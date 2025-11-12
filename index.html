@@ -12,6 +12,13 @@
             --text-color: #333333;
             --light-color: #ffffff;
         }
+	/* --- GLOBAL IMAGE FIX FOR MOBILE RESPONSIVENESS --- */
+    	img {
+        max-width: 100%; 
+        height: auto; /* Ensures image scales proportionally */
+        display: block; /* Helps prevent layout issues */
+    	}
+    	/* --- END GLOBAL FIX --- */
         body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: var(--text-color); }
         .container { width: 90%; max-width: 1200px; margin: 0 auto; }
         /* Header & Nav */
