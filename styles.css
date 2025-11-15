@@ -1,159 +1,146 @@
-/* Global Styles - Inspired by Apple's minimalism */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Project 55 Motors – Premium, minimalist dealership style */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.6;
-    color: #1d1d1f; /* Apple's dark gray */
-    background-color: #f5f5f7; /* Light gray for subtle backdrop */
+    color: #1d1d1f;
+    background: #fafafa;
+    -webkit-font-smoothing: antialiased;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
+p { color: #333; }
 
-ul {
-    list-style: none;
-}
-
-/* Navigation - Clean, fixed like Apple */
+/* Fixed transparent nav – identical feel to Apple */
 nav {
     position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px); /* Subtle blur for modern feel */
-    padding: 1rem 0;
+    top: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(180%) blur(20px);
     z-index: 1000;
-    border-bottom: 1px solid #d2d2d7;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 1rem 0;
 }
-
 nav ul {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 3rem;
 }
-
-nav li a {
+nav a {
+    font-size: 1rem;
     font-weight: 500;
-    transition: color 0.2s;
+    color: #1d1d1f;
+    transition: color .2s;
 }
+nav a:hover { color: #0066cc; }
 
-nav li a:hover {
-    color: #0071e3; /* Apple blue */
-}
-
-/* Hero Section - Full-width imagery like Apple product showcases */
+/* Hero – full-bleed, centred copy like Apple product pages */
 .hero {
     height: 100vh;
-    background-image: url('aygo-hero.jpg'); /* Upload your AYGO photo */
-    background-size: cover;
-    background-position: center;
+    min-height: 600px;
+    background: #000 url('aygo-hero.jpg') center/cover no-repeat;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     color: white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
 }
-
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+}
 .hero h1 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    margin-bottom: 1rem;
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 600;
+    margin-bottom: .5rem;
+    position: relative;
+    z-index: 1;
 }
-
 .hero p {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     max-width: 600px;
-    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
 }
 
-/* Container for Content - Ample white space */
+/* General container */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 5rem 2rem;
 }
 
-/* Featured Car / Inventory Card - Grid like Nene, detailed like Mayfair */
+/* Car cards – clean, spacious like Mayfair Prestige */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+}
 .car-card {
     background: white;
-    border-radius: 18px; /* Soft corners like Apple */
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    transition: transform .3s, box-shadow .3s;
 }
-
 .car-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
-
-.car-image {
+.car-card img {
     width: 100%;
-    height: 300px;
+    height: 240px;
     object-fit: cover;
 }
-
 .car-details {
     padding: 2rem;
 }
-
 .car-details h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #0071e3;
+    font-size: 1.8rem;
+    margin-bottom: .75rem;
+    color: #0066cc;
 }
-
-.car-specs {
+.specs {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 1rem 0;
-    font-size: 1.1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    margin: 1.5rem 0;
+    font-size: .95rem;
+    color: #555;
 }
-
 .cta {
     display: inline-block;
-    background: #0071e3;
+    background: #0066cc;
     color: white;
-    padding: 1rem 2rem;
+    padding: .9rem 2rem;
     border-radius: 12px;
     font-weight: 600;
-    margin: 2rem 0;
-    transition: background 0.2s;
+    margin-top: 1rem;
+    transition: background .2s;
 }
+.cta:hover { background: #004c99; }
 
-.cta:hover {
-    background: #005bb5;
-}
-
-/* Footer - Simple like Prestige */
+/* Footer */
 footer {
     background: #1d1d1f;
-    color: white;
+    color: #86868b;
     text-align: center;
-    padding: 2rem;
-    margin-top: 4rem;
+    padding: 3rem 1rem;
+    font-size: .9rem;
 }
 
-/* Responsive - Mobile-first like Apple */
+/* Responsive */
 @media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .container {
-        padding: 2rem 1rem;
-    }
-    
-    .car-specs {
-        grid-template-columns: 1fr;
-    }
+    nav ul { flex-direction: column; gap: 1rem; }
+    .hero h1 { font-size: 3rem; }
 }
