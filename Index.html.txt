@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Project 55 Motors – hand-selected, meticulously prepared used cars in Cleobury Mortimer.">
+    <title>Project 55 Motors – Quality Used Cars</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="inventory.html">Stock</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <h1>Project 55 Motors</h1>
+    <p>Hand-selected vehicles. Meticulously prepared. Personally presented.</p>
+</section>
+
+<div class="container" style="text-align:center;">
+    <h2 style="font-size:2.8rem; margin-bottom:1rem;">Current Stock</h2>
+    <p style="font-size:1.2rem; max-width:700px; margin:0 auto 3rem;">
+        Every car is chosen for provenance, condition and service history.
+    </p>
+
+    <div class="car-grid">
+        <div class="car-card">
+            <img src="aygo-exterior.jpg" alt="2017 Toyota AYGO exterior">
+            <div class="car-details">
+                <h2>2017 Toyota AYGO 1.0 VVT-i x-play</h2>
+                <p>One mature owner | Full Toyota service history | MOT to June 2026</p>
+                <div class="specs">
+                    <div><strong>Mileage</strong><br>57,500</div>
+                    <div><strong>Price</strong><br>£6,995</div>
+                    <div><strong>Transmission</strong><br>5-speed manual</div>
+                    <div><strong>Fuel</strong><br>Petrol</div>
+                </div>
+                <a href="inventory.html" class="cta">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Project 55 Motors – Sole Trader | Cleobury Mortimer, Shropshire<br>
+       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
+</footer>
+</body>
+</html>
