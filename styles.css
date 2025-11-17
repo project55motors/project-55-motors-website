@@ -1,4 +1,4 @@
-/* Project 55 Motors – FINAL VERSION – November 2025 */
+/* Project 55 Motors – FINAL WORKING VERSION – 17 Nov 2025 */
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
 
@@ -8,14 +8,14 @@ body {
     color: #1d1d1f;
     background: #ffffff;
     -webkit-font-smoothing: antialiased;
-    padding-top: 90px !important;   /* ← THIS IS THE PERMANENT FIX FOR ALL DEVICES */
+    padding-top: 140px !important;   /* ← fixes all hidden content forever */
 }
 
-/* Fixed nav */
+/* Fixed navigation bar */
 nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 90px;
+    height: 100px;
     background: rgba(255,255,255,0.95);
     backdrop-filter: saturate(180%) blur(20px);
     z-index: 1000;
@@ -32,7 +32,7 @@ nav {
     align-items: center;
     justify-content: space-between;
 }
-nav ul { display: flex; gap: 3rem; list-style: none; margin: 0; }
+nav ul { display: flex; gap: 3rem; list-style: none; }
 nav ul li a {
     position: relative;
     font-size: 1rem;
@@ -48,10 +48,10 @@ nav ul li a:hover { color: #0066cc; }
 nav ul li a:hover::after { width: 100%; }
 nav .logo img { max-width: 220px; height: auto; }
 
-/* Big hero text – perfectly visible on all devices */
+/* Big centred hero title */
 .hero-header {
     text-align: center;
-    padding: 8rem 2rem 10rem;
+    padding: 100px 2rem 120px;
     background: #ffffff;
 }
 .hero-header h1 {
@@ -66,7 +66,7 @@ nav .logo img { max-width: 220px; height: auto; }
     margin: 0 auto;
 }
 
-/* Normal content sections */
+/* Main content */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -84,10 +84,10 @@ nav .logo img { max-width: 220px; height: auto; }
 .cta:hover { background:#004c99; }
 footer { background:#1d1d1f; color:#86868b; text-align:center; padding:4rem 1rem; font-size:.9rem; margin-top:6rem; }
 
-/* Mobile fixes */
+/* Mobile / tablet fixes */
 @media (max-width: 1024px) {
-    body { padding-top: 110px !important; }
-    nav { height: 110px; }
-    nav ul { flex-direction: column; gap: 1rem; text-align: center; }
-    .hero-header { padding: 6rem 2rem 8rem; }
+    body { padding-top: 180px !important; }
+    nav { height: 140px; }
+    nav ul { flex-direction: column; gap: 1rem; }
+    .hero-header { padding: 80px 2rem 100px; }
 }
