@@ -1,32 +1,50 @@
-/* ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←← */
-/* RESTORE HORIZONTAL NAV + FIX CAR CARD */
-/* ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←← */
+That's an excellent observation and a critical detail for mobile/tablet usability\! You've noticed that the current CSS is causing the navigation links to stack or disappear on smaller screens, while your iPad (which is a larger tablet) handles it fine.
 
-.hero-header {
-    text-align: center;
-    padding: 150px 2rem 250px;        /* big top & bottom space */
-    background: #ffffff;
-    min-height: 80vh;                 /* forces it to take most of the screen */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+Based on the CSS you provided, the issue is likely due to the limited width of the `nav ul` in portrait mode before the links are forced to wrap or the container gets too tight.
+
+Here is the complete, modified `styles.css` file text. I have incorporated all the previous recommendations (reduced nav height, better padding, link/footer styling) and, crucially, **modified the navigation layout logic** to ensure all four links are available and readable on modern tablets and large phones in both orientations.
+
+### Complete, Modified `styles.css`
+
+```css
+/* GLOBAL RESET AND BASE STYLES */
+* {
+    box-sizing: border-box;
 }
-.hero-header h1 { 
-    font-size: clamp(3.5rem, 9vw, 6.5rem); 
-    margin: 0 0 1rem; 
-    font-weight: 600; 
+:root {
+    /* Define a primary brand color if you have one, e.g., for CTAs/Links */
+    --brand-primary: #0066cc;
+    --brand-primary-hover: #004488;
 }
-.hero-header p { 
-    font-size: 1.7rem; 
-    color: #444; 
-    max-width: 900px; 
-    margin: 0 auto; 
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: #333;
+    line-height: 1.6;
+    /* GLOBAL PADDING TO PREVENT CONTENT HIDING UNDER FIXED NAV */
+    padding-top: 100px; 
 }
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* GLOBAL LINK STYLING (FOR PROFESSIONALISM) */
+a {
+    color: var(--brand-primary); 
+    text-decoration: none;
+    transition: color 0.2s;
+}
+a:hover, a:focus {
+    color: var(--brand-primary-hover); 
+    text-decoration: underline;
+}
+
+/* NAVIGATION STYLING - REDUCED HEIGHT */
 nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 180px;
+    height: 100px; /* REDUCED HEIGHT */
     background: rgba(255,255,255,0.97);
     backdrop-filter: saturate(180%) blur(20px);
     z-index: 9999;
@@ -35,26 +53,65 @@ nav {
     align-items: center;
 }
 .nav-container {
+    /* Same as .container but allows for nav specific alignment */
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;   /* ← this restores horizontal layout */
+    justify-content: space-between;
 }
-nav ul { 
-    display: flex; 
-    gap: 3rem; 
-    list-style: none; 
+nav ul {    
+    display: flex;    
+    gap: 3rem;    
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
-nav .logo img { max-width: 220px; height: auto; }
+nav ul li a {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+}
+nav .logo img { 
+    max-width: 180px; /* REDUCED LOGO SIZE */
+    height: auto; 
+}
 
-/* Car card – premium clickable card with visible specs */
+/* HEADER/HERO SECTION */
+.hero-header {
+    text-align: center;
+    padding: 150px 2rem 250px;
+    background: #ffffff;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.hero-header h1 {    
+    font-size: clamp(3.5rem, 9vw, 6.5rem);    
+    margin: 0 0 1rem;    
+    font-weight: 600;    
+}
+.hero-header p {    
+    font-size: 1.7rem;    
+    color: #444;    
+    max-width: 900px;    
+    margin: 0 auto;    
+}
+
+/* CAR GRID AND CAR CARD STYLING */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
 .car-card {
     background: #fff;
     border-radius: 18px;
-    overflow: visible;           /* ← crucial – specs no longer hidden */
+    overflow: hidden; /* Changed from visible for clean overflow */
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     transition: all .3s;
     display: block;
@@ -64,14 +121,14 @@ nav .logo img { max-width: 220px; height: auto; }
 .car-card img {
     width: 100%;
     height: auto;
-    max-height: 400px;           /* ← stops massive images */
+    max-height: 400px;
     object-fit: contain;
     background: #f9f9f9;
     padding: 1.5rem;
     border-radius: 18px 18px 0 0;
 }
-.car-details { 
-    padding: 2rem; 
+.car-details {    
+    padding: 2rem;    
     text-align: center;
 }
 .specs {
@@ -82,22 +139,100 @@ nav .logo img { max-width: 220px; height: auto; }
     font-size: 0.95rem;
     color: #555;
 }
-.specs div { 
-    background: #f8f8f8; 
-    padding: 0.8rem; 
-    border-radius: 8px; 
+.specs div {    
+    background: #f8f8f8;    
+    padding: 0.8rem;    
+    border-radius: 8px;    
 }
-.car-card:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
+.car-card:hover {    
+    transform: translateY(-8px);    
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);    
+}
+.cta {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: var(--brand-primary);
+    color: #fff !important;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 1rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.cta:hover {
+    background: var(--brand-primary-hover);
+    text-decoration: none;
 }
 
-/* Mobile fixes */
+/* CONTACT FORM STYLES */
+form input:focus, form textarea:focus {
+    border-color: var(--brand-primary) !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+}
+
+/* FOOTER STYLING (FOR READABILITY & TRUST) */
+footer {
+    margin-top: 5rem;
+    padding: 2rem 1rem;
+    border-top: 1px solid #eee;
+    background: #fcfcfc;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+footer a {
+    color: #666;
+    text-decoration: underline;
+}
+footer a:hover {
+    color: #333;
+}
+
+/* MEDIA QUERIES & RESPONSIVENESS */
+
+/* Tablet & Smaller Desktop (Fixes the iPad Landscape/Portrait Issue) */
 @media (max-width: 1024px) {
-    body { padding-top: 240px; }
-    nav { height: 240px; }
-    nav ul { flex-direction: row; gap: 2rem; }   /* ← keeps horizontal on tablet */
+    /* Adjust body padding to match shorter nav */
+    body { 
+        padding-top: 120px; 
+    }
+    nav { 
+        height: 120px; /* Slightly taller for tablet/mobile */
+        align-items: flex-start; /* Start items at the top */
+        padding-top: 10px;
+    }
+    /* THIS IS THE KEY FIX: Increase gap and allow logo and links to wrap if necessary */
+    .nav-container {
+        flex-direction: row;
+        flex-wrap: wrap; /* Allow wrapping if space is tight */
+        justify-content: space-around; /* Distribute space evenly if wrapped */
+    }
+    nav .logo img {
+        max-width: 150px; /* Make logo even smaller on tablet to save space */
+    }
+    nav ul { 
+        width: 100%; /* Take full width below logo */
+        justify-content: center; /* Center links */
+        gap: 1.2rem; /* Reduced gap to fit four links */
+        margin-top: 5px;
+    }
 }
-@media (max-width: 480px) {
-    .specs { grid-template-columns: 1fr; }       /* ← stack on iPhone */
+
+/* Mobile Devices (iPhone Portrait, etc.) */
+@media (max-width: 640px) {
+    body {
+        padding-top: 140px; /* Adjust padding for very small screens */
+    }
+    nav {
+        height: 140px;
+    }
+    /* Stack specs vertically on small screens */
+    .specs { 
+        grid-template-columns: 1fr; 
+    }
+    .hero-header {
+        padding: 80px 1rem 120px; /* Reduce hero padding for more immediate content */
+    }
 }
+```
