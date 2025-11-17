@@ -2,6 +2,27 @@
 /* RESTORE HORIZONTAL NAV + FIX CAR CARD */
 /* ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←← */
 
+.hero-header {
+    text-align: center;
+    padding: 150px 2rem 250px;        /* big top & bottom space */
+    background: #ffffff;
+    min-height: 80vh;                 /* forces it to take most of the screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.hero-header h1 { 
+    font-size: clamp(3.5rem, 9vw, 6.5rem); 
+    margin: 0 0 1rem; 
+    font-weight: 600; 
+}
+.hero-header p { 
+    font-size: 1.7rem; 
+    color: #444; 
+    max-width: 900px; 
+    margin: 0 auto; 
+}
 nav {
     position: fixed;
     top: 0; left: 0; right: 0;
