@@ -1,27 +1,82 @@
+/* ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←← */
+/* RESTORE HORIZONTAL NAV + FIX CAR CARD */
+/* ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←← */
+
+nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 180px;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: saturate(180%) blur(20px);
+    z-index: 9999;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+}
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;   /* ← this restores horizontal layout */
+}
+nav ul { 
+    display: flex; 
+    gap: 3rem; 
+    list-style: none; 
+}
+nav .logo img { max-width: 220px; height: auto; }
+
+/* Car card – premium clickable card with visible specs */
 .car-card {
     background: #fff;
     border-radius: 18px;
-    overflow: visible; /* Changed from hidden – allows specs to show */
+    overflow: visible;           /* ← crucial – specs no longer hidden */
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     transition: all .3s;
-    height: auto; /* Changed from aspect-ratio – expands to fit content */
-    margin-bottom: 2rem; /* Space between cards */
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 .car-card img {
     width: 100%;
     height: auto;
+    max-height: 400px;           /* ← stops massive images */
     object-fit: contain;
     background: #f9f9f9;
     padding: 1.5rem;
-    display: block;
+    border-radius: 18px 18px 0 0;
 }
-.car-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+.car-details { 
+    padding: 2rem; 
+    text-align: center;
+}
 .specs {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    gap: 1rem;
     margin: 1.5rem 0;
     font-size: 0.95rem;
     color: #555;
 }
-@media (max-width: 480px) { .specs { grid-template-columns: 1fr; } } /* Stack on iPhone – shows all 4 facts */
+.specs div { 
+    background: #f8f8f8; 
+    padding: 0.8rem; 
+    border-radius: 8px; 
+}
+.car-card:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
+}
+
+/* Mobile fixes */
+@media (max-width: 1024px) {
+    body { padding-top: 240px; }
+    nav { height: 240px; }
+    nav ul { flex-direction: row; gap: 2rem; }   /* ← keeps horizontal on tablet */
+}
+@media (max-width: 480px) {
+    .specs { grid-template-columns: 1fr; }       /* ← stack on iPhone */
+}

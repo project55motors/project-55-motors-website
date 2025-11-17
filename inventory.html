@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Current stock – Project 55 Motors. Hand-selected, low-mileage used cars in Cleobury Mortimer.">
     <title>Current Stock – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Modal for full specs */
-        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; overflow-y:auto; padding:2rem 1rem; }
-        .modal:target { display:block; }
-        .modal-content { max-width:900px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; position:relative; }
-        .modal-close { position:absolute; top:15px; right:20px; font-size:3rem; color:#fff; text-decoration:none; z-index:10001; }
-        .modal-gallery img { width:100%; height:auto; display:block; }
-        .modal-details { padding:2.5rem; text-align:center; }
-        .modal-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:2rem 0; font-size:1rem; }
-        .modal-specs div { background:#f8f8f8; padding:1rem; border-radius:12px; }
-        .full-specs { max-width:700px; margin:2rem auto; text-align:left; line-height:1.7; color:#333; background:#f9f9f9; padding:2rem; border-radius:12px; max-height:400px; overflow-y:auto; }
-        @media (max-width:640px) { .modal-specs { grid-template-columns:1fr 1fr; } }
+        .modal {display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:10000;overflow-y:auto;padding:2rem 1rem;}
+        .modal:target {display:block;}
+        .modal-content {max-width:900px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;position:relative;}
+        .modal-close {position:absolute;top:15px;right:20px;font-size:3rem;color:#fff;text-decoration:none;z-index:10001;}
+        .modal-gallery img {width:100%;height:auto;display:block;}
+        .modal-details {padding:2.5rem;text-align:center;}
+        .modal-specs {display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:2rem 0;}
+        .modal-specs div {background:#f8f8f8;padding:1rem;border-radius:12px;}
+        .full-specs {max-width:700px;margin:2rem auto;text-align:left;line-height:1.8;background:#f9f9f9;padding:2rem;border-radius:12px;overflow-y:auto;max-height:60vh;}
     </style>
 </head>
 <body>
@@ -34,45 +31,46 @@
   </div>
 </nav>
 
-<div class="container" style="text-align:center;">
-    <h1 style="font-size:3.5rem; margin-bottom:1rem;">Current Stock</h1>
-    <p style="font-size:1.25rem; max-width:800px; margin:0 auto 4rem; color:#555;">
+<div class="container" style="padding-top:10rem;text-align:center;">
+    <h1 style="font-size:3.5rem;margin-bottom:1rem;">Current Stock</h1>
+    <p style="font-size:1.25rem;max-width:800px;margin:0 auto 4rem;color:#555;">
         Carefully chosen vehicles, prepared to the highest standard.
     </p>
 
     <div class="car-grid">
-        <!-- AYGO – full card with 4 facts visible -->
-        <div class="car-card">
+
+        <!-- CLICKABLE CARD – whole thing opens modal -->
+        <a href="#aygo-modal" class="car-card">
             <img src="aygo-main.jpg" alt="2017 Toyota Aygo EK67 BVD">
             <div class="car-details">
                 <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
-                <p>Finished in Electro Grey metallic. One elderly lady and one learner driver private owners from new with full Toyota main-dealer service history. This car also comes with a Toyota main-dealer warranty.</p>
+                <p>One elderly lady + one learner driver · Full Toyota history · Warranty to June 2026</p>
                 <div class="specs">
                     <div><strong>Registration</strong><br>EK67 BVD</div>
-                    <div><strong>Mileage</strong><br>57,500 miles</div>
+                    <div><strong>Mileage</strong><br>57,500</div>
                     <div><strong>MOT</strong><br>June 2026</div>
                     <div><strong>Price</strong><br>£5,750 ono</div>
                 </div>
-                <a href="#aygo-modal" class="cta">View Full Specification</a>
+                <div class="cta" style="margin-top:1rem;">Tap for full details →</div>
             </div>
-        </div>
+        </a>
 
-        <!-- Add more cars here – the grid auto-adjusts -->
-        <!-- Example for second Aygo: copy the div above, change ID to #aygo2-modal, update photo/specs, add matching modal below -->
+        <!-- Add more cars exactly like this -->
+
     </div>
 </div>
 
-<!-- MODAL FOR AYGO – with scrollable full specs -->
+<!-- PREMIUM FULL-SCREEN MODAL -->
 <div id="aygo-modal" class="modal">
     <a href="/inventory.html" class="modal-close">×</a>
     <div class="modal-content">
         <div class="modal-gallery">
-            <img src="aygo-main.jpg" alt="2017 Toyota Aygo EK67 BVD">
+            <img src="aygo-main.jpg" alt="2017 Toyota Aygo">
         </div>
         <div class="modal-details">
-            <h1 style="font-size:2.8rem; margin-bottom:0.5rem;">2017 (67) Toyota AYGO 1.0 VVT-i x-play</h1>
-            <p style="font-size:1.3rem; max-width:700px; margin:2rem auto; color:#333;">
-                Finished in Electro Grey metallic. One elderly lady and one learner driver private owners from new with full Toyota main-dealer service history until 2024 and our own specialist service in 2025. Still covered by Toyota warranty until June 2026.
+            <h1 style="font-size:2.8rem;">2017 (67) Toyota AYGO 1.0 VVT-i x-play</h1>
+            <p style="font-size:1.3rem;max-width:700px;margin:2rem auto;">
+                Finished in Electro Grey metallic. Full Toyota service history and warranty until June 2026.
             </p>
 
             <div class="modal-specs">
@@ -85,24 +83,20 @@
             </div>
 
             <div class="full-specs">
-                <h3 style="margin-bottom:1rem;">Full Specification & Features</h3>
-                <ul style="text-align:left; max-width:600px; margin:0 auto; list-style-type: disc; padding-left:1.5rem;">
+                <h3>Full Specification & Features</h3>
+                <ul>
                     <li>Reverse camera</li>
-                    <li>Bluetooth connectivity & audio streaming</li>
+                    <li>Bluetooth & audio streaming</li>
                     <li>Air conditioning</li>
-                    <li>DAB digital radio</li>
+                    <li>DAB radio</li>
                     <li>LED daytime running lights</li>
-                    <li>Speed limiter</li>
-                    <li>Electric front windows</li>
-                    <li>Remote central locking with 2 keys</li>
                     <li>Toyota warranty until June 2026</li>
-                    <li>HPI clear with certificate</li>
-                    <li>Fresh service & professional valet completed</li>
-                    <!-- Add as many as you want – it scrolls -->
+                    <li>HPI clear</li>
+                    <!-- add as many as you want -->
                 </ul>
             </div>
 
-            <a href="/contact.html" class="cta" style="font-size:1.4rem; padding:1rem 3rem;">Enquire about this car</a>
+            <a href="/contact.html" class="cta" style="font-size:1.4rem;padding:1rem 3rem;">Enquire about this car</a>
         </div>
     </div>
 </div>
