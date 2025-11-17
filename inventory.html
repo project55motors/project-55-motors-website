@@ -7,17 +7,17 @@
     <title>Current Stock – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Same modal styles as homepage – so everything feels consistent */
+        /* Modal for full specs */
         .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; overflow-y:auto; padding:2rem 1rem; }
         .modal:target { display:block; }
         .modal-content { max-width:900px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; position:relative; }
         .modal-close { position:absolute; top:15px; right:20px; font-size:3rem; color:#fff; text-decoration:none; z-index:10001; }
         .modal-gallery img { width:100%; height:auto; display:block; }
         .modal-details { padding:2.5rem; text-align:center; }
-        .modal-specs { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:1rem; margin:2rem 0; font-size:1rem; }
+        .modal-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:2rem 0; font-size:1rem; }
         .modal-specs div { background:#f8f8f8; padding:1rem; border-radius:12px; }
+        .full-specs { max-width:700px; margin:2rem auto; text-align:left; line-height:1.7; color:#333; background:#f9f9f9; padding:2rem; border-radius:12px; max-height:400px; overflow-y:auto; }
         @media (max-width:640px) { .modal-specs { grid-template-columns:1fr 1fr; } }
-        @media (max-width:480px) { .specs { grid-template-columns:1fr !important; } }
     </style>
 </head>
 <body>
@@ -34,37 +34,35 @@
   </div>
 </nav>
 
-<div class="container" style="padding-top:8rem;">
-    <h1 style="font-size:3.5rem; text-align:center; margin-bottom:1rem;">Current Stock</h1>
-    <p style="font-size:1.25rem; text-align:center; max-width:800px; margin:0 auto 4rem; color:#555;">
+<div class="container" style="text-align:center;">
+    <h1 style="font-size:3.5rem; margin-bottom:1rem;">Current Stock</h1>
+    <p style="font-size:1.25rem; max-width:800px; margin:0 auto 4rem; color:#555;">
         Carefully chosen vehicles, prepared to the highest standard.
     </p>
 
-    <!-- Responsive grid – automatically handles 1, 2 or 3+ cars beautifully -->
     <div class="car-grid">
-
-        <!-- AYGO – click/tap anywhere to open full details -->
-        <a href="#aygo-modal" class="car-card" style="text-decoration:none; color:inherit; display:block;">
+        <!-- AYGO – full card with 4 facts visible -->
+        <div class="car-card">
             <img src="aygo-main.jpg" alt="2017 Toyota Aygo EK67 BVD">
             <div class="car-details">
                 <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
-                <p>One elderly lady + one learner driver owner | Full Toyota history | Toyota warranty to June 2026</p>
+                <p>Finished in Electro Grey metallic. One elderly lady and one learner driver private owners from new with full Toyota main-dealer service history. This car also comes with a Toyota main-dealer warranty.</p>
                 <div class="specs">
                     <div><strong>Registration</strong><br>EK67 BVD</div>
-                    <div><strong>Mileage</strong><br>57,500</div>
+                    <div><strong>Mileage</strong><br>57,500 miles</div>
                     <div><strong>MOT</strong><br>June 2026</div>
                     <div><strong>Price</strong><br>£5,750 ono</div>
                 </div>
-                <div class="cta" style="margin-top:1rem;">Tap for full specification →</div>
+                <a href="#aygo-modal" class="cta">View Full Specification</a>
             </div>
-        </a>
+        </div>
 
-        <!-- Add future cars exactly like this – they will automatically flow into the grid -->
-
+        <!-- Add more cars here – the grid auto-adjusts -->
+        <!-- Example for second Aygo: copy the div above, change ID to #aygo2-modal, update photo/specs, add matching modal below -->
     </div>
 </div>
 
-<!-- FULL-SCREEN MODAL (same as homepage) -->
+<!-- MODAL FOR AYGO – with scrollable full specs -->
 <div id="aygo-modal" class="modal">
     <a href="/inventory.html" class="modal-close">×</a>
     <div class="modal-content">
@@ -79,17 +77,29 @@
 
             <div class="modal-specs">
                 <div><strong>Registration</strong><br>EK67 BVD</div>
-                <div><strong>First registered</strong><br>September 2017</div>
                 <div><strong>Mileage</strong><br>57,500 miles</div>
-                <div><strong>MOT</strong><br>June 2026 (no advisories)</div>
+                <div><strong>MOT</strong><br>June 2026</div>
                 <div><strong>Price</strong><br>£5,750 ono</div>
                 <div><strong>Transmission</strong><br>5-speed manual</div>
-                <div><strong>Fuel</strong><br>Petrol – 68.9 mpg combined</div>
-                <div><strong>Colour</strong><br>Electro Grey metallic</div>
-                <div><strong>Owners</strong><br>2 private</div>
-                <div><strong>Service history</strong><br>Full Toyota + our own</div>
-                <div><strong>Keys</strong><br>2</div>
-                <div><strong>HPI</strong><br>Clear</div>
+                <div><strong>Fuel</strong><br>Petrol</div>
+            </div>
+
+            <div class="full-specs">
+                <h3 style="margin-bottom:1rem;">Full Specification & Features</h3>
+                <ul style="text-align:left; max-width:600px; margin:0 auto; list-style-type: disc; padding-left:1.5rem;">
+                    <li>Reverse camera</li>
+                    <li>Bluetooth connectivity & audio streaming</li>
+                    <li>Air conditioning</li>
+                    <li>DAB digital radio</li>
+                    <li>LED daytime running lights</li>
+                    <li>Speed limiter</li>
+                    <li>Electric front windows</li>
+                    <li>Remote central locking with 2 keys</li>
+                    <li>Toyota warranty until June 2026</li>
+                    <li>HPI clear with certificate</li>
+                    <li>Fresh service & professional valet completed</li>
+                    <!-- Add as many as you want – it scrolls -->
+                </ul>
             </div>
 
             <a href="/contact.html" class="cta" style="font-size:1.4rem; padding:1rem 3rem;">Enquire about this car</a>
