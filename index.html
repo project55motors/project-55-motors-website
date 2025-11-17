@@ -1,29 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Project 55 Motors – hand-selected, meticulously prepared used cars in Cleobury Mortimer.">
+    <title>Project 55 Motors – Quality Used Cars</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .modal {display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:10000;overflow-y:auto;padding:2rem 1rem;}
+        .modal:target {display:block;}
+        .modal-content {max-width:900px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;position:relative;}
+        .modal-close {position:absolute;top:15px;right:20px;font-size:3rem;color:#fff;text-decoration:none;z-index:10001;}
+        .modal-gallery img {width:100%;height:auto;display:block;}
+        .modal-details {padding:2.5rem;text-align:center;}
+        .modal-specs {display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:2rem 0;font-size:1rem;}
+        .modal-specs div {background:#f8f8f8;padding:1rem;border-radius:12px;}
+        .full-specs {max-width:700px;margin:2rem auto;text-align:left;line-height:1.7;color:#333;background:#f9f9f9;padding:2rem;border-radius:12px;}
+        @media (max-width:640px) {.modal-specs {grid-template-columns:1fr 1fr;}}
+    </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-container">
+    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/inventory.html">Stock</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero-header">
+    <h1>Project 55 Motors</h1>
+    <p>Hand-selected vehicles. Meticulously prepared. Personally presented.</p>
+</header>
+
 <div class="container">
-    <h2 style="font-size:2.6rem;margin-bottom:1rem;">Featured Vehicle</h2>
+    <h2 style="font-size:2.6rem;margin-bottom:1rem;">Current Stock</h2>
     <p style="font-size:1.2rem;max-width:700px;margin:0 auto 3rem;color:#555;">
-        Every car is hand-selected and prepared to the highest standard.
+        Every car is chosen for provenance, condition and service history.
     </p>
 
     <div class="car-grid">
-        <!-- Teaser card – clicks through to full stock page -->
-        <a href="/inventory.html" class="car-card">
+
+        <!-- AYGO #1 – clickable card with 4 key facts visible -->
+        <a href="#aygo1-modal" class="car-card" style="text-decoration:none;color:inherit;display:block;">
             <img src="aygo-main.jpg" alt="2017 Toyota Aygo EK67 BVD">
             <div class="car-details">
-                <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
-                <p>One elderly lady owner · Full Toyota history · Warranty to July 2026</p>
+                <h2>2017 Toyota AYGO 1.0 VVT-i x-play</h2>
+                <p>One mature owner · Full Toyota history · Warranty to June 2026</p>
                 <div class="specs">
                     <div><strong>Reg</strong><br>EK67 BVD</div>
                     <div><strong>Mileage</strong><br>57,500</div>
                     <div><strong>MOT</strong><br>June 2026</div>
                     <div><strong>Price</strong><br>£5,750 ono</div>
                 </div>
-                <div class="cta" style="margin-top:1rem;">View all current stock →</div>
+                <div class="cta" style="margin-top:1rem;">Tap for full specification →</div>
             </div>
         </a>
-    </div>
 
-    <!-- Optional big button for extra emphasis -->
-    <a href="/inventory.html" class="cta" style="display:inline-block;margin-top:3rem;font-size:1.4rem;padding:1rem 3rem;">
-        View Full Stock List
-    </a>
+        <!-- Add more cars here – they will automatically grid nicely -->
+
+    </div>
 </div>
+
+<!-- FULL MODAL FOR AYGO #1 -->
+<div id="aygo1-modal" class="modal">
+    <a href="/" class="modal-close">×</a>
+    <div class="modal-content">
+        <div class="modal-gallery">
+            <img src="aygo-main.jpg" alt="2017 Toyota Aygo EK67 BVD">
+        </div>
+        <div class="modal-details">
+            <h1 style="font-size:2.8rem;margin-bottom:0.5rem;">2017 (67) Toyota AYGO 1.0 VVT-i x-play</h1>
+            <p style="font-size:1.3rem;max-width:700px;margin:2rem auto;color:#333;">
+                Finished in Electro Grey metallic. One elderly lady and one learner driver private owners from new with full Toyota main-dealer service history until 2024 and our own specialist service in 2025. Still covered by Toyota warranty until June 2026.
+            </p>
+
+            <div class="modal-specs">
+                <div><strong>Registration</strong><br>EK67 BVD</div>
+                <div><strong>Mileage</strong><br>57,500 miles</div>
+                <div><strong>MOT</strong><br>June 2026</div>
+                <div><strong>Price</strong><br>£5,750 ono</div>
+                <div><strong>Transmission</strong><br>5-speed manual</div>
+                <div><strong>Fuel</strong><br>Petrol</div>
+                <div><strong>Colour</strong><br>Electro Grey metallic</div>
+                <div><strong>Owners</strong><br>2 private</div>
+            </div>
+
+            <div class="full-specs">
+                <h3 style="margin-bottom:1rem;">Full Specification & Features</h3>
+                <ul style="text-align:left;max-width:600px;margin:0 auto;">
+                    <li>Reverse camera</li>
+                    <li>Bluetooth connectivity & audio streaming</li>
+                    <li>Air conditioning</li>
+                    <li>DAB digital radio</li>
+                    <li>LED daytime running lights</li>
+                    <li>Speed limiter</li>
+                    <li>Electric front windows</li>
+                    <li>Remote central locking with 2 keys</li>
+                    <li>Toyota warranty until June 2026</li>
+                    <li>HPI clear with certificate</li>
+                    <li>Fresh service & professional valet completed</li>
+                </ul>
+            </div>
+
+            <a href="/contact.html" class="cta" style="font-size:1.4rem;padding:1rem 3rem;">Enquire about this car</a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2025 Project 55 Motors – Sole Trader | Cleobury Mortimer, Shropshire<br>
+       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
+</footer>
+
+</body>
+</html>
