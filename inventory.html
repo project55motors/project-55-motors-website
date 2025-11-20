@@ -12,11 +12,39 @@
         .modal-content { max-width:900px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; position:relative; }
         .modal-close { position:absolute; top:15px; right:20px; font-size:3rem; color:#fff; text-decoration:none; z-index:10001; }
 
-        /* Photo gallery – smooth swipe + big centred arrows */
-        .photo-gallery-wrapper { position:relative; background:#000; padding:4rem 0; }
-        .photo-gallery { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:0; -webkit-overflow-scrolling:touch; scroll-behavior:smooth; }
-        .photo-gallery img { flex:0 0 100%; width:100%; max-height:70vh; object-fit:contain; scroll-snap-align:center; }
-        .photo-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.7); color:white; width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:3.5rem; cursor:pointer; z-index:10; }
+        /* Photo gallery – perfect, no white gaps, arrows centred */
+        .photo-gallery-wrapper { position:relative; background:#000; }
+        .photo-gallery { 
+            display:flex; 
+            overflow-x:auto; 
+            scroll-snap-type:x mandatory; 
+            gap:0; 
+            -webkit-overflow-scrolling:touch; 
+            scroll-behavior:smooth;
+        }
+        .photo-gallery img { 
+            flex:0 0 100%; 
+            width:100%; 
+            max-height:75vh; 
+            object-fit:contain; 
+            scroll-snap-align:center; 
+        }
+        .photo-nav { 
+            position:absolute; 
+            top:50%; 
+            transform:translateY(-50%); 
+            background:rgba(0,0,0,0.7); 
+            color:white; 
+            width:70px; 
+            height:70px; 
+            border-radius:50%; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-size:3.5rem; 
+            cursor:pointer; 
+            z-index:10;
+        }
         .photo-nav:hover { background:rgba(0,0,0,0.9); }
         .photo-nav.prev { left:20px; }
         .photo-nav.next { right:20px; }
@@ -67,7 +95,7 @@
     </div>
 </div>
 
-<!-- MODAL – with big centred arrows and all 20 photos -->
+<!-- MODAL – with 20 photos, perfect arrows, scrollable description -->
 <div id="aygo-modal" class="modal">
     <a href="/inventory.html" class="modal-close">×</a>
     <div class="modal-content">
@@ -78,25 +106,25 @@
 
                 <img src="Currentstock/EK67BVD/aygo-main.jpeg" alt="Aygo main">
                 <img src="Currentstock/EK67BVD/aygo-1.jpeg" alt="Aygo photo 1">
-                <img src="Currentstock/EK67BVD/aygo-2.JPEG" alt="Aygo photo 2">
+                <img src="Currentstock/EK67BVD/aygo-2.jpeg" alt="Aygo photo 2">
                 <img src="Currentstock/EK67BVD/aygo-3.jpeg" alt="Aygo photo 3">
                 <img src="Currentstock/EK67BVD/aygo-4.jpeg" alt="Aygo photo 4">
-                <img src="Currentstock/EK67BVD/aygo-5.JPEG" alt="Aygo photo 5">
-                <img src="Currentstock/EK67BVD/aygo-6.JPEG" alt="Aygo photo 6">
+                <img src="Currentstock/EK67BVD/aygo-5.jpeg" alt="Aygo photo 5">
+                <img src="Currentstock/EK67BVD/aygo-6.jpeg" alt="Aygo photo 6">
                 <img src="Currentstock/EK67BVD/aygo-7.jpeg" alt="Aygo photo 7">
-                <img src="Currentstock/EK67BVD/aygo-8.JPEG" alt="Aygo photo 8">
-                <img src="Currentstock/EK67BVD/aygo-9.JPEG" alt="Aygo photo 9">
-                <img src="Currentstock/EK67BVD/aygo-10.JPEG" alt="Aygo photo 10">
-                <img src="Currentstock/EK67BVD/aygo-11.JPEG" alt="Aygo photo 11">
-                <img src="Currentstock/EK67BVD/aygo-12.JPEG" alt="Aygo photo 12">
-                <img src="Currentstock/EK67BVD/aygo-13.JPEG" alt="Aygo photo 13">
-                <img src="Currentstock/EK67BVD/aygo-14.JPEG" alt="Aygo photo 14">
-                <img src="Currentstock/EK67BVD/aygo-15.JPEG" alt="Aygo photo 15">
-                <img src="Currentstock/EK67BVD/aygo-16.JPEG" alt="Aygo photo 16">
-                <img src="Currentstock/EK67BVD/aygo-17.JPEG" alt="Aygo photo 17">
-                <img src="Currentstock/EK67BVD/aygo-18.JPEG" alt="Aygo photo 18">
-                <img src="Currentstock/EK67BVD/aygo-19.JPEG" alt="Aygo photo 19">
-                <img src="Currentstock/EK67BVD/aygo-20.JPEG" alt="Aygo photo 20">
+                <img src="Currentstock/EK67BVD/aygo-8.jpeg" alt="Aygo photo 8">
+                <img src="Currentstock/EK67BVD/aygo-9.jpeg" alt="Aygo photo 9">
+                <img src="Currentstock/EK67BVD/aygo-10.JPG" alt="Aygo photo 10">
+                <img src="Currentstock/EK67BVD/aygo-11.JPG" alt="Aygo photo 11">
+                <img src="Currentstock/EK67BVD/aygo-12.JPG" alt="Aygo photo 12">
+                <img src="Currentstock/EK67BVD/aygo-13.JPG" alt="Aygo photo 13">
+                <img src="Currentstock/EK67BVD/aygo-14.JPG" alt="Aygo photo 14">
+                <img src="Currentstock/EK67BVD/aygo-15.JPG" alt="Aygo photo 15">
+                <img src="Currentstock/EK67BVD/aygo-16.JPG" alt="Aygo photo 16">
+                <img src="Currentstock/EK67BVD/aygo-17.JPG" alt="Aygo photo 17">
+                <img src="Currentstock/EK67BVD/aygo-18.JPG" alt="Aygo photo 18">
+                <img src="Currentstock/EK67BVD/aygo-19.JPG" alt="Aygo photo 19">
+                <img src="Currentstock/EK67BVD/aygo-20.JPG" alt="Aygo photo 20">
             </div>
         </div>
 
@@ -108,7 +136,7 @@
                 58,000 miles | EK67 BVD
 
                 Highlights
-                -Full Toyota Dealer Service History  (FDSH)
+                -Full Toyota Dealer Service History (FDSH)
                 -Toyota Relax Warranty active and transferable until July 2026 (or 68k miles)
                 -Warranty renewable yearly up to 10 years / 100,000 miles with Toyota servicing
                 -HPI Clear
@@ -119,7 +147,7 @@
                 -15" Gloss Black Alloy Wheels
                 -Rear Privacy Glass
                 -Reversing Camera
-                -x-Touch Multimedia System  (7"Touchscreen, DAB, Bluetooth)
+                -x-Touch Multimedia System (7"Touchscreen, DAB, Bluetooth)
                 -Automatic Air Conditioning
                 -Front Fog Lamps
 
@@ -163,5 +191,4 @@ function scrollGallery(direction) {
 </footer>
 
 </body>
-
 </html>
