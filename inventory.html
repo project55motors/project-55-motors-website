@@ -1,109 +1,150 @@
-<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Current stock – Project 55 Motors. Hand-selected, low-mileage used cars in Cleobury Mortimer.">
+    <title>Current Stock – Project 55 Motors</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Modal styles – premium full-screen overlay */
+        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; overflow-y:auto; padding:2rem 1rem; }
+        .modal:target { display:block; }
+        .modal-content { max-width:900px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; position:relative; }
+        .modal-close { position:absolute; top:15px; right:20px; font-size:3rem; color:#fff; text-decoration:none; z-index:10001; }
+        .modal-details { padding:2.5rem; text-align:center; }
+        .modal-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:2rem 0; font-size:1rem; }
+        .modal-specs div { background:#f8f8f8; padding:1rem; border-radius:12px; }
+        @media (max-width:640px) { .modal-specs { grid-template-columns:1fr 1fr; } }
 
-<html lang="en">
+        /* Scrollable description box */
+        .full-description { max-width:700px; margin:2rem auto; text-align:left; line-height:1.7; color:#333; background:#f8f8f8; padding:2rem; border-radius:12px; max-height:300px; overflow-y: auto; }
 
-<head>
+        /* Photo panel – Sway-like stack */
+        .photo-gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap:1rem; padding:1rem; -webkit-overflow-scrolling: touch; }
+        .photo-gallery img { flex: 0 0 80%; scroll-snap-align: center; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:transform 0.3s; }
+        .photo-gallery img:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body>
 
-    <meta charset="UTF-8">
+<nav>
+  <div class="nav-container">
+    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/inventory.html">Stock</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="container" style="text-align:center; padding-top:6rem;">
+    <h1 style="font-size:3.5rem; margin-bottom:1rem;">Current Stock</h1>
+    <p style="font-size:1.25rem; max-width:800px; margin:0 auto 4rem; color:#555;">
+        Carefully chosen vehicles, prepared to the highest standard.
+    </p>
 
-    <meta name="description" content="Current stock – Project 55 Motors. Hand-selected, low-mileage used cars in Cleobury Mortimer.">
+    <div class="car-grid">
+        <div class="car-card">
+            <img src="/cars/aygo1/aygo-main.jpg" alt="2017 Toyota AYGO">
+            <div class="car-details">
+                <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
+                <p>Finished in Electro Grey metallic. One elderly lady and one learner lady driver private owners from new with full Toyota main-dealer service history. This car also comes with a Toyota main-dealer warranty.</p>
+                <div class="specs">
+                    <div><strong>Registration</strong><br>EK67 BVD</div>
+                    <div><strong>Mileage</strong><br>57,500 miles</div>
+                    <div><strong>MOT</strong><br>June 2026</div>
+                    <div><strong>Price</strong><br>£5,750 ono</div>
+                </div>
+                <a href="#aygo-modal" class="cta">View Full Details</a>
+            </div>
+        </div>
+        <!-- Duplicate this card for future cars -->
+    </div>
+</div>
 
-    <title>Current Stock – Project 55 Motors</title>
+<!-- MODAL – now with description and photo panel -->
+<div id="aygo-modal" class="modal">
+    <a href="/inventory.html" class="modal-close">×</a>
+    <div class="modal-content">
+        <div class="photo-gallery">
+            <img src="/cars/aygo1/aygo-main.jpg" alt="Aygo main">
+            <img src="/cars/aygo1/aygo-1.jpg" alt="Aygo photo 1">
+            <img src="/cars/aygo1/aygo-2.jpg" alt="Aygo photo 2">
+            <img src="/cars/aygo1/aygo-3.jpg" alt="Aygo photo 3">
+            <img src="/cars/aygo1/aygo-4.jpg" alt="Aygo photo 4">
+            <img src="/cars/aygo1/aygo-5.jpg" alt="Aygo photo 5">
+            <img src="/cars/aygo1/aygo-6.jpg" alt="Aygo photo 6">
+            <img src="/cars/aygo1/aygo-7.jpg" alt="Aygo photo 7">
+            <img src="/cars/aygo1/aygo-8.jpg" alt="Aygo photo 8">
+            <img src="/cars/aygo1/aygo-9.jpg" alt="Aygo photo 9">
+            <img src="/cars/aygo1/aygo-10.jpg" alt="Aygo photo 10">
+            <img src="/cars/aygo1/aygo-11.jpg" alt="Aygo photo 11">
+            <img src="/cars/aygo1/aygo-12.jpg" alt="Aygo photo 12">
+            <img src="/cars/aygo1/aygo-13.jpg" alt="Aygo photo 13">
+            <img src="/cars/aygo1/aygo-14.jpg" alt="Aygo photo 14">
+            <img src="/cars/aygo1/aygo-15.jpg" alt="Aygo photo 15">
+            <img src="/cars/aygo1/aygo-16.jpg" alt="Aygo photo 16">
+            <img src="/cars/aygo1/aygo-17.jpg" alt="Aygo photo 17">
+            <img src="/cars/aygo1/aygo-18.jpg" alt="Aygo photo 18">
+            <img src="/cars/aygo1/aygo-19.jpg" alt="Aygo photo 19">
+            <img src="/cars/aygo1/aygo-20.jpg" alt="Aygo photo 20">
+        </div>
+        <div class="modal-details">
+            <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
+            <div class="full-description">
+                2017 Toyota Aygo X-Style - Electro Grey
 
-    <link rel="stylesheet" href="styles.css">
+58,000 miles | EK67 BVD
 
-    <style>
+Highlights
+-Full Toyota Dealer Service History  (FDSH)
+-Toyota Relax Warranty active and transferable until July 2026 (or 68k miles)
+-Warranty renewable yearly up to 10 years / 100,000 miles with Toyota servicing
+-HPI Clear
+-Pre-sale inspection completed
 
-        /* Modal styles – premium full-screen overlay */
+Specification 
+- X-Style Trim
+-15" Gloss Black Alloy Wheels
+-Rear Privacy Glass
+-Reversing Camera
+-x-Touch Multimedia System  (7"Touchscreen, DAB, Bluetooth)
+-Automatic Air Conditioning
+-Front Fog Lamps
 
-        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; overflow-y:auto; padding:2rem 1rem; }
+Condition
+-Excellent condition for age and mileage
+-Minor, age related marks
+-No dents or damage
+-Slight discolouration on rear bench (shown in photos)
 
-        .modal:target { display:block; }
+Why This Car Stands Out
+-Superior maintenance record
+-Backed by official Toyota warranty
+-Desirable X-Style model
+-Fully checked and ready to drive away
 
-        .modal-content { max-width:900px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; position:relative; }
+Delivery available.
+Message for viewing, test drive, or additional photos.
+            </div>
+            <div class="modal-specs">
+                <div><strong>Registration</strong><br>EK67 BVD</div>
+                <div><strong>Mileage</strong><br>57,500 miles</div>
+                <div><strong>MOT</strong><br>June 2026</div>
+                <div><strong>Price</strong><br>£5,750 ono</div>
+            </div>
+            <a href="/contact.html" class="cta">Enquire</a>
+        </div>
+    </div>
+</div>
 
-        .modal-close { position:absolute; top:15px; right:20px; font-size:3rem; color:#fff; text-decoration:none; z-index:10001; }
+<footer>
+    <p>© 2025 Project 55 Motors – Sole Trader | Cleobury Mortimer, Shropshire<br>
+       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
+</footer>
 
-        .modal-details { padding:2.5rem; text-align:center; }
-
-
-
-        /* Scrollable description box */
-
-        .full-description { max-width:700px; margin:2rem auto; text-align:left; line-height:1.7; color:#333; background:#f9f9f9; padding:2rem; border-radius:12px; max-height:300px; overflow-y: auto; }
-
-
-
-        /* Photo panel – Sway-like stack with horizontal scroll and snap */
-
-        .photo-gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap:1rem; padding:1rem; -webkit-overflow-scrolling: touch; }
-
-        .photo-gallery img { flex: 0 0 80%; scroll-snap-align: center; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:transform 0.3s; }
-
-        .photo-gallery img:hover { transform: scale(1.05); }
-
-
-
-        /* Specs grid */
-
-        .modal-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:2rem 0; font-size:1rem; }
-
-        .modal-specs div { background:#f8f8f8; padding:1rem; border-radius:12px; }
-
-        @media (max-width:640px) { .modal-specs { grid-template-columns:1fr 1fr; } }
-
-    </style>
-
-</head>
-
-<body>
-
-
-
-<nav>
-
-  <div class="nav-container">
-
-    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
-
-    <ul>
-
-      <li><a href="/">Home</a></li>
-
-      <li><a href="/inventory.html">Stock</a></li>
-
-      <li><a href="/about.html">About</a></li>
-
-      <li><a href="/contact.html">Contact</a></li>
-
-    </ul>
-
-  </div>
-
-</nav>
-
-
-
-<div class="container" style="text-align:center; padding-top:6rem;">
-
-    <h1 style="font-size:3.5rem; margin-bottom:1rem;">Current Stock</h1>
-
-    <p style="font-size:1.25rem; max-width:800px; margin:0 auto 4rem; color:#555;">
-
-        Carefully chosen vehicles, prepared to the highest standard.
-
-    </p>
-
-
-
-    <div class="car-grid">
-
-        <div class="car-card">
-
-            <img src="/cars/aygo1/aygo-main.jpg" alt="2017 Toyota AYGO">
-
-            <div class="car-details">
-
-                <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h
+</body>
+</html>
