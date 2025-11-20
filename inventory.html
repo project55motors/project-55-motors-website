@@ -3,26 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Current stock – Project 55 Motors. Hand-selected, low-mileage used cars in Cleobury Mortimer.">
     <title>Current Stock – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Modal styles – premium full-screen overlay */
         .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:10000; overflow-y:auto; padding:2rem 1rem; }
         .modal:target { display:block; }
         .modal-content { max-width:900px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; position:relative; }
         .modal-close { position:absolute; top:15px; right:20px; font-size:3rem; color:#fff; text-decoration:none; z-index:10001; }
         .modal-details { padding:2.5rem; text-align:center; }
-
-        /* Scrollable description box */
-        .full-description { max-width:700px; margin:2rem auto; text-align:left; line-height:1.7; color:#333; background:#f9f9f9; padding:2rem; border-radius:12px; max-height:300px; overflow-y: auto; }
-
-        /* Photo panel – Sway-like stack with horizontal scroll and snap */
+        .full-description { max-width:700px; margin:2rem auto; text-align:left; line-height:1.7; color:#333; background:#f9f9f9; padding:2rem; border-radius:12px; max-height:300px; overflow-y:auto; }
         .photo-gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap:1rem; padding:1rem; -webkit-overflow-scrolling: touch; }
         .photo-gallery img { flex: 0 0 80%; scroll-snap-align: center; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.2); transition:transform 0.3s; }
         .photo-gallery img:hover { transform: scale(1.05); }
-
-        /* Specs grid */
         .modal-specs { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:2rem 0; font-size:1rem; }
         .modal-specs div { background:#f8f8f8; padding:1rem; border-radius:12px; }
         @media (max-width:640px) { .modal-specs { grid-template-columns:1fr 1fr; } }
@@ -50,7 +42,7 @@
 
     <div class="car-grid">
         <div class="car-card">
-            <img src="/Currentstock/EK67BVD/aygo-main.jpeg" alt="2017 Toyota AYGO">
+            <img src="Currentstock/EK67BVD/aygo-main.jpeg" alt="2017 Toyota AYGO">
             <div class="car-details">
                 <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
                 <p>Finished in Electro Grey metallic. One elderly lady and one learner lady driver private owners from new with full Toyota main-dealer service history. This car also comes with a Toyota main-dealer warranty.</p>
@@ -63,36 +55,35 @@
                 <a href="#aygo-modal" class="cta">View Full Details</a>
             </div>
         </div>
-        <!-- Duplicate for more cars -->
     </div>
 </div>
 
-<!-- MODAL WITH 20 PHOTOS + SCROLLABLE DESCRIPTION -->
+<!-- MODAL – all 20 photos with your exact current filenames -->
 <div id="aygo-modal" class="modal">
     <a href="/inventory.html" class="modal-close">×</a>
     <div class="modal-content">
         <div class="photo-gallery">
-            <img src="/Currentstock/EK67BVD/aygo-main.jpeg" alt="Aygo main">
-            <img src="/Currentstock/EK67BVD/aygo-1.jpeg" alt="Aygo photo 1">
-            <img src="/Currentstock/EK67BVD/aygo-2.jpeg" alt="Aygo photo 2">
-            <img src="/Currentstock/EK67BVD/aygo-3.jpeg" alt="Aygo photo 3">
-            <img src="/Currentstock/EK67BVD/aygo-4.jpeg" alt="Aygo photo 4">
-            <img src="/Currentstock/EK67BVD/aygo-5.jpeg" alt="Aygo photo 5">
-            <img src="/Currentstock/EK67BVD/aygo-6.jpeg" alt="Aygo photo 6">
-            <img src="/Currentstock/EK67BVD/aygo-7.jpeg" alt="Aygo photo 7">
-            <img src="/Currentstock/EK67BVD/aygo-8.jpeg" alt="Aygo photo 8">
-            <img src="/Currentstock/EK67BVD/aygo-9.jpeg" alt="Aygo photo 9">
-            <img src="/Currentstock/EK67BVD/aygo-10.jpeg" alt="Aygo photo 10">
-            <img src="/Currentstock/EK67BVD/aygo-11.jpeg" alt="Aygo photo 11">
-            <img src="/Currentstock/EK67BVD/aygo-12.jpeg" alt="Aygo photo 12">
-            <img src="/Currentstock/EK67BVD/aygo-13.jpeg" alt="Aygo photo 13">
-            <img src="/Currentstock/EK67BVD/aygo-14.jpeg" alt="Aygo photo 14">
-            <img src="/Currentstock/EK67BVD/aygo-15.jpeg" alt="Aygo photo 15">
-            <img src="/Currentstock/EK67BVD/aygo-16.jpeg" alt="Aygo photo 16">
-            <img src="/Currentstock/EK67BVD/aygo-17.jpeg" alt="Aygo photo 17">
-            <img src="/Currentstock/EK67BVD/aygo-18.jpeg" alt="Aygo photo 18">
-            <img src="/Currentstock/EK67BVD/aygo-19.jpeg" alt="Aygo photo 19">
-            <img src="/Currentstock/EK67BVD/aygo-20.jpeg" alt="Aygo photo 20">
+            <img src="Currentstock/EK67BVD/aygo-main.jpeg" alt="Aygo main">
+            <img src="Currentstock/EK67BVD/aygo-1.jpeg" alt="Aygo photo 1">
+            <img src="Currentstock/EK67BVD/aygo-2.jpeg" alt="Aygo photo 2">
+            <img src="Currentstock/EK67BVD/aygo-3.jpeg" alt="Aygo photo 3">
+            <img src="Currentstock/EK67BVD/aygo-4.jpeg" alt="Aygo photo 4">
+            <img src="Currentstock/EK67BVD/aygo-5.jpeg" alt="Aygo photo 5">
+            <img src="Currentstock/EK67BVD/aygo-6.jpeg" alt="Aygo photo 6">
+            <img src="Currentstock/EK67BVD/aygo-7.jpeg" alt="Aygo photo 7">
+            <img src="Currentstock/EK67BVD/aygo-8.jpeg" alt="Aygo photo 8">
+            <img src="Currentstock/EK67BVD/aygo-9.jpeg" alt="Aygo photo 9">
+            <img src="Currentstock/EK67BVD/aygo-10.JPG" alt="Aygo photo 10">
+            <img src="Currentstock/EK67BVD/aygo-11.JPG" alt="Aygo photo 11">
+            <img src="Currentstock/EK67BVD/aygo-12.JPG" alt="Aygo photo 12">
+            <img src="Currentstock/EK67BVD/aygo-13.JPG" alt="Aygo photo 13">
+            <img src="Currentstock/EK67BVD/aygo-14.JPG" alt="Aygo photo 14">
+            <img src="Currentstock/EK67BVD/aygo-15.JPG" alt="Aygo photo 15">
+            <img src="Currentstock/EK67BVD/aygo-16.JPG" alt="Aygo photo 16">
+            <img src="Currentstock/EK67BVD/aygo-17.JPG" alt="Aygo photo 17">
+            <img src="Currentstock/EK67BVD/aygo-18.JPG" alt="Aygo photo 18">
+            <img src="Currentstock/EK67BVD/aygo-19.JPG" alt="Aygo photo 19">
+            <img src="Currentstock/EK67BVD/aygo-20.JPG" alt="Aygo photo 20">
         </div>
         <div class="modal-details">
             <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play – EK67 BVD</h2>
