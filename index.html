@@ -21,56 +21,20 @@
   </div>
 </nav>
 
-<header class="hero-header" style="padding:12rem 2rem 10rem;background:#fafafa;">
-    <h1 style="font-size:clamp(4rem,10vw,7rem);margin:0 0 1rem;">Project 55 Motors</h1>
-    <p style="font-size:2rem;color:#444;max-width:900px;margin:0 auto 2rem;">
-        Hand-selected vehicles. Meticulously prepared. Personally presented.
-    </p>
-    <p style="font-size:1.3rem;color:#666;max-width:800px;margin:0 auto;">
-        Every car receives a thorough mechanical inspection, professional valet and HPI clearance. 
+<header class="hero-header">
+    <h1>Project 55 Motors</h1>
+    <p>Hand-selected vehicles. Meticulously prepared. Personally presented.</p>
+    <p style="font-size:1.4rem;color:#555;max-width:800px;margin:2rem auto 0;">
+        Every car receives a thorough mechanical inspection, professional valet and HPI clearance.<br>
         We only offer vehicles we would happily own ourselves.
     </p>
 </header>
 
-<div class="container" style="background:#ffffff;padding-bottom:6rem;">
+<div class="container">
     <h2 style="font-size:2.8rem;margin-bottom:2rem;">Current Stock</h2>
 
-    <div class="car-grid">
-        <!-- Your real Aygo -->
-        <a href="/inventory.html" class="car-card">
-            <img src="Currentstock/EK67BVD/aygo-main.jpeg" alt="2017 Toyota Aygo EK67 BVD">
-            <div class="car-details">
-                <h2>2017 (67) Toyota AYGO 1.0 VVT-i x-play</h2>
-                <p>Two female owners from new · Full Toyota history · Warranty to June 2026</p>
-                <div class="specs">
-                    <div><strong>Reg</strong><br>EK67 BVD</div>
-                    <div><strong>Mileage</strong><br>57,500</div>
-                    <div><strong>MOT</strong><br>June 2026</div>
-                    <div><strong>Price</strong><br>£5,750</div>
-                </div>
-            </div>
-        </a>
-
-        <!-- Two "Coming soon" teasers – look intentional and premium -->
-        <div class="car-card" style="opacity:0.7;">
-            <div style="background:#f0f0f0;height:300px;display:flex;align-items:center;justify-content:center;border-radius:18px 18px 0 0;">
-                <p style="font-size:1.4rem;color:#999;">Coming Soon</p>
-            </div>
-            <div class="car-details">
-                <h2 style="color:#999;">Another exceptional vehicle</h2>
-                <p style="color:#999;">Hand-selected and prepared to the same exacting standards.</p>
-            </div>
-        </div>
-
-        <div class="car-card" style="opacity:0.7;">
-            <div style="background:#f0f0f0;height:300px;display:flex;align-items:center;justify-content:center;border-radius:18px 18px 0 0;">
-                <p style="font-size:1.4rem;color:#999;">Coming Soon</p>
-            </div>
-            <div class="car-details">
-                <h2 style="color:#999;">One more arriving shortly</h2>
-                <p style="color:#999;">Low mileage, full history – as always.</p>
-            </div>
-        </div>
+    <div class="car-grid" id="car-grid">
+        <!-- Cars appear here automatically from Tally/Airtable -->
     </div>
 
     <a href="/inventory.html" class="cta" style="display:inline-block;margin-top:3rem;font-size:1.4rem;padding:1rem 3rem;">
@@ -83,5 +47,6 @@
        <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
 </footer>
 
+<script src="cars.js"></script>
 </body>
 </html>
