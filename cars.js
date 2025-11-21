@@ -1,5 +1,6 @@
+// cars.js – auto-generates car cards from Tally form (calls secure Worker)
 async function loadCars() {
-    const response = await fetch('https://cars-api.nathan-ed2.'); // your Worker URL
+    const response = await fetch('https://cars-api.nathan-ed2.workers.dev/'); // your Worker URL here
     const data = await response.json();
     const cars = data.data.filter(car => car.fields.status !== "Sold").reverse(); // newest first, hide sold
 
