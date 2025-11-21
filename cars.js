@@ -1,9 +1,9 @@
-// cars.js – auto-loads cars from Airtable (unlimited photos, free forever, API key hidden in Worker)
+// cars.js – auto-loads cars from Airtable (unlimited photos, free forever, key hidden in Worker)
 async function loadCars() {
-    // Calls your secure Cloudflare Worker – no key in this file
+    // Calls your secure Cloudflare Worker – no key exposed on the site
     const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
     const data = await response.json();
-    const cars = data.records.filter(car => car.fields.Status !== "Sold"); // hide sold cars
+    const cars = data.records.filter(car => car.fields.Status !== "Sold");
 
     const grid = document.getElementById('car-grid');
     grid.innerHTML = '';
@@ -58,4 +58,18 @@ async function loadCars() {
                         <div><strong>MOT</strong><br>${mot}</div>
                         <div><strong>Price</strong><br>${price}</div>
                     </div>
-                    <a href="/contact.html"
+                    <a href="/contact.html" class="cta">Enquire</a>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    });
+}
+
+function scrollGallery(index, direction) {
+    const gallery = document.getElementById(`gallery${index}`);
+    const scrollAmount = gallery.clientWidth;
+    gallery.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', loadCars);
