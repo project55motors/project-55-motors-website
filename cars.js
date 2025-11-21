@@ -1,8 +1,13 @@
-// cars.js – auto-loads cars from Airtable (unlimited photos, free forever, key hidden in Worker)
+// cars.js – auto-loads cars from Airtable via your secure Worker (no key exposed)
 async function loadCars() {
-    // Calls your secure Cloudflare Worker – no key exposed on the site
+    // Calls your secure Worker – no key in this file
     const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
     const data = await response.json();
+    
+    // TEMPORARY DEBUGGING LINE: Check the Console tab on your iPad!
+    // This will show if the data is malformed (e.g., wrong field names) or missing.
+    console.log("Airtable Data Response:", data);
+    
     const cars = data.records.filter(car => car.fields.Status !== "Sold");
 
     const grid = document.getElementById('car-grid');
