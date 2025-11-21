@@ -1,17 +1,17 @@
-// cars.js – auto-generates car cards from Tally form (calls secure Worker)
+// cars.js – pulls cars from your secure Worker (no password visible!)
 async function loadCars() {
-    const response = await fetch('https://cars-api.nathan-ed2.workers.dev/'); // your Worker URL here
+    const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
     const data = await response.json();
-    const cars = data.data.filter(car => car.fields.status !== "Sold").reverse(); // newest first, hide sold
+    const cars = data.data.filter(car => car.fields.status !== "Sold").reverse();
 
     const grid = document.getElementById('car-grid');
-    grid.innerHTML = ''; // clear existing
+    grid.innerHTML = '';
 
     cars.forEach((car, index) => {
         const photos = car.fields.photos || [];
         const mainPhoto = photos[0] || 'placeholder.jpg';
-        const priceFormatted = `£${parseInt(car.fields.price).toLocaleString()} ono`; // formats price as £5,750 ono
-        const motFormatted = new Date(car.fields.mot_date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }); // formats MOT as "June 2026"
+        const priceFormatted = `£${parseInt(car.fields.price).toLocaleString()} ono`;
+        const motFormatted = new Date(car.fields.mot_date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
         const card = document.createElement('a');
         card.href = `#car${index}-modal`;
@@ -33,7 +33,7 @@ async function loadCars() {
         `;
         grid.appendChild(card);
 
-        // Create modal for this car
+        // Modal
         const modal = document.createElement('div');
         modal.id = `car${index}-modal`;
         modal.className = 'modal';
@@ -64,12 +64,10 @@ async function loadCars() {
     });
 }
 
-// Navigation arrows for modals
 function scrollGallery(index, direction) {
     const gallery = document.getElementById(`gallery${index}`);
     const scrollAmount = gallery.clientWidth;
     gallery.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
 }
 
-// Load cars on page load
 document.addEventListener('DOMContentLoaded', loadCars);
