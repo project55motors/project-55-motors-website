@@ -1,12 +1,3 @@
-That's an excellent observation and a critical detail for mobile/tablet usability\! You've noticed that the current CSS is causing the navigation links to stack or disappear on smaller screens, while your iPad (which is a larger tablet) handles it fine.
-
-Based on the CSS you provided, the issue is likely due to the limited width of the `nav ul` in portrait mode before the links are forced to wrap or the container gets too tight.
-
-Here is the complete, modified `styles.css` file text. I have incorporated all the previous recommendations (reduced nav height, better padding, link/footer styling) and, crucially, **modified the navigation layout logic** to ensure all four links are available and readable on modern tablets and large phones in both orientations.
-
-### Complete, Modified `styles.css`
-
-```css
 /* GLOBAL RESET AND BASE STYLES */
 * {
     box-sizing: border-box;
@@ -111,7 +102,7 @@ nav .logo img {
 .car-card {
     background: #fff;
     border-radius: 18px;
-    overflow: hidden; /* Changed from visible for clean overflow */
+    overflow: hidden; 
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     transition: all .3s;
     display: block;
@@ -164,7 +155,14 @@ nav .logo img {
     text-decoration: none;
 }
 
-/* CONTACT FORM STYLES */
+/* CONTACT FORM FIELD STYLING (MOVED FROM contact.html) */
+.form-field {
+    width: 100%; 
+    padding: 1rem; 
+    margin-bottom: 1rem; 
+    border: 1px solid #d2d2d7; 
+    border-radius: 12px;
+}
 form input:focus, form textarea:focus {
     border-color: var(--brand-primary) !important;
     outline: none;
@@ -187,6 +185,104 @@ footer a {
 }
 footer a:hover {
     color: #333;
+}
+
+/* --- MODAL STYLING (Required for cars.js modals) --- */
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85); /* Dark, transparent overlay */
+    z-index: 10000;
+    display: none; 
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+.modal:target {
+    opacity: 1;
+    pointer-events: auto;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 2rem;
+    padding: 2rem;
+    position: relative;
+}
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: #fff;
+    font-size: 2.5rem;
+    text-decoration: none;
+    line-height: 1;
+    z-index: 10001;
+}
+/* Photo Gallery Specific Styles */
+.photo-gallery-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 10; 
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f0f0f0;
+}
+.photo-gallery {
+    display: flex;
+    width: fit-content;
+    height: 100%;
+    overflow-x: scroll; 
+}
+.photo-gallery img {
+    width: 100%; 
+    height: 100%;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.photo-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    line-height: 1;
+    user-select: none;
+}
+.photo-nav.prev { left: 15px; }
+.photo-nav.next { right: 15px; }
+/* Modal Details and Description */
+.modal-details h2 { margin-top: 0; }
+.full-description {
+    margin-bottom: 2rem;
+    padding-right: 1rem;
+    max-height: 250px;
+    overflow-y: auto; /* Scrollable description */
+}
+.modal-specs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+}
+.modal-specs div {
+    padding: 1rem;
+    background: #f8f8f8;
+    border-radius: 8px;
+    text-align: center;
 }
 
 /* MEDIA QUERIES & RESPONSIVENESS */
@@ -234,5 +330,10 @@ footer a:hover {
     .hero-header {
         padding: 80px 1rem 120px; /* Reduce hero padding for more immediate content */
     }
+    .modal-content {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    .full-description { max-height: 150px; }
 }
-```
