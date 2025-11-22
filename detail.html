@@ -4,96 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Loading Car Details...</title>
-    <link rel="stylesheet" href="styles.css?v=20251122">
-    <style>
-        /* Note: Global image and overflow fixes are in styles.css */
-        
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 2.5rem;
-            margin-top: 2rem;
-        }
-        
-        /* Main Photo Container Styling */
-        #main-photo-container {
-            width: 100%; 
-            aspect-ratio: 16 / 10;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            background: #f9f9f9;
-        }
-        #main-photo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Ensures the whole image is seen without cropping */
-        }
-
-        /* Thumbnail Gallery Styling */
-        #thumbnail-gallery {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto; /* Allows horizontal scrolling for thumbnails only */
-            margin-top: 1rem;
-            padding-bottom: 15px; 
-            max-width: 100%; 
-        }
-        .thumbnail {
-            flex-shrink: 0;
-            width: 80px;
-            height: 50px;
-            cursor: pointer;
-            border-radius: 6px;
-            border: 2px solid transparent;
-            transition: border 0.2s, opacity 0.2s;
-            overflow: hidden;
-        }
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .thumbnail:hover, .thumbnail.active {
-            border-color: var(--brand-primary);
-            opacity: 1;
-        }
-        .thumbnail:not(.active) {
-            opacity: 0.7;
-        }
-
-        .detail-specs {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 120px;
-        }
-        .detail-specs h1 { margin-top: 0; font-size: 2.5rem; }
-        .detail-description { margin-top: 2rem; line-height: 1.8; white-space: pre-wrap; }
-
-        /* Mobile Layout */
-        @media (max-width: 900px) {
-            .detail-grid { grid-template-columns: 1fr; gap: 2rem; }
-            .detail-specs { position: static; }
-            
-            /* --- FINAL CRITICAL FIX FOR IMAGE OVERFLOW --- */
-            /* Force the photo section to respect the container width and hide any overflow */
-            .photo-section {
-                width: 100%; 
-                max-width: 100%;
-                overflow: hidden;
-            }
-            /* ------------------------------------------- */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <nav>
-  <div class="container nav-container">
-    <a href="/" class="logo"><img src="/logo.png" alt="Project 55 Motors"></a>
+  <div class="nav-container container">
+    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/inventory.html">Stock</a></li>
@@ -104,11 +21,11 @@
 </nav>
 
 <div class="container" id="detail-content">
-    <p style="text-align:center; padding: 5rem 0;">Searching for vehicle details...</p>
+    <p style="text-align:center; padding:5rem 0;">Searching for vehicle details...</p>
 </div>
 
 <footer>
-    <p>© 2025 Project 55 Motors – Sole Trader | Cleobury Mortimer, Shropshire<br>
+    <p>© 2025 Project 55 Motors | Cleobury Mortimer, Shropshire<br>
        <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
 </footer>
 

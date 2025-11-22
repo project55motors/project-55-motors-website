@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Project 55 Motors</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container" style="max-width:800px; margin:5rem auto; text-align:center;">
+    <h1>Admin Login</h1>
+    <p>Enter your credentials to access car stock and customer data.</p>
+    <form id="admin-login-form">
+        <input type="text" name="username" placeholder="Username" required class="form-field">
+        <input type="password" name="password" placeholder="Password" required class="form-field">
+        <button type="submit" class="cta" style="width:100%;">Login</button>
+    </form>
+    <p id="login-error" style="color:red; margin-top:1rem; display:none;">Invalid credentials</p>
+</div>
+
+<script>
+document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const username = form.username.value;
+    const password = form.password.value;
+
+    try {
+        const response = await fetch('https://your-worker-name.your-subdomain.workers.dev', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            // Redirect to a secured dashboard
+            window.location.href = '/admin-dashboard.html';
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    } catch (err) {
+        document.getElementById('login-error').textContent = 'Server error';
+        document.getElementById('login-error').style.display = 'block';
+    }
+});
+</script>
+
+</body>
+</html>

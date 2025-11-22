@@ -1,18 +1,17 @@
-// detail.js – Fetches and renders a single car detail page with a gallery
+// detail.js – Fetches a single car detail with Engine & Fuel specs
 async function loadCarDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const reg = urlParams.get('reg');
     const contentContainer = document.getElementById('detail-content');
 
     if (!reg) {
-        contentContainer.innerHTML = '<h1 style="text-align:center;">Error: Vehicle Registration Not Found.</h1><p style="text-align:center;">Please return to the <a href="/inventory.html">Stock Page</a>.</p>';
+        contentContainer.innerHTML = '<h1 style="text-align:center;">Error: Vehicle Registration Not Found.</h1><p style="text-align:center;">Return to the <a href="/inventory.html">Stock Page</a>.</p>';
         return;
     }
 
     try {
         const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
         const data = await response.json();
-        
         const car = data.records.find(car => car.fields.Registration === reg);
 
         if (!car) {
@@ -24,17 +23,17 @@ async function loadCarDetail() {
         const photos = f.Photos || [];
         const price = f.Price ? `£${Number(f.Price).toLocaleString()} ono` : 'POA';
         const mot = f.MOT_Date ? new Date(f.MOT_Date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) : 'N/A';
-        const model = f['Make & Model'] || 'Unknown Model';
+        const engine = f.Engine_size || 'N/A';
+        const fuel = f.Fuel_type || 'N/A';
+        const model = f.Make_Model || 'Unknown Model';
 
         document.getElementById('page-title').textContent = `${model} | Reg: ${f.Registration} - Project 55 Motors`;
 
-        // Determine if we have photos to render
         const photoSectionHTML = photos.length > 0 ? `
             <div class="photo-section">
                 <div id="main-photo-container">
                     <img id="main-car-photo" src="${photos[0].url}" alt="${model} main photo">
                 </div>
-
                 <div id="thumbnail-gallery">
                     ${photos.map((p, index) => `
                         <div class="thumbnail ${index === 0 ? 'active' : ''}" data-url="${p.url}">
@@ -42,44 +41,34 @@ async function loadCarDetail() {
                         </div>
                     `).join('')}
                 </div>
-            </div>
-        ` : `<div class="photo-section"><p style="text-align:center; padding: 2rem;">No photos available for this vehicle.</p></div>`;
+            </div>` : `<div class="photo-section"><p style="text-align:center; padding:2rem;">No photos available.</p></div>`;
 
-
-        // Render the content
         contentContainer.innerHTML = `
             <div class="detail-grid">
                 ${photoSectionHTML}
-
                 <div class="detail-specs">
                     <h1>${model}</h1>
                     <p style="font-size:1.4rem; font-weight:700; color:var(--brand-primary);">${price}</p>
-                    
                     <div class="specs">
                         <div><strong>Registration</strong><br>${f.Registration || 'N/A'}</div>
                         <div><strong>Mileage</strong><br>${f.Mileage?.toLocaleString() || 'N/A'}</div>
                         <div><strong>MOT Expiry</strong><br>${mot}</div>
+                        <div><strong>Engine</strong><br>${engine}</div>
+                        <div><strong>Fuel</strong><br>${fuel}</div>
                     </div>
-                    
                     <a href="/checkout.html?reg=${f.Registration}" class="cta" style="width:100%; text-align:center;">Reserve Car or Enquire</a>
-                    
-                    <h3 style="margin-top: 2rem;">Full Description</h3>
+                    <h3 style="margin-top:2rem;">Full Description</h3>
                     <div class="detail-description">${f.Full_Description || 'No detailed description provided.'}</div>
                 </div>
             </div>
         `;
 
-        // 2. Attach the click handler ONLY if photos were rendered
+        // Thumbnail click for gallery
         if (photos.length > 0) {
             document.querySelectorAll('.thumbnail').forEach(thumbnail => {
                 thumbnail.addEventListener('click', function() {
                     const newPhotoUrl = this.getAttribute('data-url');
-                    const mainPhoto = document.getElementById('main-car-photo');
-                    
-                    // Update main photo source
-                    mainPhoto.src = newPhotoUrl;
-                    
-                    // Update active class for visual feedback
+                    document.getElementById('main-car-photo').src = newPhotoUrl;
                     document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                 });
