@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Loading Car Details...</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20251122">
     <style>
-        /* Note: Global image and overflow fixes are now in styles.css */
+        /* Note: Global image and overflow fixes are in styles.css */
         
         .detail-grid {
             display: grid;
@@ -77,6 +77,15 @@
         @media (max-width: 900px) {
             .detail-grid { grid-template-columns: 1fr; gap: 2rem; }
             .detail-specs { position: static; }
+            
+            /* --- FINAL CRITICAL FIX FOR IMAGE OVERFLOW --- */
+            /* Force the photo section to respect the container width and hide any overflow */
+            .photo-section {
+                width: 100%; 
+                max-width: 100%;
+                overflow: hidden;
+            }
+            /* ------------------------------------------- */
         }
     </style>
 </head>

@@ -89,7 +89,6 @@ nav ul li a {
 nav .logo img { 
     max-width: 180px; /* REDUCED LOGO SIZE */
     height: auto; 
-    /* The max-width:180px rule is sufficiently specific to override the global img rule without adding !important here */
 }
 
 /* HEADER/HERO SECTION */
@@ -116,7 +115,6 @@ nav .logo img {
 }
 
 /* CAR GRID AND CAR CARD STYLING */
-/* Updated from .car-grid to #car-grid to match detail.html and cars.js structure */
 #car-grid, .car-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -257,15 +255,9 @@ footer a:hover {
     }
 }
 
-/* We must add a rule here to override the older .modal-details padding-top fix 
-   from the original styles, as the detail page now uses a grid layout. 
-   This ensures the spec details are not pushed too far down on the new detail page. */
+/* Fix for detail page elements on small screens */
 @media (max-width: 640px) {
-    /* Target the details section on the new detail.html page */
     .detail-specs {
         padding-top: 2rem !important; /* Reset to normal padding */
     }
 }
-
-/* We are intentionally removing the entire old MODAL STYLING section 
-   and its associated media queries as the website no longer uses modals. */
