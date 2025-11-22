@@ -6,19 +6,8 @@
     <title id="page-title">Loading Car Details...</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* --- CRITICAL FIXES FOR MOBILE/IMAGE SIZING --- */
-        /* Forces ALL images inside the content area to fit their container */
-        #detail-content img {
-            max-width: 100%;
-            height: auto; 
-            display: block;
-        }
-        /* Prevents the main container from stretching beyond the screen width */
-        .container {
-            overflow-x: hidden;
-        }
-        /* ----------------------------------------------- */
-
+        /* Note: Global image and overflow fixes are now in styles.css */
+        
         .detail-grid {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -48,6 +37,7 @@
             overflow-x: auto; /* Allows horizontal scrolling for thumbnails only */
             margin-top: 1rem;
             padding-bottom: 15px; 
+            max-width: 100%; 
         }
         .thumbnail {
             flex-shrink: 0;

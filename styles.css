@@ -1,3 +1,8 @@
+/*
+ * Project 55 Motors - Base Stylesheet
+ * This file contains global reset, structure, and theme definitions.
+ */
+
 /* GLOBAL RESET AND BASE STYLES */
 * {
     box-sizing: border-box;
@@ -18,6 +23,22 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
+}
+
+/* --- CRITICAL GLOBAL RESPONSIVE FIXES --- */
+
+/* 1. Global constraint: Prevents horizontal overflow on the entire page, fixing the scrolling issue. */
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+}
+
+/* 2. Global image scaling: Ensures all images always fit within their containers (like the main photo). 
+   Using !important here to override any conflicting browser or local styles. */
+img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block; 
 }
 
 /* GLOBAL LINK STYLING (FOR PROFESSIONALISM) */
@@ -68,6 +89,7 @@ nav ul li a {
 nav .logo img { 
     max-width: 180px; /* REDUCED LOGO SIZE */
     height: auto; 
+    /* The max-width:180px rule is sufficiently specific to override the global img rule without adding !important here */
 }
 
 /* HEADER/HERO SECTION */
@@ -94,7 +116,8 @@ nav .logo img {
 }
 
 /* CAR GRID AND CAR CARD STYLING */
-.car-grid {
+/* Updated from .car-grid to #car-grid to match detail.html and cars.js structure */
+#car-grid, .car-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
@@ -187,104 +210,6 @@ footer a:hover {
     color: #333;
 }
 
-/* --- MODAL STYLING (Required for cars.js modals) --- */
-.modal {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.85); /* Dark, transparent overlay */
-    z-index: 10000;
-    display: none; 
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease-in-out;
-}
-.modal:target {
-    opacity: 1;
-    pointer-events: auto;
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-}
-.modal-content {
-    background: #fff;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 1400px;
-    max-height: 90vh;
-    overflow-y: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 2rem;
-    padding: 2rem;
-    position: relative;
-}
-.modal-close {
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    color: #fff;
-    font-size: 2.5rem;
-    text-decoration: none;
-    line-height: 1;
-    z-index: 10001;
-}
-/* Photo Gallery Specific Styles */
-.photo-gallery-wrapper {
-    position: relative;
-    aspect-ratio: 16 / 10; 
-    overflow: hidden;
-    border-radius: 8px;
-    background: #f0f0f0;
-}
-.photo-gallery {
-    display: flex;
-    width: fit-content;
-    height: 100%;
-    overflow-x: scroll; 
-}
-.photo-gallery img {
-    width: 100%; 
-    height: 100%;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-.photo-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 5;
-    background: rgba(0, 0, 0, 0.4);
-    color: #fff;
-    padding: 10px 15px;
-    font-size: 2rem;
-    cursor: pointer;
-    border-radius: 50%;
-    line-height: 1;
-    user-select: none;
-}
-.photo-nav.prev { left: 15px; }
-.photo-nav.next { right: 15px; }
-/* Modal Details and Description */
-.modal-details h2 { margin-top: 0; }
-.full-description {
-    margin-bottom: 2rem;
-    padding-right: 1rem;
-    max-height: 250px;
-    overflow-y: auto; /* Scrollable description */
-}
-.modal-specs {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin: 2rem 0;
-}
-.modal-specs div {
-    padding: 1rem;
-    background: #f8f8f8;
-    border-radius: 8px;
-    text-align: center;
-}
-
 /* MEDIA QUERIES & RESPONSIVENESS */
 
 /* Tablet & Smaller Desktop (Fixes the iPad Landscape/Portrait Issue) */
@@ -330,14 +255,17 @@ footer a:hover {
     .hero-header {
         padding: 80px 1rem 120px; /* Reduce hero padding for more immediate content */
     }
-    .modal-content {
-        grid-template-columns: 1fr;
-        padding: 1rem;
-        gap: 1rem;
-    }
-    /* FIX FOR IPHONE TITLE OVERLAP: Add padding to push the details below the photo */
-    .modal-details {
-        padding-top: 1rem; 
-    }
-    .full-description { max-height: 150px; }
 }
+
+/* We must add a rule here to override the older .modal-details padding-top fix 
+   from the original styles, as the detail page now uses a grid layout. 
+   This ensures the spec details are not pushed too far down on the new detail page. */
+@media (max-width: 640px) {
+    /* Target the details section on the new detail.html page */
+    .detail-specs {
+        padding-top: 2rem !important; /* Reset to normal padding */
+    }
+}
+
+/* We are intentionally removing the entire old MODAL STYLING section 
+   and its associated media queries as the website no longer uses modals. */

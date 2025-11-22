@@ -28,23 +28,28 @@ async function loadCarDetail() {
 
         document.getElementById('page-title').textContent = `${model} | Reg: ${f.Registration} - Project 55 Motors`;
 
-        // 1. Generate the HTML structure with the first image as the main photo
+        // Determine if we have photos to render
+        const photoSectionHTML = photos.length > 0 ? `
+            <div class="photo-section">
+                <div id="main-photo-container">
+                    <img id="main-car-photo" src="${photos[0].url}" alt="${model} main photo">
+                </div>
+
+                <div id="thumbnail-gallery">
+                    ${photos.map((p, index) => `
+                        <div class="thumbnail ${index === 0 ? 'active' : ''}" data-url="${p.url}">
+                            <img src="${p.url}" alt="${model} thumbnail ${index + 1}" loading="lazy">
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        ` : `<div class="photo-section"><p style="text-align:center; padding: 2rem;">No photos available for this vehicle.</p></div>`;
+
+
+        // Render the content
         contentContainer.innerHTML = `
             <div class="detail-grid">
-                
-                <div class="photo-section">
-                    <div id="main-photo-container">
-                        <img id="main-car-photo" src="${photos[0]?.url || 'placeholder.jpg'}" alt="${model} main photo">
-                    </div>
-
-                    <div id="thumbnail-gallery">
-                        ${photos.map((p, index) => `
-                            <div class="thumbnail ${index === 0 ? 'active' : ''}" data-url="${p.url}">
-                                <img src="${p.url}" alt="${model} thumbnail ${index + 1}" loading="lazy">
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
+                ${photoSectionHTML}
 
                 <div class="detail-specs">
                     <h1>${model}</h1>
@@ -64,20 +69,22 @@ async function loadCarDetail() {
             </div>
         `;
 
-        // 2. Attach the click handler to the thumbnails
-        document.querySelectorAll('.thumbnail').forEach(thumbnail => {
-            thumbnail.addEventListener('click', function() {
-                const newPhotoUrl = this.getAttribute('data-url');
-                const mainPhoto = document.getElementById('main-car-photo');
-                
-                // Update main photo source
-                mainPhoto.src = newPhotoUrl;
-                
-                // Update active class for visual feedback
-                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
+        // 2. Attach the click handler ONLY if photos were rendered
+        if (photos.length > 0) {
+            document.querySelectorAll('.thumbnail').forEach(thumbnail => {
+                thumbnail.addEventListener('click', function() {
+                    const newPhotoUrl = this.getAttribute('data-url');
+                    const mainPhoto = document.getElementById('main-car-photo');
+                    
+                    // Update main photo source
+                    mainPhoto.src = newPhotoUrl;
+                    
+                    // Update active class for visual feedback
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
-        });
+        }
 
     } catch (error) {
         console.error("Failed to load car details:", error);

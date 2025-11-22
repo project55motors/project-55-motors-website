@@ -4,13 +4,15 @@ async function loadCars() {
     const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
     const data = await response.json();
     
-    // REMOVE THIS LINE when debugging is complete:
-    console.log("Airtable Data Response:", data);
-    
     const cars = data.records.filter(car => car.fields.Status !== "Sold");
 
     const grid = document.getElementById('car-grid');
     grid.innerHTML = '';
+    
+    if (cars.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; padding: 5rem 0;">We currently have no vehicles in stock.</p>';
+        return;
+    }
 
     cars.forEach((car) => {
         const f = car.fields;
@@ -44,5 +46,5 @@ async function loadCars() {
         grid.appendChild(card);
     });
 }
-// Remove the scrollGallery function and any modal-related code from cars.js
+// Remove all modal-related code from this file
 document.addEventListener('DOMContentLoaded', loadCars);
