@@ -6,6 +6,19 @@
     <title id="page-title">Loading Car Details...</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* --- CRITICAL FIXES FOR MOBILE/IMAGE SIZING --- */
+        /* Forces ALL images inside the content area to fit their container */
+        #detail-content img {
+            max-width: 100%;
+            height: auto; 
+            display: block;
+        }
+        /* Prevents the main container from stretching beyond the screen width */
+        .container {
+            overflow-x: hidden;
+        }
+        /* ----------------------------------------------- */
+
         .detail-grid {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -15,8 +28,8 @@
         
         /* Main Photo Container Styling */
         #main-photo-container {
-            width: 100%;
-            aspect-ratio: 16 / 10; /* Maintain a good wide aspect ratio */
+            width: 100%; 
+            aspect-ratio: 16 / 10;
             overflow: hidden;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -30,11 +43,11 @@
 
         /* Thumbnail Gallery Styling */
         #thumbnail-gallery {
-            display: flex; /* Display horizontally */
+            display: flex;
             gap: 10px;
-            overflow-x: auto; /* Allow horizontal scrolling if many images */
+            overflow-x: auto; /* Allows horizontal scrolling for thumbnails only */
             margin-top: 1rem;
-            padding-bottom: 15px; /* Space for scrollbar */
+            padding-bottom: 15px; 
         }
         .thumbnail {
             flex-shrink: 0;
