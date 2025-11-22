@@ -16,8 +16,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     color: #333;
     line-height: 1.6;
-    /* GLOBAL PADDING FIX: Increased from 100px to 120px to prevent overlap on about/contact pages */
-    padding-top: 120px; 
+    /* FIX: Increased padding again to 130px to clear the navigation bar on all pages */
+    padding-top: 130px; 
 }
 .container {
     max-width: 1200px;
@@ -40,6 +40,12 @@ img {
     display: block; 
 }
 
+/* FINAL IMAGE OVERRIDE FOR DETAIL PAGE: This targets the specific detail page content */
+#detail-content img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
 /* GLOBAL LINK STYLING (FOR PROFESSIONALISM) */
 a {
     color: var(--brand-primary); 
@@ -51,20 +57,21 @@ a:hover, a:focus {
     text-decoration: underline;
 }
 
-/* NAVIGATION STYLING - REDUCED HEIGHT */
+/* NAVIGATION STYLING */
 nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: 100px; /* REDUCED HEIGHT */
+    /* FIX: Set a maximum height to prevent clipping */
+    height: 110px; 
     background: rgba(255,255,255,0.97);
     backdrop-filter: saturate(180%) blur(20px);
     z-index: 9999;
-    /* FIX: Keep the border, but align content to the bottom of the nav bar */
     border-bottom: 1px solid #e5e5e5;
     display: flex;
-    /* FIX: Vertically align content to the bottom to push the line below the logo/links */
-    align-items: flex-end; 
-    padding-bottom: 10px; /* Add a little space below the content but before the border */
+    /* Align content to the center */
+    align-items: center; 
+    /* FIX: Remove bottom padding, rely on height */
+    padding-bottom: 0; 
 }
 .nav-container {
     max-width: 1200px;
@@ -211,16 +218,15 @@ footer a:hover {
 
 /* MEDIA QUERIES & RESPONSIVENESS */
 
-/* Tablet & Smaller Desktop (Fixes the iPad Landscape/Portrait Issue) */
+/* Tablet & Smaller Desktop */
 @media (max-width: 1024px) {
-    /* Adjust body padding to match shorter nav */
+    /* FIX: Increased padding on body to clear the slightly taller nav */
     body { 
-        padding-top: 120px; 
+        padding-top: 140px; 
     }
     nav { 
-        height: 120px; /* Slightly taller for tablet/mobile */
-        align-items: flex-end; /* FIX: Align content to the bottom */
-        padding-top: 10px;
+        height: 120px; 
+        align-items: center; /* Center items again */
     }
     .nav-container {
         flex-direction: row;
@@ -241,7 +247,7 @@ footer a:hover {
 /* Mobile Devices (iPhone Portrait, etc.) */
 @media (max-width: 640px) {
     body {
-        padding-top: 140px; /* Adjust padding for very small screens */
+        padding-top: 150px; /* Final adjustment for very small screens */
     }
     nav {
         height: 140px;
