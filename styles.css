@@ -335,5 +335,9 @@ footer a:hover {
         padding: 1rem;
         gap: 1rem;
     }
+    /* FIX FOR IPHONE TITLE OVERLAP: Add padding to push the details below the photo */
+    .modal-details {
+        padding-top: 1rem; 
+    }
     .full-description { max-height: 150px; }
 }
