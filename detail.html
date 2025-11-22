@@ -12,46 +12,68 @@
             gap: 2.5rem;
             margin-top: 2rem;
         }
-        .detail-gallery {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-        .detail-gallery img {
+        
+        /* Main Photo Container Styling */
+        #main-photo-container {
             width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            object-fit: contain;
+            aspect-ratio: 16 / 10; /* Maintain a good wide aspect ratio */
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             background: #f9f9f9;
         }
+        #main-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ensures the whole image is seen without cropping */
+        }
+
+        /* Thumbnail Gallery Styling */
+        #thumbnail-gallery {
+            display: flex; /* Display horizontally */
+            gap: 10px;
+            overflow-x: auto; /* Allow horizontal scrolling if many images */
+            margin-top: 1rem;
+            padding-bottom: 15px; /* Space for scrollbar */
+        }
+        .thumbnail {
+            flex-shrink: 0;
+            width: 80px;
+            height: 50px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            transition: border 0.2s, opacity 0.2s;
+            overflow: hidden;
+        }
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--brand-primary);
+            opacity: 1;
+        }
+        .thumbnail:not(.active) {
+            opacity: 0.7;
+        }
+
         .detail-specs {
             background: #fff;
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             position: sticky;
-            top: 120px; /* Aligns with nav height */
+            top: 120px;
         }
-        .detail-specs h1 {
-            margin-top: 0;
-            font-size: 2.5rem;
-        }
-        .detail-description {
-            margin-top: 2rem;
-            line-height: 1.8;
-            white-space: pre-wrap; /* Preserves line breaks from Airtable */
-        }
+        .detail-specs h1 { margin-top: 0; font-size: 2.5rem; }
+        .detail-description { margin-top: 2rem; line-height: 1.8; white-space: pre-wrap; }
 
         /* Mobile Layout */
         @media (max-width: 900px) {
-            .detail-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            .detail-specs {
-                position: static;
-            }
+            .detail-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .detail-specs { position: static; }
         }
     </style>
 </head>
