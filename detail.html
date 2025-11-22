@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading Car Details...</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+        .detail-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .detail-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            object-fit: contain;
+            background: #f9f9f9;
+        }
+        .detail-specs {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 120px; /* Aligns with nav height */
+        }
+        .detail-specs h1 {
+            margin-top: 0;
+            font-size: 2.5rem;
+        }
+        .detail-description {
+            margin-top: 2rem;
+            line-height: 1.8;
+            white-space: pre-wrap; /* Preserves line breaks from Airtable */
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 900px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .detail-specs {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-container">
+    <a href="/" class="logo"><img src="/logo.png" alt="Project 55 Motors"></a>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/inventory.html">Stock</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container" id="detail-content">
+    <p style="text-align:center; padding: 5rem 0;">Searching for vehicle details...</p>
+</div>
+
+<footer>
+    <p>© 2025 Project 55 Motors – Sole Trader | Cleobury Mortimer, Shropshire<br>
+       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
+</footer>
+
+<script src="detail.js"></script>
+</body>
+</html>
