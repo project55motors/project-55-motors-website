@@ -1,4 +1,4 @@
-// cars.js – UPDATED FOR DETAIL PAGES
+// cars.js – UPDATED FOR DETAIL PAGES AND CORRECTED AIRTABLE KEY
 async function loadCars() {
     // Calls your secure Worker – no key in this file
     const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
@@ -23,16 +23,15 @@ async function loadCars() {
         
         const card = document.createElement('a');
         
-        // --- NEW LINK: Points to detail.html and passes Registration as a parameter ---
+        // Link to detail.html
         card.href = '/detail.html?reg=' + encodeURIComponent(f.Registration);
-        // -----------------------------------------------------------------------------
         
         card.className = 'car-card';
         card.style = 'display:block;text-decoration:none;color:inherit;';
         card.innerHTML = `
             <img src="${mainPhoto}" alt="${f.Registration || 'Car'}" loading="lazy">
             <div class="car-details">
-                <h2>${f['Make & Model'] || 'Unknown Model'}</h2>
+                <h2>${f.Make_Model || 'Unknown Model'}</h2>
                 <p>${f.Short_Description || ''}</p>
                 <div class="specs">
                     <div><strong>Reg</strong><br>${f.Registration || 'N/A'}</div>
@@ -46,5 +45,4 @@ async function loadCars() {
         grid.appendChild(card);
     });
 }
-// Remove all modal-related code from this file
 document.addEventListener('DOMContentLoaded', loadCars);
