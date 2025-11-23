@@ -3,25 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading Car Details...</title>
+    <meta name="description" content="Project 55 Motors – Detailed view of selected vehicle.">
+    <title>Car Details – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <nav>
-  <div class="nav-container">
-    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/inventory.html">Stock</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-    </ul>
-  </div>
+    <div class="nav-container">
+        <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/inventory.html">Stock</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+        </ul>
+    </div>
 </nav>
 
-<div class="container" id="detail-content">
-    <p style="text-align:center; padding:5rem 0;">Searching for vehicle details...</p>
+<div class="container">
+    <div class="detail-grid">
+
+        <!-- Main Photo -->
+        <div id="main-photo-container">
+            <img id="main-photo" src="placeholder.jpg" alt="Car Image" style="border-radius:12px;">
+            <div id="thumbnails" style="display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap;"></div>
+        </div>
+
+        <!-- Details / Specs -->
+        <div class="detail-specs">
+            <h1 id="car-title">Loading...</h1>
+            <p class="detail-description" id="car-description"></p>
+            <div class="specs" id="specs"></div>
+            <a href="/contact.html" class="cta" style="margin-top:2rem;">Enquire</a>
+        </div>
+
+    </div>
 </div>
 
 <footer>
@@ -30,5 +47,7 @@
 </footer>
 
 <script src="detail.js"></script>
+<script src="/admin-shortcut.js"></script>
+
 </body>
 </html>

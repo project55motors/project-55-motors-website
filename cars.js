@@ -1,43 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Project 55 Motors – hand-selected, meticulously prepared used cars in Cleobury Mortimer.">
-    <title>Project 55 Motors – Current Stock</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<nav>
-  <div class="nav-container">
-    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/inventory.html">Stock</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-    </ul>
-  </div>
-</nav>
-
-<header class="hero-header">
-    <h1>Current Stock</h1>
-    <p>Hand-selected vehicles, meticulously prepared and personally presented.</p>
-</header>
-
-<div class="container">
-    <div class="car-grid" id="car-grid">
-        <!-- Cars will be populated automatically from Airtable -->
-    </div>
-</div>
-
-<footer>
-    <p>© 2025 Project 55 Motors | Cleobury Mortimer, Shropshire<br>
-       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
-</footer>
-
-<script>
 const CAR_GRID = document.getElementById("car-grid");
 const WORKER_URL = "https://cars-api.nathan-ed2.workers.dev"; // Cloudflare worker URL
 
@@ -57,7 +17,7 @@ async function fetchCars() {
             const fields = record.fields;
 
             const carCard = document.createElement("a");
-            carCard.href = `/detail.html?id=${record.id}`;
+            carCard.href = `/inventory.html?id=${record.id}`;
             carCard.className = "car-card";
 
             const imgSrc = (fields.Photos && fields.Photos[0] && fields.Photos[0].url) || "placeholder.jpg";
@@ -78,7 +38,7 @@ async function fetchCars() {
 
             CAR_GRID.appendChild(carCard);
 
-            // Full-screen on click
+            // Click image → full-screen
             carCard.querySelector("img").addEventListener("click", e => {
                 e.preventDefault();
                 showFullScreenImage(imgSrc);
@@ -91,7 +51,7 @@ async function fetchCars() {
     }
 }
 
-// Full-screen image function
+// Full-screen overlay for car images
 function showFullScreenImage(src) {
     const overlay = document.createElement("div");
     overlay.style.position = "fixed";
@@ -120,7 +80,3 @@ function showFullScreenImage(src) {
 
 // Initialize
 fetchCars();
-</script>
-
-</body>
-</html>
