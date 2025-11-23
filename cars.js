@@ -1,14 +1,14 @@
-// cars.js – auto-loads cars from Airtable via secure Worker
+// cars.js – Fetches cars from Worker and renders grid
 async function loadCars() {
     const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
     const data = await response.json();
-
     const cars = data.records.filter(car => car.fields.Status !== "Sold");
+
     const grid = document.getElementById('car-grid');
     grid.innerHTML = '';
 
     if (cars.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; padding: 5rem 0;">We currently have no vehicles in stock.</p>';
+        grid.innerHTML = '<p style="text-align:center; padding:5rem 0;">We currently have no vehicles in stock.</p>';
         return;
     }
 
@@ -17,14 +17,13 @@ async function loadCars() {
         const photos = f.Photos || [];
         const mainPhoto = photos[0]?.url || 'placeholder.jpg';
         const price = f.Price ? `£${Number(f.Price).toLocaleString()} ono` : 'POA';
-        const mot = f.MOT_Date ? new Date(f.MOT_Date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) : 'N/A';
+        const mot = f.MOT_Date ? new Date(f.MOT_Date).toLocaleDateString('en-GB', { month:'long', year:'numeric' }) : 'N/A';
 
         const card = document.createElement('a');
         card.href = '/detail.html?reg=' + encodeURIComponent(f.Registration);
         card.className = 'car-card';
-        card.style = 'display:block;text-decoration:none;color:inherit;';
         card.innerHTML = `
-            <img src="${mainPhoto}" alt="${f.Registration || 'Car'}" loading="lazy">
+            <img src="${mainPhoto}" alt="${f.Registration || 'Car'}">
             <div class="car-details">
                 <h2>${f.Make_Model || 'Unknown Model'}</h2>
                 <p>${f.Short_Description || ''}</p>
@@ -40,5 +39,4 @@ async function loadCars() {
         grid.appendChild(card);
     });
 }
-
 document.addEventListener('DOMContentLoaded', loadCars);

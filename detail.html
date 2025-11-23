@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">Loading Car Details...</title>
-<link rel="stylesheet" href="styles.css?v=20251122">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading Car Details...</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <nav>
-  <div class="container nav-container">
-    <a href="/" class="logo"><img src="/logo.png" alt="Project 55 Motors"></a>
+  <div class="nav-container">
+    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/inventory.html">Stock</a></li>
@@ -21,13 +21,7 @@
 </nav>
 
 <div class="container" id="detail-content">
-    <p style="text-align:center; padding: 5rem 0;">Searching for vehicle details...</p>
-</div>
-
-<!-- Fullscreen Overlay for Images -->
-<div id="fullscreen-overlay">
-    <span id="fullscreen-close">&times;</span>
-    <img id="fullscreen-img" src="" alt="Full screen car image">
+    <p style="text-align:center; padding:5rem 0;">Searching for vehicle details...</p>
 </div>
 
 <footer>
@@ -36,31 +30,5 @@
 </footer>
 
 <script src="detail.js"></script>
-<script>
-    // Fullscreen image functionality
-    const overlay = document.getElementById('fullscreen-overlay');
-    const fullscreenImg = document.getElementById('fullscreen-img');
-    const closeBtn = document.getElementById('fullscreen-close');
-
-    document.addEventListener('click', (e) => {
-        if(e.target.tagName === 'IMG' && e.target.closest('#main-photo-container, #thumbnail-gallery')) {
-            fullscreenImg.src = e.target.src;
-            overlay.style.display = 'flex';
-        }
-    });
-
-    closeBtn.addEventListener('click', () => {
-        overlay.style.display = 'none';
-        fullscreenImg.src = '';
-    });
-
-    overlay.addEventListener('click', (e) => {
-        if(e.target === overlay) {
-            overlay.style.display = 'none';
-            fullscreenImg.src = '';
-        }
-    });
-</script>
-
 </body>
 </html>
