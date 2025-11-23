@@ -1,4 +1,4 @@
-// cars.js – Fetches and renders all cars
+// cars.js – auto-loads cars from Airtable via secure Worker
 async function loadCars() {
     const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
     const data = await response.json();
