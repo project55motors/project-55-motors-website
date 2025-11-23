@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – Project 55 Motors</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-list-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .admin-list-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        .admin-details {
+            flex-grow: 1;
+        }
+        .admin-actions {
+            margin-left: 2rem;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" style="max-width:1000px; margin:5rem auto;">
+    <h1 style="text-align:center;">Admin Dashboard</h1>
+    <p style="text-align:center; margin-bottom:2rem;">Current Inventory Management</p>
+
+    <div id="car-list">
+        <p style="text-align:center; padding:5rem 0;">Loading cars...</p>
+    </div>
+</div>
+
+<script>
+async function loadAdminCars() {
+    const list = document.getElementById('car-list');
+    try {
+        // NOTE: This call retrieves ALL cars including "Sold" cars, for admin view
+        const response = await fetch('https://cars-api.nathan-ed2.workers.dev/all'); 
+        const data = await response.json();
+        const cars = data.records;
+
+        if (cars.length === 0) {
+            list.innerHTML = '<p style="text-align:center; padding:5rem 0;">No cars in Airtable.</p>';
+            return;
+        }
+
+        list.innerHTML = '';
+        cars.forEach((car) => {
+            const f = car.fields;
+            const photos = f.Photos || [];
+            const mainPhoto = photos[0]?.url || 'placeholder.jpg';
+            const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : 'POA';
+
+            const item = document.createElement('div');
+            item.className = 'admin-list-item';
+            
+            item.innerHTML = `
+                <img src="${mainPhoto}" alt="${f.Registration}">
+                <div class="admin-details">
+                    <h2 style="font-size:1.2rem; margin:0 0 0.2rem;">${f.Make_Model} – ${f.Registration}</h2>
+                    <p style="font-size:0.9rem; margin:0; color:#555;">
+                        Price: ${price} | Mileage: ${f.Mileage?.toLocaleString() || 'N/A'} | Status: <strong>${f.Status || 'Active'}</strong>
+                    </p>
+                </div>
+                <div class="admin-actions">
+                    <a href="YOUR_AIRTABLE_EDIT_LINK_HERE" class="cta" style="padding:0.5rem 1rem; font-size:0.8rem; background:#007aff;">Edit in Airtable</a>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+    } catch (err) {
+        list.innerHTML = '<p style="text-align:center; color:red;">Access denied or failed to load data.</p>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadAdminCars);
+</script>
+
+</body>
+</html>
