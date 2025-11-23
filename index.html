@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Project 55 Motors – hand-selected, meticulously prepared used cars in Cleobury Mortimer.">
-    <title>Project 55 Motors – Quality Used Cars</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project 55 Motors – Quality Used Cars in the UK</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Project 55 Motors – Quality, hand-picked used cars. Honest service, transparent pricing, and fully prepared vehicles." />
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Project 55 Motors – Quality Used Cars" />
+    <meta property="og:description" content="Browse our latest stock. Fully inspected, high-quality used vehicles." />
+    <meta property="og:image" content="https://yourwebsite.com/images/og-image.jpg" />
+    <meta property="og:url" content="https://yourwebsite.com/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
-<nav>
-  <div class="nav-container">
-    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/inventory.html">Stock</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-    </ul>
-  </div>
-</nav>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/"><img src="images/logo.png" alt="Project 55 Motors"></a>
+            </div>
+            <ul>
+                <li><a href="/stock.html">Stock</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<header class="hero-header">
-    <h1>Project 55 Motors</h1>
-    <p>Hand-selected vehicles. Meticulously prepared. Personally presented.</p>
-    <p style="font-size:1.4rem;color:#555;max-width:800px;margin:2rem auto 0;">
-        Every car receives a thorough mechanical inspection, professional valet and HPI clearance.<br>
-        We only offer vehicles we would happily own ourselves.
-    </p>
-</header>
+    <!-- HERO -->
+    <header class="hero">
+        <h1>Quality Used Cars</h1>
+        <p>Browse our latest vehicles — carefully selected, fully inspected, professionally prepared.</p>
+        <a href="/stock.html" class="cta">View Stock</a>
+    </header>
 
-<div class="container">
-    <h2 style="font-size:2.8rem;margin-bottom:2rem;">Current Stock</h2>
-    <div class="car-grid" id="car-grid">
-        <!-- Cars will be populated automatically from Airtable -->
-    </div>
-</div>
+    <!-- LATEST CARS -->
+    <section class="container">
+        <h2>Latest Arrivals</h2>
+        <div id="car-grid" class="car-grid"></div>
+    </section>
 
-<footer>
-    <p>© 2025 Project 55 Motors | Cleobury Mortimer, Shropshire<br>
-       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
-</footer>
+    <footer>
+        © 2025 Project 55 Motors
+    </footer>
 
-<script src="cars.js"></script>
-<script src="/admin-shortcut.js"></script>
+    <script src="cars.js"></script>
+
 </body>
 </html>

@@ -3,124 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Project 55 Motors – hand-selected, meticulously prepared used cars in Cleobury Mortimer.">
-    <title>Project 55 Motors – Current Stock</title>
+    <title>Vehicle Details – Project 55 Motors</title>
+
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<nav>
-  <div class="nav-container">
-    <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/inventory.html">Stock</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-    </ul>
-  </div>
-</nav>
+    <div class="detail-container" id="detail-container">
 
-<header class="hero-header">
-    <h1>Current Stock</h1>
-    <p>Hand-selected vehicles, meticulously prepared and personally presented.</p>
-</header>
+        <div class="detail-grid">
 
-<div class="container">
-    <div class="car-grid" id="car-grid">
-        <!-- Cars will be populated automatically from Airtable -->
-    </div>
-</div>
-
-<footer>
-    <p>© 2025 Project 55 Motors | Cleobury Mortimer, Shropshire<br>
-       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
-</footer>
-
-<script>
-const CAR_GRID = document.getElementById("car-grid");
-const WORKER_URL = "https://cars-api.nathan-ed2.workers.dev"; // Cloudflare worker URL
-
-async function fetchCars() {
-    try {
-        const response = await fetch(WORKER_URL);
-        const data = await response.json();
-
-        if (!data.records || data.records.length === 0) {
-            CAR_GRID.innerHTML = "<p>No cars available at the moment.</p>";
-            return;
-        }
-
-        CAR_GRID.innerHTML = ""; // clear grid before populating
-
-        data.records.forEach(record => {
-            const fields = record.fields;
-
-            const carCard = document.createElement("a");
-            carCard.href = `/detail.html?id=${record.id}`;
-            carCard.className = "car-card";
-
-            const imgSrc = (fields.Photos && fields.Photos[0] && fields.Photos[0].url) || "placeholder.jpg";
-
-            carCard.innerHTML = `
-                <img src="${imgSrc}" alt="${fields.Name || "Car"}">
-                <div class="car-details">
-                    <h2>${fields.Name || "Unknown Vehicle"}</h2>
-                    <p>${fields.Description || ""}</p>
-                    <div class="specs">
-                        <div><strong>Reg</strong><br>${fields.Registration || ""}</div>
-                        <div><strong>Mileage</strong><br>${fields.Mileage || ""}</div>
-                        <div><strong>MOT</strong><br>${fields.MOT || ""}</div>
-                        <div><strong>Price</strong><br>${fields.Price || ""}</div>
-                    </div>
+            <!-- LEFT SIDE: IMAGES -->
+            <div>
+                <div id="main-photo-container">
+                    <img id="main-photo" src="placeholder.jpg" alt="Vehicle Image">
                 </div>
-            `;
 
-            CAR_GRID.appendChild(carCard);
+                <div id="thumbnails" class="thumbnail-row"></div>
+            </div>
 
-            // Full-screen on click
-            carCard.querySelector("img").addEventListener("click", e => {
-                e.preventDefault();
-                showFullScreenImage(imgSrc);
-            });
-        });
+            <!-- RIGHT SIDE: SPECIFICATION BOX -->
+            <div class="detail-specs">
 
-    } catch (err) {
-        console.error("Failed to fetch car data:", err);
-        CAR_GRID.innerHTML = "<p>Error loading cars. Please try again later.</p>";
-    }
-}
+                <h1 id="car-name">Loading...</h1>
+                <p id="car-description" class="detail-short"></p>
 
-// Full-screen image function
-function showFullScreenImage(src) {
-    const overlay = document.createElement("div");
-    overlay.style.position = "fixed";
-    overlay.style.top = "0";
-    overlay.style.left = "0";
-    overlay.style.width = "100vw";
-    overlay.style.height = "100vh";
-    overlay.style.backgroundColor = "rgba(0,0,0,0.85)";
-    overlay.style.display = "flex";
-    overlay.style.alignItems = "center";
-    overlay.style.justifyContent = "center";
-    overlay.style.zIndex = "10000";
-    overlay.style.cursor = "pointer";
+                <div class="spec-list">
+                    <div><strong>Registration:</strong> <span id="car-registration"></span></div>
+                    <div><strong>Mileage:</strong> <span id="car-mileage"></span></div>
+                    <div><strong>MOT:</strong> <span id="car-mot"></span></div>
+                    <div><strong>Engine Size:</strong> <span id="car-engine"></span></div>
+                    <div><strong>Fuel:</strong> <span id="car-fuel"></span></div>
+                    <div><strong>Price:</strong> £<span id="car-price"></span></div>
+                </div>
 
-    const img = document.createElement("img");
-    img.src = src;
-    img.style.maxWidth = "95%";
-    img.style.maxHeight = "95%";
-    img.style.borderRadius = "12px";
+            </div>
+        </div>
 
-    overlay.appendChild(img);
-    overlay.addEventListener("click", () => document.body.removeChild(overlay));
+        <!-- FULL DESCRIPTION -->
+        <div class="detail-description">
+            <h2>Full Description</h2>
+            <p id="car-full-description"></p>
+        </div>
 
-    document.body.appendChild(overlay);
-}
+    </div>
 
-// Initialize
-fetchCars();
-</script>
+    <script src="detail.js"></script>
 
 </body>
 </html>

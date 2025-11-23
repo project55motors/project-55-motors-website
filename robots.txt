@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block admin login
+Disallow: /admin.html
+Disallow: /admin-shortcut.js
+
+Sitemap: https://yourwebsite.com/sitemap.xml

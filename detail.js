@@ -1,102 +1,96 @@
-const DETAIL_CONTAINER = document.getElementById("detail-container");
 const MAIN_PHOTO = document.getElementById("main-photo");
 const THUMBNAIL_CONTAINER = document.getElementById("thumbnails");
-const WORKER_URL = "https://cars-api.nathan-ed2.workers.dev"; // your Cloudflare worker URL
+const WORKER_URL = "https://cars-api.nathan-ed2.workers.dev";
 
-// Get the car ID from URL
-const params = new URLSearchParams(window.location.search);
-const CAR_ID = params.get("id");
+// Get Airtable record ID
+const CAR_ID = new URLSearchParams(window.location.search).get("id");
 
+// Load data
 async function fetchCarDetails() {
     try {
         const response = await fetch(WORKER_URL);
         const data = await response.json();
 
-        if (!data.records || data.records.length === 0) {
-            DETAIL_CONTAINER.innerHTML = "<p>Car details not found.</p>";
-            return;
-        }
-
         const record = data.records.find(r => r.id === CAR_ID);
         if (!record) {
-            DETAIL_CONTAINER.innerHTML = "<p>Car details not found.</p>";
+            document.getElementById("detail-container").innerHTML =
+                "<p>Vehicle not found.</p>";
             return;
         }
 
-        const fields = record.fields;
+        const f = record.fields;
 
-        // Set main content
-        document.getElementById("car-name").textContent = fields.Name || "Unknown Vehicle";
-        document.getElementById("car-description").textContent = fields.Description || "";
-        document.getElementById("car-registration").textContent = fields.Registration || "";
-        document.getElementById("car-mileage").textContent = fields.Mileage || "";
-        document.getElementById("car-mot").textContent = fields.MOT || "";
-        document.getElementById("car-price").textContent = fields.Price || "";
+        // Set text fields
+        document.getElementById("car-name").textContent = f.Make_Model || "";
+        document.getElementById("car-description").textContent = f.Short_Description || "";
+        document.getElementById("car-registration").textContent = f.Registration || "";
+        document.getElementById("car-mileage").textContent = f.Mileage || "";
+        document.getElementById("car-mot").textContent = f.MOT_Date || "";
+        document.getElementById("car-engine").textContent = f.Engine_size || "";
+        document.getElementById("car-fuel").textContent = f.Fuel_type || "";
+        document.getElementById("car-price").textContent = f.Price || "";
+        document.getElementById("car-full-description").textContent = f.Full_Description || "";
 
-        // Handle images
-        const photos = fields.Photos || [];
-        if (photos.length === 0) {
-            MAIN_PHOTO.src = "placeholder.jpg";
-        } else {
-            MAIN_PHOTO.src = photos[0].url;
-        }
+        // Images
+        const photos = f.Photos || [];
+        MAIN_PHOTO.src = photos.length ? photos[0].url : "placeholder.jpg";
 
-        THUMBNAIL_CONTAINER.innerHTML = ""; // clear thumbnails
-
+        THUMBNAIL_CONTAINER.innerHTML = "";
         photos.forEach((photo, index) => {
             const thumb = document.createElement("img");
             thumb.src = photo.url;
             thumb.className = "thumbnail";
             if (index === 0) thumb.classList.add("active");
 
-            // Thumbnail click sets main image
-            thumb.addEventListener("click", (e) => {
-                e.preventDefault();
+            thumb.addEventListener("click", () => {
                 MAIN_PHOTO.src = photo.url;
                 document.querySelectorAll(".thumbnail").forEach(t => t.classList.remove("active"));
                 thumb.classList.add("active");
+            });
 
-                showFullScreenImage(photo.url); // optional: remove if full-screen only on main image
+            thumb.addEventListener("click", (e) => {
+                e.preventDefault();
+                showFullScreen(photo.url);
             });
 
             THUMBNAIL_CONTAINER.appendChild(thumb);
         });
 
-        // Full-screen main image click
-        MAIN_PHOTO.addEventListener("click", () => showFullScreenImage(MAIN_PHOTO.src));
+        MAIN_PHOTO.addEventListener("click", () => showFullScreen(MAIN_PHOTO.src));
 
     } catch (err) {
-        console.error("Failed to fetch car details:", err);
-        DETAIL_CONTAINER.innerHTML = "<p>Error loading car details. Please try again later.</p>";
+        console.error(err);
+        document.getElementById("detail-container").innerHTML =
+            "<p>Error loading vehicle.</p>";
     }
 }
 
-// Full-screen image overlay
-function showFullScreenImage(src) {
+// Full-screen viewer
+function showFullScreen(src) {
     const overlay = document.createElement("div");
     overlay.style.position = "fixed";
     overlay.style.top = "0";
     overlay.style.left = "0";
     overlay.style.width = "100vw";
     overlay.style.height = "100vh";
-    overlay.style.backgroundColor = "rgba(0,0,0,0.85)";
+    overlay.style.background = "rgba(0,0,0,0.9)";
     overlay.style.display = "flex";
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
     overlay.style.zIndex = "10000";
-    overlay.style.cursor = "pointer";
+    overlay.style.cursor = "zoom-out";
 
     const img = document.createElement("img");
     img.src = src;
     img.style.maxWidth = "95%";
     img.style.maxHeight = "95%";
-    img.style.borderRadius = "12px";
+    img.style.borderRadius = "10px";
 
     overlay.appendChild(img);
-    overlay.addEventListener("click", () => document.body.removeChild(overlay));
+
+    overlay.addEventListener("click", () => overlay.remove());
 
     document.body.appendChild(overlay);
 }
 
-// Initialize
 fetchCarDetails();

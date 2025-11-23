@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Project 55 Motors – Detailed view of selected vehicle.">
+    <meta name="description" content="Project 55 Motors – Vehicle Details">
     <title>Car Details – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -21,29 +21,32 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="detail-grid">
-
-        <!-- Main Photo -->
-        <div id="main-photo-container">
-            <img id="main-photo" src="placeholder.jpg" alt="Car Image" style="border-radius:12px;">
-            <div id="thumbnails" style="display:flex; gap:0.5rem; margin-top:1rem; flex-wrap:wrap;"></div>
+<div class="container detail-grid" id="detail-container">
+    <div>
+        <img id="main-photo" src="placeholder.jpg" alt="Car Main Photo" style="width:100%;border-radius:12px;cursor:pointer;">
+        <div id="thumbnails" style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;"></div>
+    </div>
+    <div class="detail-specs">
+        <h1 id="car-name">Loading...</h1>
+        <p id="car-description" style="margin-top:1rem;"></p>
+        <div style="margin-top:1.5rem;">
+            <p><strong>Registration:</strong> <span id="car-registration"></span></p>
+            <p><strong>MOT:</strong> <span id="car-mot"></span></p>
+            <p><strong>Mileage:</strong> <span id="car-mileage"></span></p>
+            <p><strong>Engine size:</strong> <span id="car-engine"></span></p>
+            <p><strong>Fuel type:</strong> <span id="car-fuel"></span></p>
+            <p><strong>Price:</strong> £<span id="car-price"></span></p>
         </div>
-
-        <!-- Details / Specs -->
-        <div class="detail-specs">
-            <h1 id="car-title">Loading...</h1>
-            <p class="detail-description" id="car-description"></p>
-            <div class="specs" id="specs"></div>
-            <a href="/contact.html" class="cta" style="margin-top:2rem;">Enquire</a>
+        <div style="margin-top:1rem;">
+            <h3>Full Description</h3>
+            <p id="car-full-description"></p>
         </div>
-
     </div>
 </div>
 
 <footer>
     <p>© 2025 Project 55 Motors | Cleobury Mortimer, Shropshire<br>
-       <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
+    <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a></p>
 </footer>
 
 <script src="detail.js"></script>
