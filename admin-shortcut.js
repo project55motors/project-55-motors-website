@@ -1,13 +1,14 @@
-// admin-shortcut.js – FINAL
+// admin-shortcut.js – FINAL FIXED VERSION FOR PROJECT 55
 
 document.addEventListener('DOMContentLoaded', () => {
+
   const adminModal  = document.getElementById('admin-login-modal');
   const adminForm   = document.getElementById('admin-login-form');
   const adminError  = document.getElementById('admin-login-error');
   const closeButton = document.querySelector('#admin-login-modal .modal-close');
 
-  // ✅ MUST be your live domain + /api
-  const WORKER_BASE = 'https://project55motors.co.uk/api';
+  // ✅ Your active working Worker URL
+  const WORKER_BASE = 'https://admin-worker.nathan-ed2.workers.dev';
 
   if (!adminModal || !adminForm) return;
 
@@ -17,44 +18,51 @@ document.addEventListener('DOMContentLoaded', () => {
     adminForm.reset();
   };
 
-  /* ───────── OPEN MODAL (Shift+A or triple-tap logo) ───────── */
+  /* ───────── OPEN MODAL (Shift+A) ───────── */
 
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if (e.shiftKey && e.key.toLowerCase() === 'a') {
       e.preventDefault();
       adminModal.style.display = 'flex';
     }
   });
 
+  /* ───────── OPEN MODAL (Triple-click logo) ───────── */
+
   let logo = null;
 
   setTimeout(() => {
-    logo =
-      document.querySelector('.logo img') ||
-      document.querySelector('nav img') ||
-      document.querySelector('img[src="logo.png"]');
 
-  console.log('Admin logo found:', logo);
+    logo = 
+      document.querySelector('a.logo') || 
+      document.querySelector('.logo') || 
+      document.querySelector('nav a[href="/"]');
 
-  if (logo) {
-    let taps = 0;
+    console.log('Admin logo found:', logo);
 
-    logo.addEventListener('click', () => {
-      taps++;
-      console.log('LOGO CLICKS:', taps);
+    if (logo) {
+      let taps = 0;
 
-      clearTimeout(logo._timer);
-      logo._timer = setTimeout(() => (taps = 0), 600);
+      logo.addEventListener('click', (e) => {
+        e.preventDefault();   // ✅ stops page navigation
 
-      if (taps === 3) {
-        taps = 0;
-        console.log('ADMIN MODAL OPENING');
-        adminModal.style.display = 'flex';
-      }
-    });
-  }
-}, 500);
+        taps++;
+        console.log('LOGO CLICKS:', taps);
 
+        clearTimeout(logo._timer);
+        logo._timer = setTimeout(() => { taps = 0 }, 600);
+
+        if (taps === 3) {
+          taps = 0;
+          console.log('ADMIN MODAL OPENING');
+          adminModal.style.display = 'flex';
+        }
+      });
+    }
+
+  }, 500);
+
+  /* ───────── CLOSE MODAL ───────── */
 
   closeButton?.addEventListener('click', e => {
     e.preventDefault();
@@ -88,7 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok && result.success) {
         hideAdminModal();
+
+        // ✅ Redirect to admin dashboard
         window.location.href = '/admin-dashboard.html';
+
       } else {
         console.error('Login failed:', response.status, result);
         adminError.textContent = result.error || 'Login failed – check username or password';
@@ -102,5 +113,5 @@ document.addEventListener('DOMContentLoaded', () => {
       adminError.style.display = 'block';
     }
   });
-});
 
+});
