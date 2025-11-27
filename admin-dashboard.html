@@ -139,7 +139,8 @@
 </div>
 
 <script>
-const WORKER = 'https://admin-worker.nathan-ed2.workers.dev';
+/* ✅ SINGLE, CORRECT WORKER BASE FOR ADMIN */
+const WORKER = "https://project55motors.co.uk/api";
 
 const STATUS = document.getElementById('status');
 const TABLE_BODY = document.getElementById('admin-table-body');
@@ -148,7 +149,7 @@ const TABLE_BODY = document.getElementById('admin-table-body');
 
 async function loadCars() {
   STATUS.className = '';
-  STATUS.textContent = 'Loading cars...';
+  STATUS.textContent = 'Loading cars…';
 
   try {
     const res = await fetch(`${WORKER}/admin/all`, {
@@ -163,13 +164,13 @@ async function loadCars() {
     TABLE_BODY.innerHTML = html;
 
     STATUS.className = 'ok';
-    STATUS.textContent = 'Stock loaded successfully';
+    STATUS.textContent = 'Stock loaded successfully ✅';
     setTimeout(() => STATUS.textContent = '', 3000);
 
   } catch (err) {
     console.error(err);
     STATUS.className = 'error';
-    STATUS.textContent = 'Error loading stock - you may not be logged in.';
+    STATUS.textContent = 'Error loading stock – you may not be logged in.';
 
     TABLE_BODY.innerHTML = `
       <tr>
@@ -184,10 +185,9 @@ async function loadCars() {
 /* ===================== SAVE CAR ===================== */
 
 async function save(id) {
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-
+  const row = document.querySelector(\`tr[data-id="\${id}"]\`);
   const data = {
-    id: id,
+    id,
     fields: {
       Make_Model: row.querySelector('[name="Make_Model"]').value.trim(),
       Registration: row.querySelector('[name="Registration"]').value.trim(),
@@ -202,13 +202,13 @@ async function save(id) {
 
   await fetch(`${WORKER}/admin/update`, {
     method: 'POST',
-    credentials: 'include',
+    credentials:'include',
     headers: { 'Content-Type':'application/json' },
     body: JSON.stringify(data)
   });
 
   STATUS.className = 'ok';
-  STATUS.textContent = 'Saved';
+  STATUS.textContent = 'Saved ✅';
   setTimeout(() => STATUS.textContent = '', 2000);
 }
 
@@ -219,9 +219,9 @@ async function sold(id) {
 
   await fetch(`${WORKER}/admin/update`, {
     method: 'POST',
-    credentials: 'include',
+    credentials:'include',
     headers: { 'Content-Type':'application/json' },
-    body: JSON.stringify({ id: id, fields: { Status: 'Sold' } })
+    body: JSON.stringify({ id, fields: { Status: 'Sold' } })
   });
 
   loadCars();
@@ -232,7 +232,7 @@ async function sold(id) {
 async function createCar() {
   await fetch(`${WORKER}/admin/create`, {
     method: 'POST',
-    credentials: 'include'
+    credentials:'include'
   });
 
   loadCars();
@@ -242,7 +242,6 @@ async function createCar() {
 
 document.addEventListener('DOMContentLoaded', loadCars);
 </script>
-
 
 </body>
 </html>
