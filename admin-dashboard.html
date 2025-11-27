@@ -185,7 +185,7 @@ async function loadCars() {
 /* ===================== SAVE CAR ===================== */
 
 async function save(id) {
-  const row = document.querySelector(\`tr[data-id="\${id}"]\`);
+  const row = document.querySelector(`tr[data-id="${id}"]`);
   const data = {
     id,
     fields: {
