@@ -1,106 +1,47 @@
-// admin-shortcut.js – FINAL for project55motors.co.uk/api
+// admin-shortcut.js – FINAL VERSION
+// Project 55 Motors – Hidden Admin Access
+// Triple-click the logo to open the admin dashboard
+// Safe, clean, and duplication-proof
 
-document.addEventListener('DOMContentLoaded', () => {
-  const adminModal  = document.getElementById('admin-login-modal');
-  const adminForm   = document.getElementById('admin-login-form');
-  const adminError  = document.getElementById('admin-login-error');
-  const closeButton = document.querySelector('#admin-login-modal .modal-close');
+(function () {
 
-  // ✅ IMPORTANT: use your own domain + /api (NOT workers.dev)
-  const WORKER_BASE = 'https://project55motors.co.uk/api';
+    let clickCount = 0;
+    let clickTimer = null;
 
-  if (!adminModal || !adminForm) return;
+    // Try multiple logo targets safely
+    const logo =
+        document.querySelector(".logo img") ||
+        document.querySelector("header img") ||
+        document.querySelector("img[src*='logo']");
 
-  const hideAdminModal = () => {
-    adminModal.style.display = 'none';
-    adminError.style.display = 'none';
-    adminForm.reset();
-  };
-
-  /* ───────── OPEN MODAL (Shift+A or triple-tap logo) ───────── */
-
-  document.addEventListener('keydown', e => {
-    if (e.shiftKey && e.key.toLowerCase() === 'a') {
-      e.preventDefault();
-      adminModal.style.display = 'flex';
+    if (!logo) {
+        console.warn("Admin shortcut: Logo not found.");
+        return;
     }
-  });
 
-  let logo = null;
+    // Add small hint in dev tools only
+    logo.setAttribute("title", "Project 55 Motors");
 
-  // Give the logo a moment to render
-  setTimeout(() => {
-    logo =
-      document.querySelector('.logo img') ||
-      document.querySelector('nav img') ||
-      document.querySelector('img[src="logo.png"]');
+    logo.addEventListener("click", () => {
+        clickCount++;
 
-    console.log('Admin logo found:', logo);
+        // Reset timer every click
+        if (clickTimer) clearTimeout(clickTimer);
 
-    if (logo) {
-      let taps = 0;
+        clickTimer = setTimeout(() => {
+            clickCount = 0;
+        }, 700); // 0.7s window
 
-      logo.addEventListener('click', () => {
-        taps++;
-        console.log('LOGO CLICKS:', taps);
+        if (clickCount === 3) {
+            clickCount = 0;
 
-        clearTimeout(logo._timer);
-        logo._timer = setTimeout(() => { taps = 0; }, 600);
+            console.log("🔓 Admin shortcut triggered");
 
-        if (taps === 3) {
-          taps = 0;
-          console.log('ADMIN MODAL OPENING');
-          adminModal.style.display = 'flex';
+            // Prevent accidental multiple triggers
+            setTimeout(() => {
+                window.location.href = "/admin-dashboard.html";
+            }, 50);
         }
-      });
-    }
-  }, 500);
+    });
 
-  closeButton?.addEventListener('click', e => {
-    e.preventDefault();
-    hideAdminModal();
-  });
-
-  adminModal.addEventListener('click', e => {
-    if (e.target === adminModal) hideAdminModal();
-  });
-
-  /* ───────── LOGIN HANDLER ───────── */
-
-  adminForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const username = adminForm.username.value.trim();
-    const password = adminForm.password.value;
-
-    adminError.style.display = 'none';
-    adminError.textContent = '';
-
-    try {
-      const response = await fetch(`${WORKER_BASE}/login`, {
-        method: 'POST',
-        credentials: 'include',          // ✅ send/receive cookies on project55motors.co.uk
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (response.ok && result.success) {
-        hideAdminModal();
-        // Go to admin dashboard on SAME domain
-        window.location.href = '/admin-dashboard.html';
-      } else {
-        console.error('Login failed:', response.status, result);
-        adminError.textContent = result.error || 'Login failed – check username or password';
-        adminError.style.display = 'block';
-        adminForm.password.value = '';
-      }
-
-    } catch (err) {
-      console.error('Network / CORS error:', err);
-      adminError.textContent = 'Network error – Worker unreachable';
-      adminError.style.display = 'block';
-    }
-  });
-});
+})();
