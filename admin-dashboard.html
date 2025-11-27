@@ -139,6 +139,9 @@
 </div>
 
 <script>
+/* ✅ CORRECT WORKER ROUTE */
+const WORKER = "https://project55motors.co.uk/api";
+
 const STATUS = document.getElementById('status');
 const TABLE_BODY = document.getElementById('admin-table-body');
 
@@ -149,7 +152,7 @@ async function loadCars() {
   STATUS.textContent = 'Loading cars…';
 
   try {
-    const res = await fetch('https://admin-worker.nathan-ed2.workers.dev/admin/all', {
+    const res = await fetch(`${WORKER}/admin/all`, {
       credentials: 'include'
     });
 
@@ -182,7 +185,8 @@ async function loadCars() {
 /* ===================== SAVE CAR ===================== */
 
 async function save(id) {
-  const row = document.querySelector(`tr[data-id="${id}"]`);
+  const row = document.querySelector(\`tr[data-id="\${id}"]\`);
+
   const data = {
     id,
     fields: {
@@ -197,9 +201,9 @@ async function save(id) {
     }
   };
 
-  await fetch('https://admin-worker.nathan-ed2.workers.dev/admin/update', {
+  await fetch(`${WORKER}/admin/update`, {
     method: 'POST',
-    credentials:'include',
+    credentials: 'include',
     headers: { 'Content-Type':'application/json' },
     body: JSON.stringify(data)
   });
@@ -214,9 +218,9 @@ async function save(id) {
 async function sold(id) {
   if (!confirm('Mark this car as SOLD?')) return;
 
-  await fetch('https://admin-worker.nathan-ed2.workers.dev/admin/update', {
+  await fetch(`${WORKER}/admin/update`, {
     method: 'POST',
-    credentials:'include',
+    credentials: 'include',
     headers: { 'Content-Type':'application/json' },
     body: JSON.stringify({ id, fields: { Status: 'Sold' } })
   });
@@ -227,9 +231,9 @@ async function sold(id) {
 /* ===================== CREATE ===================== */
 
 async function createCar() {
-  await fetch('https://admin-worker.nathan-ed2.workers.dev/admin/create', {
+  await fetch(`${WORKER}/admin/create`, {
     method: 'POST',
-    credentials:'include'
+    credentials: 'include'
   });
 
   loadCars();
