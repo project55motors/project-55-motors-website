@@ -26,19 +26,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const logo = document.querySelector('.logo img') || document.querySelector('nav img');
+  let logo = null;
+
+  setTimeout(() => {
+    logo =
+      document.querySelector('.logo img') ||
+      document.querySelector('nav img') ||
+      document.querySelector('img[src="logo.png"]');
+
+  console.log('Admin logo found:', logo);
+
   if (logo) {
     let taps = 0;
+
     logo.addEventListener('click', () => {
       taps++;
+      console.log('LOGO CLICKS:', taps);
+
       clearTimeout(logo._timer);
-      logo._timer = setTimeout(() => { taps = 0; }, 600);
+      logo._timer = setTimeout(() => (taps = 0), 600);
+
       if (taps === 3) {
         taps = 0;
+        console.log('ADMIN MODAL OPENING');
         adminModal.style.display = 'flex';
       }
     });
   }
+}, 500);
+
 
   closeButton?.addEventListener('click', e => {
     e.preventDefault();
@@ -87,3 +103,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
