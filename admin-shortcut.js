@@ -1,4 +1,4 @@
-// admin-shortcut.js – FINAL USING WORKERS.DEV (WORKING VERSION)
+// admin-shortcut.js – FIXED for project55motors.co.uk/api
 
 document.addEventListener('DOMContentLoaded', () => {
   const adminModal  = document.getElementById('admin-login-modal');
@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminError  = document.getElementById('admin-login-error');
   const closeButton = document.querySelector('#admin-login-modal .modal-close');
 
-  // IMPORTANT: This must match your Worker that already works
-  const WORKER_BASE = 'https://admin-worker.nathan-ed2.workers.dev';
+  // ✅ MUST be your domain + /api
+  const WORKER_BASE = 'https://project55motors.co.uk/api';
 
   if (!adminModal || !adminForm) return;
 
@@ -63,18 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(`${WORKER_BASE}/login`, {
         method: 'POST',
-        credentials: 'include',              // send / receive cookies for workers.dev
+        credentials: 'include',     // ✅ REQUIRED
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
 
-      // If the fetch itself succeeded, parse JSON
       const result = await response.json().catch(() => ({}));
 
       if (response.ok && result.success) {
-        // Login OK: hide modal and go to dashboard
         hideAdminModal();
+
+        // ✅ Go to admin dashboard
         window.location.href = '/admin-dashboard.html';
+
       } else {
         console.error('Login failed:', response.status, result);
         adminError.textContent = result.error || 'Login failed – check username or password';
@@ -83,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
     } catch (err) {
-      console.error('Network / CORS error talking to Worker:', err);
-      adminError.textContent = 'Network error – Worker unreachable';
+      console.error('Network / CORS error:', err);
+      adminError.textContent = 'Network error – worker unreachable';
       adminError.style.display = 'block';
     }
   });
