@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminError  = document.getElementById('admin-login-error');
   const closeButton = document.querySelector('#admin-login-modal .modal-close');
 
-  // ✅ MUST be your domain + /api
-  const WORKER_BASE = 'https://admin-worker.nathan-ed2.workers.dev';
+  // ✅ MUST be your live routed domain + /api
+  const WORKER_BASE = 'https://project55motors.co.uk/api';
 
   if (!adminModal || !adminForm) return;
 
@@ -90,4 +90,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
 
