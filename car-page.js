@@ -1,38 +1,37 @@
-// car-page.js – Loads a single car's data onto the car.html page based on URL ID
+// car-page.js – FINAL FIXED VERSION
 
-// Function to handle image switching (same as in cars.js, needed here too)
+const API_URL = "/api/all";
+
 function switchMainPhoto(element, url) {
-    const mainViewer = document.querySelector('.gallery-main-viewer img');
+    const mainViewer = document.querySelector(".gallery-main-viewer img");
     if (mainViewer) {
         mainViewer.src = url;
     }
-    document.querySelectorAll('.gallery-thumbnail-strip img').forEach(img => {
-        img.classList.remove('active');
-    });
-    element.classList.add('active');
+
+    document.querySelectorAll(".gallery-thumbnail").forEach(img =>
+        img.classList.remove("active")
+    );
+
+    element.classList.add("active");
 }
 
-
 async function loadSingleCar() {
-    const container = document.getElementById('car-details-container');
+    const container = document.getElementById("car-details-container");
     if (!container) return;
 
-    // 1. Get the Car ID from the URL
     const params = new URLSearchParams(window.location.search);
-    const carId = params.get('id');
+    const carId = params.get("id");
 
     if (!carId) {
-        container.innerHTML = "<h1 style='text-align:center;'>Error: Vehicle ID not found.</h1>";
+        container.innerHTML = "<h1 style='text-align:center;'>Vehicle ID missing.</h1>";
         return;
     }
 
     try {
-        container.innerHTML = "<h1 style='text-align:center;'>Fetching data for ID: " + carId + "...</h1>";
-        
-        const response = await fetch('https://cars-api.nathan-ed2.workers.dev');
-        
+        const response = await fetch(API_URL);
+
         if (!response.ok) {
-            container.innerHTML = "<h1 style='text-align:center;color:red;'>Could not connect to stock API.</h1>";
+            container.innerHTML = `<h1 style="text-align:center;color:red;">Could not load vehicle data.</h1>`;
             return;
         }
 
@@ -40,97 +39,72 @@ async function loadSingleCar() {
         const car = data.records.find(r => r.id === carId);
 
         if (!car || car.fields.Status === "Sold") {
-            container.innerHTML = "<h1 style='text-align:center;'>Vehicle Not Found or No Longer Available.</h1>";
+            container.innerHTML = `<h1 style="text-align:center;">Vehicle not found or sold.</h1>`;
             return;
         }
 
-        // --- 4. RENDER THE PREMIUM CAR DETAILS ---
         const f = car.fields;
 
-        // Clean up photo data
         let photos = f.Photos || [];
-        const uniqueUrls = new Set();
-        const uniquePhotos = [];
-        
-        photos.forEach(p => {
-            if (p.url && !uniqueUrls.has(p.url)) {
-                uniquePhotos.push(p);
-                uniqueUrls.add(p.url);
-            }
-        });
-        photos = uniquePhotos; 
-        
-        const mainPhotoUrl = photos[0]?.url || 'placeholder.jpg';
-        const price = f.Price ? `£${Number(f.Price).toLocaleString()} ono` : 'POA';
-        const mot = f.MOT_Date ? new Date(f.MOT_Date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) : 'N/A';
-        const regDisplay = f.Registration || 'N/A';
-        
-        // --- DATA VERIFICATION: Ensure these match your Airtable column names exactly! ---
-        const rawShortDescription = f['Short_Description'] || ''; // Use bracket notation for safety
-        const rawFullDescription = f['Full_Description'] || '';   // Use bracket notation for safety
-        const descriptionHtml = rawFullDescription.replace(/\n/g, '<br>');
 
+        const mainPhotoUrl = photos[0]?.url || "placeholder.jpg";
+        const price = f.Price ? `£${Number(f.Price).toLocaleString()} ono` : "POA";
 
-        // Conditional rendering for the Full Description section
-        const overviewSection = (rawFullDescription.trim() !== '') ? `
-            <div class="full-description">
-                <h3>Vehicle Overview</h3>
-                <p>${descriptionHtml}</p>
-            </div>
-        ` : '';
+        const mot = f.MOT_Date
+            ? new Date(f.MOT_Date).toLocaleDateString("en-GB", { month: "long", year: "numeric" })
+            : "N/A";
 
-        document.title = `${f.Make_Model} (${regDisplay}) | Project 55 Motors`;
+        const reg = f.Registration || "N/A";
 
-        // Generate Thumbnail strip HTML
+        const rawShort = f.Short_Description || "";
+        const rawFull = (f.Full_Description || "").replace(/\n/g, "<br>");
+
         const thumbnailHtml = photos.map((p, i) => `
-            <img src="${p.url}" 
-                 alt="Thumbnail ${i + 1}" 
-                 onclick="switchMainPhoto(this, '${p.url}')"
-                 class="gallery-thumbnail ${i === 0 ? 'active' : ''}">
-        `).join('');
+            <img 
+                src="${p.url}" 
+                onclick="switchMainPhoto(this, '${p.url}')"
+                class="gallery-thumbnail ${i === 0 ? "active" : ""}">
+        `).join("");
 
-        // Build the final content
+        document.title = `${f.Make_Model} (${reg}) | Project 55 Motors`;
+
         container.innerHTML = `
-            <h1 style="font-size:3rem;margin-bottom:0.5rem;">${f.Make_Model || 'Unknown Model'}</h1>
-            
-            ${rawShortDescription ? `<p style="font-size:1.4rem;color:#444;margin-bottom:1rem;">${rawShortDescription}</p>` : ''}
-            
-            <h2 style="font-size:1.8rem;color:#444;margin-bottom:2rem;">${regDisplay} - ${price}</h2>
-            
+            <h1 style="font-size:3rem;">${f.Make_Model}</h1>
+            ${rawShort ? `<p style="font-size:1.3rem;">${rawShort}</p>` : ""}
+            <h2>${reg} — ${price}</h2>
+
             <div class="modal-content">
-                
+
                 <div class="photo-gallery-wrapper">
                     <div class="gallery-main-viewer">
-                        <img src="${mainPhotoUrl}" alt="${f.Make_Model} main photo">
+                        <img src="${mainPhotoUrl}">
                     </div>
-                    
                     <div class="gallery-thumbnail-strip">
                         ${thumbnailHtml}
                     </div>
                 </div>
 
-                <div class="modal-details" style="padding:0;">
+                <div class="modal-details">
                     <div class="modal-specs">
-                        <div><strong>Registration</strong><br>${regDisplay}</div>
-                        <div><strong>Mileage</strong><br>${f.Mileage?.toLocaleString() || 'N/A'}</div>
+                        <div><strong>Registration</strong><br>${reg}</div>
+                        <div><strong>Mileage</strong><br>${(f.Mileage || 0).toLocaleString()}</div>
                         <div><strong>MOT</strong><br>${mot}</div>
-                        <div><strong>Price</strong><br>${price}</div>
+                        <div><strong>Fuel</strong><br>${f.Fuel_type || "N/A"}</div>
                     </div>
-                    
-                    <a href="/contact.html?enquiry=${encodeURIComponent(f.Make_Model)}" class="cta car-enquiry-cta">Enquire</a>
-
-                    ${overviewSection}
                 </div>
+
             </div>
-            <p style="text-align:center; margin-top:3rem;"><a href="/inventory.html">← Back to Stock List</a></p>
+
+            ${rawFull ? `
+                <div class="full-description">
+                    <h3>Vehicle Overview</h3>
+                    <p>${rawFull}</p>
+                </div>` : ""}
         `;
-
-
-    } catch (err) {
-        console.error("Error loading single car data:", err);
-        container.innerHTML = "<h1 style='text-align:center;color:red;'>Failed to load vehicle details due to a network error.</h1>";
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = `<p style="text-align:center;">Error loading vehicle</p>`;
     }
 }
 
-// Initialize on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', loadSingleCar);
+document.addEventListener("DOMContentLoaded", loadSingleCar);
