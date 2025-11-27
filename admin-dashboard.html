@@ -1,213 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Project 55 Motors • Admin Dashboard</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Project 55 Motors – Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: #f5f7fb;
+    }
 
-<style>
-body {
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:#f4f6fb;
-  margin:0;
-}
+    .admin-container {
+      max-width: 1400px;
+      margin: 5rem auto;
+      padding: 2rem;
+    }
 
-.container {
-  max-width:1400px;
-  margin:3rem auto;
-  padding:1.5rem;
-}
+    h1 { margin-bottom: 0.3rem; }
+    .sub { color: #666; margin-bottom: 2rem; }
 
-h1 {
-  font-size:2rem;
-  margin-bottom:.3rem;
-}
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
 
-.sub {
-  color:#667085;
-  margin-bottom:1.5rem;
-}
+    button {
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
 
-.btn-add {
-  background:#2563eb;
-  color:white;
-  padding:.6rem 1.2rem;
-  border:none;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
-  margin-bottom:1rem;
-}
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-save { background: #10b981; color: white; margin-bottom: 0.4rem; }
+    .btn-sold { background: #6b7280; color: white; }
 
-table {
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 20px 40px rgba(0,0,0,.06);
-}
+    .message {
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 1rem 0;
+      display: none;
+    }
 
-thead {
-  background:#1e40af;
-  color:white;
-}
+    .error { background: #fee2e2; color:#991b1b; display:block;}
+    .success { background:#dcfce7; color:#166534; display:block;}
 
-th, td {
-  padding:.8rem;
-  text-align:left;
-  vertical-align:top;
-  border-bottom:1px solid #e5e7eb;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.03);
+    }
 
-img.photo-thumb {
-  width:90px;
-  height:70px;
-  object-fit:cover;
-  border-radius:6px;
-}
+    th {
+      background:#1e40af;
+      color:white;
+      font-weight:600;
+      padding:12px 8px;
+      font-size:14px;
+    }
 
-input,textarea,select {
-  width:100%;
-  padding:.4rem;
-  border:1px solid #d1d5db;
-  border-radius:6px;
-  font:inherit;
-}
+    td { padding:10px; vertical-align:top; }
 
-textarea {
-  min-height:70px;
-}
+    input, textarea, select {
+      width:100%;
+      padding:7px;
+      border-radius:6px;
+      border:1px solid #cbd5e1;
+      font-size:0.85rem;
+    }
 
-.btn {
-  padding:.4rem .8rem;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:600;
-}
+    textarea { min-height: 55px; }
 
-.btn-save { background:#10b981; color:white; }
-.btn-sold { background:#6b7280; color:white; }
+    img.photo-thumb {
+      width:85px;
+      height:60px;
+      object-fit:cover;
+      border-radius:6px;
+      border:1px solid #ddd;
+    }
 
-#status {
-  padding:.75rem 1rem;
-  border-radius:8px;
-  margin-bottom:1rem;
-  display:none;
-}
-
-.ok { background:#ecfdf5; color:#065f46; }
-.error { background:#fef2f2; color:#7f1d1d; }
-</style>
+    .table-wrap { overflow-x:auto; }
+  </style>
 </head>
 
 <body>
 
-<header style="padding:1rem 2rem;display:flex;align-items:center;gap:1rem">
-  <img src="logo.png" class="logo" alt="Project 55 Motors" style="height:36px;cursor:pointer">
-  <strong>Admin</strong>
-</header>
+  <div class="admin-container">
+    <h1>Project 55 Motors · Admin Dashboard</h1>
+    <p class="sub">Full inline editing · Never open Airtable again</p>
 
-<div class="container">
+    <div class="controls">
+      <button class="btn-primary" id="addBtn">Add New Car</button>
+      <button class="btn-sold" onclick="logout()">Logout</button>
+    </div>
 
-<h1>Project 55 Motors • Admin Dashboard</h1>
-<p class="sub">Full inline editing • Never open Airtable again</p>
+    <div id="statusMsg" class="message"></div>
 
-<button class="btn-add" onclick="createCar()">Add New Car</button>
-
-<div id="status"></div>
-
-<table>
-  <thead>
-    <tr>
-      <th>Photo</th>
-      <th>Make / Model</th>
-      <th>Reg</th>
-      <th>£</th>
-      <th>Mileage</th>
-      <th>MOT</th>
-      <th>Status</th>
-      <th>Short</th>
-      <th>Full Description</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="admin-table-body">
-    <tr>
-      <td colspan="10" style="text-align:center;padding:2rem">
-        Loading stock…
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Make / Model</th>
+            <th>Reg</th>
+            <th>£</th>
+            <th>Mileage</th>
+            <th>MOT</th>
+            <th>Status</th>
+            <th>Short</th>
+            <th>Full Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="stockTable">
+          <tr><td colspan="10" style="text-align:center;padding:30px">Loading stock…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 <script>
-const WORKER = "https://project55motors.co.uk/api";
-const TABLE = document.getElementById('admin-table-body');
-const STATUS = document.getElementById('status');
+const API = "https://project55motors.co.uk/api"
 
-let loadedOnce = false;
+const table = document.getElementById("stockTable")
+const msg = document.getElementById("statusMsg")
 
-/* ✅ TRIPLE CLICK LOGO */
-let clickCount = 0;
-document.querySelector('.logo').addEventListener('click', () => {
-  clickCount++;
-  setTimeout(() => clickCount = 0, 600);
-  if (clickCount === 3) {
-    window.location.href = "/admin.html";
-  }
-});
-
-/* ✅ STATUS MESSAGE */
-function flash(msg, good=true){
-  STATUS.style.display = "block";
-  STATUS.className = good ? 'ok' : 'error';
-  STATUS.textContent = msg;
-  setTimeout(()=>STATUS.style.display='none',3000);
+function show(type, text) {
+  msg.className = `message ${type}`
+  msg.textContent = text
 }
 
-/* ✅ LOAD CARS (ONLY ONCE) */
-async function loadCars() {
-
-  if (loadedOnce) return;
-  loadedOnce = true;
-
-  try{
-    const res = await fetch(`${WORKER}/admin/all`, {
-      credentials: "include"
-    });
-
-    if(!res.ok) throw res.status;
-
-    const html = await res.text();
-    TABLE.innerHTML = html;
-
-    flash("Stock loaded successfully ✅");
-
-  } catch(err){
-    console.error(err);
-    flash("Error loading stock - check server login", false);
-    TABLE.innerHTML = `<tr><td colspan="10" style="text-align:center;color:red;padding:2rem">Unable to load data</td></tr>`;
-  }
-}
-
-/* ✅ SAVE */
-async function save(id){
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  const fields = {
-    Make_Model: row.querySelector('[name="Make_Model"]').value,
-    Registration: row.querySelector('[name="Registration"]').value,
-    Price: parseInt(row.querySelector('[name="Price"]').value||0),
-    Mileage: parseInt(row.querySelector('[name="Mileage"]').value||0),
-    MOT_Date: row.querySelector('[name="MOT_Date"]').value,
-    Status: row.querySelector('[name="Status"]').value,
-    Short_Description: row.querySelector('[name="Short_Description"]').value,
-    Full_Description: row.querySelector('[name="Full_Description"]').value
-  };
-
-  await fetch(`${WORK
+async function loadCars(){
+  try {
+    const res = await fetch(`${API}/admin/all`, { credentials:"include" })
+    if(!res.ok) throw new Error(res.status)
+    const html = await res.text()
+    table.innerHTML = html
+    show("success","✅ Stock loaded successfully")
+  } catch {
+    show("error
