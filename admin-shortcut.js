@@ -1,14 +1,13 @@
-// admin-shortcut.js – FINAL FIXED VERSION FOR PROJECT 55
+// admin-shortcut.js – FINAL for project55motors.co.uk/api
 
 document.addEventListener('DOMContentLoaded', () => {
-
   const adminModal  = document.getElementById('admin-login-modal');
   const adminForm   = document.getElementById('admin-login-form');
   const adminError  = document.getElementById('admin-login-error');
   const closeButton = document.querySelector('#admin-login-modal .modal-close');
 
-  // ✅ Your active working Worker URL
-  const WORKER_BASE = 'https://admin-worker.nathan-ed2.workers.dev';
+  // ✅ IMPORTANT: use your own domain + /api (NOT workers.dev)
+  const WORKER_BASE = 'https://project55motors.co.uk/api';
 
   if (!adminModal || !adminForm) return;
 
@@ -18,39 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
     adminForm.reset();
   };
 
-  /* ───────── OPEN MODAL (Shift+A) ───────── */
+  /* ───────── OPEN MODAL (Shift+A or triple-tap logo) ───────── */
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (e.shiftKey && e.key.toLowerCase() === 'a') {
       e.preventDefault();
       adminModal.style.display = 'flex';
     }
   });
 
-  /* ───────── OPEN MODAL (Triple-click logo) ───────── */
-
   let logo = null;
 
+  // Give the logo a moment to render
   setTimeout(() => {
-
-    logo = 
-      document.querySelector('a.logo') || 
-      document.querySelector('.logo') || 
-      document.querySelector('nav a[href="/"]');
+    logo =
+      document.querySelector('.logo img') ||
+      document.querySelector('nav img') ||
+      document.querySelector('img[src="logo.png"]');
 
     console.log('Admin logo found:', logo);
 
     if (logo) {
       let taps = 0;
 
-      logo.addEventListener('click', (e) => {
-        e.preventDefault();   // ✅ stops page navigation
-
+      logo.addEventListener('click', () => {
         taps++;
         console.log('LOGO CLICKS:', taps);
 
         clearTimeout(logo._timer);
-        logo._timer = setTimeout(() => { taps = 0 }, 600);
+        logo._timer = setTimeout(() => { taps = 0; }, 600);
 
         if (taps === 3) {
           taps = 0;
@@ -59,10 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-
   }, 500);
-
-  /* ───────── CLOSE MODAL ───────── */
 
   closeButton?.addEventListener('click', e => {
     e.preventDefault();
@@ -87,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(`${WORKER_BASE}/login`, {
         method: 'POST',
-        credentials: 'include',
+        credentials: 'include',          // ✅ send/receive cookies on project55motors.co.uk
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
@@ -96,10 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok && result.success) {
         hideAdminModal();
-
-        // ✅ Redirect to admin dashboard
+        // Go to admin dashboard on SAME domain
         window.location.href = '/admin-dashboard.html';
-
       } else {
         console.error('Login failed:', response.status, result);
         adminError.textContent = result.error || 'Login failed – check username or password';
@@ -113,5 +103,4 @@ document.addEventListener('DOMContentLoaded', () => {
       adminError.style.display = 'block';
     }
   });
-
 });
