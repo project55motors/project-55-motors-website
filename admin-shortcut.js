@@ -1,4 +1,4 @@
-// admin-shortcut.js – FIXED for project55motors.co.uk/api
+// admin-shortcut.js – FINAL
 
 document.addEventListener('DOMContentLoaded', () => {
   const adminModal  = document.getElementById('admin-login-modal');
@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const adminError  = document.getElementById('admin-login-error');
   const closeButton = document.querySelector('#admin-login-modal .modal-close');
 
-  // ✅ MUST be your live routed domain + /api
+  // ✅ MUST be your live domain + /api
   const WORKER_BASE = 'https://project55motors.co.uk/api';
 
   if (!adminModal || !adminForm) return;
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(`${WORKER_BASE}/login`, {
         method: 'POST',
-        credentials: 'include',     // ✅ REQUIRED
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
@@ -72,10 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok && result.success) {
         hideAdminModal();
-
-        // ✅ Go to admin dashboard
         window.location.href = '/admin-dashboard.html';
-
       } else {
         console.error('Login failed:', response.status, result);
         adminError.textContent = result.error || 'Login failed – check username or password';
@@ -85,10 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (err) {
       console.error('Network / CORS error:', err);
-      adminError.textContent = 'Network error – worker unreachable';
+      adminError.textContent = 'Network error – Worker unreachable';
       adminError.style.display = 'block';
     }
   });
 });
-
-
