@@ -18,7 +18,41 @@
         </ul>
     </div>
 </nav>
+<!-- Admin Login Modal (hidden by default) -->
 
+<div id="admin-login-modal" class="modal" style="display:none;">
+
+  <div class="modal-content">
+
+    <span class="modal-close">×</span>
+
+
+
+    <h2 style="text-align:center;">Staff Login</h2>
+
+
+
+    <form id="admin-login-form" style="text-align:left;">
+
+      <input type="text" name="username" placeholder="Username" required class="form-field">
+
+      <input type="password" name="password" placeholder="Password" required class="form-field">
+
+      <button type="submit" class="cta" style="width:100%;">Log In</button>
+
+    </form>
+
+
+
+    <p id="admin-login-error"
+
+       style="color:red; text-align:center; margin-top:1rem; display:none;">
+
+    </p>
+
+  </div>
+
+</div>
 <div class="container" style="text-align:center; max-width:800px; padding:6rem 2rem;">
     <h1 style="font-size:3.5rem; margin-bottom:2rem;">About Us</h1>
     <p style="font-size:1.3rem; margin-bottom:2rem;">
