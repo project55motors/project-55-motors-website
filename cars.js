@@ -1,32 +1,26 @@
-// cars.js – FINAL (uses your live worker only)
-
-const API_URL = "https://project55motors.co.uk/api/cars";
+// cars.js – FINAL CLEAN VERSION
 
 
 
-document.addEventListener("DOMContentLoaded", loadCars);
+const API = "https://project55motors.co.uk/api/cars";
+
+const container = document.getElementById("car-list");
 
 
 
 async function loadCars() {
 
-  const grid = document.getElementById("car-grid");
-
-  if (!grid) return;
-
-
-
   try {
 
-    const res = await fetch(API_URL);
+    const res = await fetch(API);
 
     const data = await res.json();
 
 
 
-    if (!data.records || !data.records.length) {
+    if (!data.records || !Array.isArray(data.records)) {
 
-      grid.innerHTML = "<p>No cars found.</p>";
+      container.innerHTML = "<p>No cars found.</p>";
 
       return;
 
@@ -34,7 +28,7 @@ async function loadCars() {
 
 
 
-    grid.innerHTML = "";
+    container.innerHTML = "";
 
 
 
@@ -44,15 +38,11 @@ async function loadCars() {
 
 
 
-      const image = f.Photos?.[0]?.url || "placeholder.jpg";
-
-      const price = f.Price ? "£" + f.Price.toLocaleString() : "POA";
+      const image = f.Photos?.[0]?.url || "no-image.png";
 
 
 
-      const card = document.createElement("a");
-
-      card.href = `car.html?id=${record.id}`;
+      const card = document.createElement("div");
 
       card.className = "car-card";
 
@@ -60,19 +50,21 @@ async function loadCars() {
 
       card.innerHTML = `
 
-        <img src="${image}">
+        <img src="${image}" alt="${f.Make_Model || ''}">
 
-        <h3>${f.Make_Model || "Vehicle"}</h3>
+        <h3>${f.Make_Model || ''}</h3>
 
-        <p>${f.Registration || ""}</p>
+        <p>${f.Registration || ''}</p>
 
-        <strong>${price}</strong>
+        <p>£${f.Price || ''}</p>
+
+        <a href="detail.html?id=${record.id}">View</a>
 
       `;
 
 
 
-      grid.appendChild(card);
+      container.appendChild(card);
 
     });
 
@@ -80,10 +72,14 @@ async function loadCars() {
 
   } catch (err) {
 
-    console.error("Car load error:", err);
+    console.error(err);
 
-    grid.innerHTML = "<p>Error loading stock</p>";
+    container.innerHTML = "<p>Error loading cars.</p>";
 
   }
 
-}
+}
+
+
+
+document.addEventListener("DOMContentLoaded", loadCars);
