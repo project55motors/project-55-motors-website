@@ -1,64 +1,59 @@
-// cars.js – FINAL (uses /api/cars correctly)
+// cars.js – FINAL (uses /api/cars only)
 
-const API = "/api/cars";
+document.addEventListener('DOMContentLoaded', () => {
+  const grid = document.getElementById('car-grid');
+  if (!grid) return;
 
-// Detect container automatically
-const container =
-  document.getElementById("stock-grid") ||
-  document.getElementById("car-grid") ||
-  document.getElementById("inventory") ||
-  document.getElementById("cars");
+  const API = 'https://project55motors.co.uk/api/cars';
 
-if (container) {
-  loadCars();
-}
+  grid.innerHTML = `<p style="text-align:center;width:100%;">Loading vehicles…</p>`;
 
-async function loadCars() {
-  try {
-    const res = await fetch(API);
+  fetch(API)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.records || !data.records.length) {
+        grid.innerHTML = `<p style="text-align:center;width:100%;">No vehicles found.</p>`;
+        return;
+      }
 
-    if (!res.ok) throw new Error("API error: " + res.status);
+      grid.innerHTML = '';
 
-    const data = await res.json();
+      data.records.forEach(record => {
+        const f = record.fields;
 
-    if (!data.records || !Array.isArray(data.records)) {
-      container.innerHTML = "<p>No vehicles found.</p>";
-      return;
-    }
+        const photo = f.Photos?.[0]?.url || '';
+        const make = f.Make_Model || 'Vehicle';
+        const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : '';
+        const reg = f.Registration || '';
+        const mileage = f.Mileage ? `${Number(f.Mileage).toLocaleString()} miles` : '';
 
-    renderCars(data.records);
+        const card = document.createElement('div');
+        card.className = 'car-card';
 
-  } catch (err) {
-    console.error("Cars API error:", err);
-    container.innerHTML = "<p>Failed to load vehicles.</p>";
-  }
-}
+        card.innerHTML = `
+          <a href="detail.html?id=${record.id}">
+            <div class="car-image">
+              ${photo ? `<img src="${photo}" alt="${make}">` : ``}
+            </div>
 
-function renderCars(records) {
-  container.innerHTML = "";
+            <div class="car-info">
+              <h3>${make}</h3>
+              <p>${reg}</p>
+              <strong>${price}</strong>
+              <span>${mileage}</span>
+            </div>
+          </a>
+        `;
 
-  records.forEach((car) => {
-    const f = car.fields;
-
-    const image = f.Photos?.[0]?.url || "/images/placeholder.png";
-    const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : "POA";
-    const title = f.Make_Model || "Vehicle";
-    const reg = f.Registration || "";
-
-    const card = document.createElement("div");
-    card.className = "car-card";
-
-    card.innerHTML = `
-      <img src="${image}" alt="${title}">
-      <h3>${title}</h3>
-      <p><strong>${reg}</strong></p>
-      <p class="price">${price}</p>
-    `;
-
-    card.onclick = () => {
-      window.location.href = `/car.html?id=${car.id}`;
-    };
-
-    container.appendChild(card);
-  });
-}
+        grid.appendChild(card);
+      });
+    })
+    .catch(err => {
+      console.error('Error loading cars:', err);
+      grid.innerHTML = `
+        <p style="color:red;text-align:center;width:100%;">
+          Error loading vehicles
+        </p>
+      `;
+    });
+});
