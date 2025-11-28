@@ -1,12 +1,13 @@
-// cars.js – FINAL
+// cars.js – FINAL (uses /api/cars correctly)
 
 const API = "/api/cars";
 
-// Change this to match YOUR container id on the page
+// Detect container automatically
 const container =
   document.getElementById("stock-grid") ||
-  document.getElementById("cars") ||
-  document.getElementById("inventory");
+  document.getElementById("car-grid") ||
+  document.getElementById("inventory") ||
+  document.getElementById("cars");
 
 if (container) {
   loadCars();
@@ -15,6 +16,9 @@ if (container) {
 async function loadCars() {
   try {
     const res = await fetch(API);
+
+    if (!res.ok) throw new Error("API error: " + res.status);
+
     const data = await res.json();
 
     if (!data.records || !Array.isArray(data.records)) {
@@ -23,9 +27,10 @@ async function loadCars() {
     }
 
     renderCars(data.records);
+
   } catch (err) {
-    container.innerHTML = "<p>Failed to load vehicles.</p>";
     console.error("Cars API error:", err);
+    container.innerHTML = "<p>Failed to load vehicles.</p>";
   }
 }
 
@@ -36,7 +41,7 @@ function renderCars(records) {
     const f = car.fields;
 
     const image = f.Photos?.[0]?.url || "/images/placeholder.png";
-    const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : "";
+    const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : "POA";
     const title = f.Make_Model || "Vehicle";
     const reg = f.Registration || "";
 
