@@ -1,63 +1,43 @@
-// detail.js OR car-page.js
+// car-page.js – FINAL
 
-
+const API = "/api/cars";
 
-const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
+const recordId = params.get("id");
 
-const id = params.get("id");
+if (!recordId) {
+  document.body.insertAdjacentHTML("beforeend", "<p>Car not found.</p>");
+} else {
+  loadCar(recordId);
+}
 
-
+async function loadCar(id) {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
 
-if (!id) {
+    const car = data.records.find((r) => r.id === id);
 
-  document.body.innerHTML = "<h2>No car ID provided</h2>";
+    if (!car) {
+      throw new Error("Car not found");
+    }
 
-} else {
+    renderCar(car.fields);
+  } catch (err) {
+    document.body.insertAdjacentHTML("beforeend", "<p>Error loading car</p>");
+    console.error(err);
+  }
+}
 
-  fetch(`https://project55motors.co.uk/api/cars?id=${id}`)
+function renderCar(f) {
+  const image = f.Photos?.[0]?.url || "/images/placeholder.png";
 
-    .then(res => res.json())
-
-    .then(data => {
-
-
-
-      const car = data.records?.[0]?.fields;
-
-
-
-      if (!car) {
-
-        document.body.innerHTML = "<h2>Car not found</h2>";
-
-        return;
-
-      }
-
-
-
-      const img = car.Photos?.[0]?.url || "no-image.png";
-
-
-
-      document.getElementById('car-image').src = img;
-
-      document.getElementById('car-title').textContent = car.Make_Model || '';
-
-      document.getElementById('car-price').textContent = "£" + (car.Price || '');
-
-      document.getElementById('car-description').textContent = car.Full_Description || '';
-
-
-
-    })
-
-    .catch(err => {
-
-      console.error(err);
-
-      document.body.innerHTML = "<h2>Error loading car</h2>";
-
-    });
-
+  document.getElementById("car-image").src = image;
+  document.getElementById("car-title").textContent = f.Make_Model;
+  document.getElementById("car-price").textContent = `£${Number(f.Price).toLocaleString()}`;
+  document.getElementById("car-reg").textContent = f.Registration;
+  document.getElementById("car-mileage").textContent = f.Mileage;
+  document.getElementById("car-mot").textContent = f.MOT_Date;
+  document.getElementById("car-short").textContent = f.Short_Description;
+  document.getElementById("car-desc").textContent = f.Full_Description;
 }
