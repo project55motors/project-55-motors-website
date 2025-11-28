@@ -1,94 +1,109 @@
-// cars.js – FINAL layout version for Project 55 Motors
+// cars.js – FINAL
 
-document.addEventListener('DOMContentLoaded', () => {
-  const grid = document.getElementById('car-grid');
-  if (!grid) return;
+(async () => {
+  const grid = document.getElementById("car-grid");
+  if (!grid) return; // nothing to do on pages without the grid
 
-  const API = 'https://project55motors.co.uk/api/cars';
+  grid.innerHTML = `<p style="text-align:center;margin-top:2rem;">Loading stock…</p>`;
 
-  grid.innerHTML = `<p style="text-align:center;width:100%;">Loading vehicles…</p>`;
+  try {
+    const res = await fetch("/api/cars");
 
-  fetch(API)
-    .then(res => res.json())
-    .then(data => {
+    if (!res.ok) {
+      throw new Error("Worker error: " + res.status);
+    }
 
-      if (!data.records || !data.records.length) {
-        grid.innerHTML = `<p style="text-align:center;width:100%;">No vehicles found.</p>`;
-        return;
-      }
+    const data = await res.json();
+    const records = data.records || [];
 
-      grid.innerHTML = '';
-
-      data.records.forEach(record => {
-        const f = record.fields;
-
-        const photo   = f.Photos?.[0]?.url || '';
-        const make    = f.Make_Model || 'Vehicle';
-        const reg     = f.Registration || '—';
-        const mileage = f.Mileage ? `${Number(f.Mileage).toLocaleString()} miles` : '—';
-        const price   = f.Price ? `£${Number(f.Price).toLocaleString()}` : '—';
-        const mot     = f.MOT_Date || '—';
-        const desc    = f.Short_Description || '';
-
-        const card = document.createElement('div');
-        card.className = 'car-card';
-
-        card.innerHTML = `
-          <a href="detail.html?id=${record.id}" style="text-decoration:none;color:inherit;">
-
-            <div class="car-image">
-              ${photo ? `<img src="${photo}" alt="${make}">` : ``}
-            </div>
-
-            <div class="car-info">
-
-              <h3 style="font-weight:700;margin-bottom:0.6rem;">
-                ${make}
-              </h3>
-
-              <div class="car-spec-grid" style="
-                display:grid;
-                grid-template-columns: 1fr 1fr;
-                gap:0.4rem 1.2rem;
-                margin-bottom:0.8rem;
-                font-size:0.95rem;
-              ">
-
-                <div><strong>Reg:</strong> ${reg}</div>
-                <div><strong>Price:</strong> ${price}</div>
-
-                <div><strong>MOT:</strong> ${mot}</div>
-                <div><strong>Mileage:</strong> ${mileage}</div>
-
-              </div>
-
-              ${desc ? `
-                <div style="
-                  border-top:1px solid #e5e7eb;
-                  margin-top:0.6rem;
-                  padding-top:0.6rem;
-                  font-size:0.9rem;
-                  color:#374151;
-                ">
-                  ${desc}
-                </div>
-              ` : ''}
-
-            </div>
-
-          </a>
-        `;
-
-        grid.appendChild(card);
-      });
-    })
-    .catch(err => {
-      console.error('Error loading cars:', err);
-
-      grid.innerHTML = `
-        <p style="color:red;text-align:center;width:100%;">
-          Error loading vehicles
-        </p>
-      `;
+    const available = records.filter(r => {
+      const s = (r.fields.Status || "").toLowerCase();
+      return s === "available"; // only show cars that are actually available
     });
-});
+
+    if (!available.length) {
+      grid.innerHTML = `<p style="text-align:center;margin-top:2rem;">No vehicles currently in stock.</p>`;
+      return;
+    }
+
+    grid.innerHTML = available.map(recordToCard).join("");
+
+  } catch (err) {
+    console.error("Error loading cars:", err);
+    grid.innerHTML = `
+      <p style="text-align:center;margin-top:2rem;color:#b91c1c;">
+        Error loading stock.
+      </p>
+    `;
+  }
+
+  function recordToCard(r) {
+    const f = r.fields || {};
+
+    const makeModel = f.Make_Model || "Vehicle";
+    const reg       = f.Registration || "";
+    const mot       = f.MOT_Date || "";
+    const mileage   = f.Mileage != null ? `${Number(f.Mileage).toLocaleString()} miles` : "";
+    const price     = f.Price   != null ? `£${Number(f.Price).toLocaleString()}` : "";
+    const shortDesc = f.Short_Description || "";
+
+    // Use first photo (large thumb if available)
+    let photoUrl = "";
+    if (Array.isArray(f.Photos) && f.Photos.length) {
+      const p = f.Photos[0];
+      photoUrl =
+        (p.thumbnails && p.thumbnails.large && p.thumbnails.large.url) ||
+        p.url ||
+        "";
+    }
+
+    const href = `/car.html?id=${encodeURIComponent(r.id)}`;
+
+    return `
+<a class="car-card" href="${href}">
+  <div class="car-card-image-wrap">
+    ${photoUrl ? `
+      <img
+        src="${photoUrl}"
+        alt="${escapeHtml(makeModel)}"
+        loading="lazy"
+        style="width:100%;height:auto;display:block;border-radius:18px 18px 0 0;"
+      >
+    ` : ""}
+  </div>
+
+  <div class="car-card-body">
+    <h3 class="car-title">${escapeHtml(makeModel)}</h3>
+
+    <div class="car-card-row" style="display:flex;justify-content:space-between;font-size:0.9rem;margin-top:0.35rem;">
+      <span>${escapeHtml(reg)}</span>
+      <span>${mot ? `MOT: ${escapeHtml(mot)}` : ""}</span>
+    </div>
+
+    <div class="car-card-row" style="display:flex;justify-content:space-between;font-size:0.9rem;margin-top:0.35rem;font-weight:600;">
+      <span>${price}</span>
+      <span>${mileage}</span>
+    </div>
+
+    ${shortDesc
+      ? `<p class="car-card-desc" style="margin-top:0.6rem;font-size:0.9rem;color:#4b5563;">
+           ${escapeHtml(shortDesc)}
+         </p>`
+      : ""}
+  </div>
+</a>`;
+  }
+
+  function escapeHtml(str = "") {
+    return String(str).replace(/[&<>"']/g, ch => {
+      switch (ch) {
+        case "&": return "&amp;";
+        case "<": return "&lt;";
+        case ">": return "&gt;";
+        case '"': return "&quot;";
+        case "'": return "&#39;";
+        default: return ch;
+      }
+    });
+  }
+})();
