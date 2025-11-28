@@ -1,63 +1,102 @@
-// detail.js OR car-page.js
+// detail.js – FINAL VERSION USING /api/cars
 
-
+const MAIN_PHOTO = document.getElementById("main-photo");
+const THUMBNAIL_CONTAINER = document.getElementById("thumbnails");
+const WORKER_URL = "https://project55motors.co.uk/api/cars";
 
-const params = new URLSearchParams(window.location.search);
+// Get Airtable record ID from URL
+const CAR_ID = new URLSearchParams(window.location.search).get("id");
 
-const id = params.get("id");
+async function fetchCarDetails() {
+  if (!CAR_ID) {
+    document.getElementById("detail-container").innerHTML =
+      "<p>Vehicle ID missing.</p>";
+    return;
+  }
 
-
+  try {
+    const response = await fetch(WORKER_URL);
+    const data = await response.json();
 
-if (!id) {
+    if (!data.records || !Array.isArray(data.records)) {
+      document.getElementById("detail-container").innerHTML =
+        "<p>No vehicles found.</p>";
+      return;
+    }
 
-  document.body.innerHTML = "<h2>No car ID provided</h2>";
+    const record = data.records.find(r => r.id === CAR_ID);
 
-} else {
+    if (!record) {
+      document.getElementById("detail-container").innerHTML =
+        "<p>Vehicle not found.</p>";
+      return;
+    }
 
-  fetch(`https://project55motors.co.uk/api/cars?id=${id}`)
+    const f = record.fields;
 
-    .then(res => res.json())
+    // Text fields
+    document.getElementById("car-name").textContent = f.Make_Model || "";
+    document.getElementById("car-description").textContent = f.Short_Description || "";
+    document.getElementById("car-registration").textContent = f.Registration || "";
+    document.getElementById("car-mileage").textContent = f.Mileage || "";
+    document.getElementById("car-mot").textContent = f.MOT_Date || "";
+    document.getElementById("car-engine").textContent = f.Engine_size || "";
+    document.getElementById("car-fuel").textContent = f.Fuel_type || "";
+    document.getElementById("car-price").textContent = f.Price || "";
+    document.getElementById("car-full-description").textContent = f.Full_Description || "";
 
-    .then(data => {
+    // Photos
+    const photos = f.Photos || [];
+    MAIN_PHOTO.src = photos.length ? photos[0].url : "placeholder.jpg";
 
-
+    THUMBNAIL_CONTAINER.innerHTML = "";
+    photos.forEach((photo, index) => {
+      const thumb = document.createElement("img");
+      thumb.src = photo.url;
+      thumb.className = "thumbnail";
+      if (index === 0) thumb.classList.add("active");
 
-      const car = data.records?.[0]?.fields;
+      thumb.addEventListener("click", (e) => {
+        e.preventDefault();
+        MAIN_PHOTO.src = photo.url;
+        document.querySelectorAll(".thumbnail").forEach(t => t.classList.remove("active"));
+        thumb.classList.add("active");
+      });
 
-
+      THUMBNAIL_CONTAINER.appendChild(thumb);
+    });
 
-      if (!car) {
+    MAIN_PHOTO.addEventListener("click", () => showFullScreen(MAIN_PHOTO.src));
 
-        document.body.innerHTML = "<h2>Car not found</h2>";
-
-        return;
-
-      }
-
-
-
-      const img = car.Photos?.[0]?.url || "no-image.png";
-
-
-
-      document.getElementById('car-image').src = img;
-
-      document.getElementById('car-title').textContent = car.Make_Model || '';
-
-      document.getElementById('car-price').textContent = "£" + (car.Price || '');
-
-      document.getElementById('car-description').textContent = car.Full_Description || '';
-
-
-
-    })
-
-    .catch(err => {
-
-      console.error(err);
-
-      document.body.innerHTML = "<h2>Error loading car</h2>";
-
-    });
-
+  } catch (err) {
+    console.error(err);
+    document.getElementById("detail-container").innerHTML =
+      "<p>Error loading vehicle.</p>";
+  }
 }
+
+function showFullScreen(src) {
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.background = "rgba(0,0,0,0.9)";
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "center";
+  overlay.style.justifyContent = "center";
+  overlay.style.zIndex = "9999";
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.style.maxWidth = "95%";
+  img.style.maxHeight = "95%";
+  img.style.borderRadius = "10px";
+
+  overlay.appendChild(img);
+  overlay.addEventListener("click", () => overlay.remove());
+  document.body.appendChild(overlay);
+}
+
+fetchCarDetails();
