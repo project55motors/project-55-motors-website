@@ -1,95 +1,58 @@
-// admin-shortcut.js – FINAL USING /api (admin-worker route)
+// admin-shortcut.js – FINAL
 
-document.addEventListener('DOMContentLoaded', () => {
-  const adminModal  = document.getElementById('admin-login-modal');
-  const adminForm   = document.getElementById('admin-login-form');
-  const adminError  = document.getElementById('admin-login-error');
-  const closeButton = document.querySelector('#admin-login-modal .modal-close');
+(function () {
+  const ADMIN_URL = "/admin.html";
 
-  // Admin worker mounted at https://project55motors.co.uk/api/*
-  const WORKER_BASE = 'https://project55motors.co.uk/api';
+  function goAdmin() {
+    window.location.href = ADMIN_URL;
+  }
 
-  if (!adminModal || !adminForm) return;
-
-  const hideAdminModal = () => {
-    adminModal.style.display = 'none';
-    adminError.style.display = 'none';
-    adminForm.reset();
-  };
-
-  // OPEN MODAL: Shift + A
-  document.addEventListener('keydown', e => {
-    if (e.shiftKey && e.key.toLowerCase() === 'a') {
-      e.preventDefault();
-      adminModal.style.display = 'flex';
+  // ===== Desktop: Shift + A =====
+  document.addEventListener("keydown", function (e) {
+    if (e.shiftKey && (e.key === "A" || e.key === "a")) {
+      goAdmin();
     }
   });
 
-  // OPEN MODAL: triple-tap logo
-  setTimeout(() => {
-    const logo =
-      document.querySelector('.logo img') ||
-      document.querySelector('nav img') ||
-      document.querySelector('img[src*="logo"]');
+  // ===== Triple click on logo =====
+  window.addEventListener("DOMContentLoaded", () => {
+    const logo = document.querySelector("img[alt*='Project'], .logo, #logo");
 
     if (!logo) return;
 
-    let taps = 0;
+    let clicks = 0;
+    let timer = null;
 
-    logo.addEventListener('click', () => {
-      taps++;
-      clearTimeout(logo._timer);
-      logo._timer = setTimeout(() => { taps = 0; }, 600);
+    logo.style.cursor = "pointer";
 
-      if (taps === 3) {
-        taps = 0;
-        adminModal.style.display = 'flex';
+    logo.addEventListener("click", () => {
+      clicks++;
+
+      if (clicks >= 3) {
+        goAdmin();
+        clicks = 0;
+        return;
       }
+
+      clearTimeout(timer);
+      timer = setTimeout(() => (clicks = 0), 800);
     });
-  }, 500);
 
-  closeButton?.addEventListener('click', e => {
-    e.preventDefault();
-    hideAdminModal();
-  });
+    // ===== Mobile: 5 taps =====
+    let taps = 0;
+    let tapTimer = null;
 
-  adminModal.addEventListener('click', e => {
-    if (e.target === adminModal) hideAdminModal();
-  });
+    logo.addEventListener("touchend", () => {
+      taps++;
 
-  // LOGIN HANDLER
-  adminForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const username = adminForm.username.value.trim();
-    const password = adminForm.password.value;
-
-    adminError.style.display = 'none';
-    adminError.textContent = '';
-
-    try {
-      const response = await fetch(`${WORKER_BASE}/login`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (response.ok && result.success) {
-        hideAdminModal();
-        window.location.href = '/admin-dashboard.html';
-      } else {
-        adminError.textContent = result.error || 'Login failed – check username or password';
-        adminError.style.display = 'block';
-        adminForm.password.value = '';
+      if (taps >= 5) {
+        goAdmin();
+        taps = 0;
+        return;
       }
 
-    } catch (err) {
-      console.error('Network / CORS error:', err);
-      adminError.textContent = 'Network error – worker unreachable';
-      adminError.style.display = 'block';
-    }
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => (taps = 0), 1000);
+    });
   });
-});
+})();
