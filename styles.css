@@ -128,6 +128,13 @@ nav .logo img { max-width:180px; height:auto; }
     color:inherit;
     text-decoration:none;
 }
+.car-card-image-wrap img {
+  width: 100%;
+  height: auto;      /* let height follow aspect ratio */
+  object-fit: contain;  /* show full car, no cropping */
+  display: block;
+}
+
 .car-card img { 
     width:100%; 
     height: 200px; /* CRITICAL FIX: Fixed height for images */
