@@ -1,85 +1,59 @@
-// cars.js – FINAL CLEAN VERSION
+// cars.js – FINAL
 
-
+const API = "/api/cars";
 
-const API = "https://project55motors.co.uk/api/cars";
+// Change this to match YOUR container id on the page
+const container =
+  document.getElementById("stock-grid") ||
+  document.getElementById("cars") ||
+  document.getElementById("inventory");
 
-const container = document.getElementById("car-list");
+if (container) {
+  loadCars();
+}
 
-
+async function loadCars() {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
 
-async function loadCars() {
+    if (!data.records || !Array.isArray(data.records)) {
+      container.innerHTML = "<p>No vehicles found.</p>";
+      return;
+    }
 
-  try {
+    renderCars(data.records);
+  } catch (err) {
+    container.innerHTML = "<p>Failed to load vehicles.</p>";
+    console.error("Cars API error:", err);
+  }
+}
 
-    const res = await fetch(API);
+function renderCars(records) {
+  container.innerHTML = "";
 
-    const data = await res.json();
+  records.forEach((car) => {
+    const f = car.fields;
 
-
+    const image = f.Photos?.[0]?.url || "/images/placeholder.png";
+    const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : "";
+    const title = f.Make_Model || "Vehicle";
+    const reg = f.Registration || "";
 
-    if (!data.records || !Array.isArray(data.records)) {
+    const card = document.createElement("div");
+    card.className = "car-card";
 
-      container.innerHTML = "<p>No cars found.</p>";
+    card.innerHTML = `
+      <img src="${image}" alt="${title}">
+      <h3>${title}</h3>
+      <p><strong>${reg}</strong></p>
+      <p class="price">${price}</p>
+    `;
 
-      return;
+    card.onclick = () => {
+      window.location.href = `/car.html?id=${car.id}`;
+    };
 
-    }
-
-
-
-    container.innerHTML = "";
-
-
-
-    data.records.forEach(record => {
-
-      const f = record.fields;
-
-
-
-      const image = f.Photos?.[0]?.url || "no-image.png";
-
-
-
-      const card = document.createElement("div");
-
-      card.className = "car-card";
-
-
-
-      card.innerHTML = `
-
-        <img src="${image}" alt="${f.Make_Model || ''}">
-
-        <h3>${f.Make_Model || ''}</h3>
-
-        <p>${f.Registration || ''}</p>
-
-        <p>£${f.Price || ''}</p>
-
-        <a href="detail.html?id=${record.id}">View</a>
-
-      `;
-
-
-
-      container.appendChild(card);
-
-    });
-
-
-
-  } catch (err) {
-
-    console.error(err);
-
-    container.innerHTML = "<p>Error loading cars.</p>";
-
-  }
-
-}
-
-
-
-document.addEventListener("DOMContentLoaded", loadCars);
+    container.appendChild(card);
+  });
+}
