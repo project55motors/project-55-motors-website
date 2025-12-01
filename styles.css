@@ -1,0 +1,396 @@
+/* --------------------------------------------------
+   GLOBAL RESET & BASE STYLES
+-------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", Arial, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------
+   NAVIGATION
+-------------------------------------------------- */
+nav {
+  width: 100%;
+  background: white;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+}
+
+nav .container {
+  max-width: 1150px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .links a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+}
+
+/* --------------------------------------------------
+   HERO
+-------------------------------------------------- */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1150px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* --------------------------------------------------
+   CAR GRID
+-------------------------------------------------- */
+#car-grid,
+.car-grid {
+  max-width: 1150px;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+/* --------------------------------------------------
+   CAR CARD
+-------------------------------------------------- */
+.car-card {
+  display: block;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.car-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+
+/* CARD IMAGE — object-fit: cover (tight, premium) */
+.car-card img.car-thumb {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  background: #eee;
+  display: block;
+}
+
+/* CARD INFO */
+.car-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.car-info h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.1rem;
+}
+
+.car-info .reg {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.car-info .price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0a7;
+}
+
+/* NEW: short description (2-line clamp) */
+.card-short-desc {
+  font-size: 0.92rem;
+  color: #555;
+  margin-top: 0.2rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* NEW: spec line (mileage + MOT) */
+.card-spec-line {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 0.15rem;
+}
+
+/* --------------------------------------------------
+   VEHICLE PAGE (car.html)
+-------------------------------------------------- */
+.vehicle-wrapper {
+  max-width: 1150px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* HERO IMAGE — object-fit: contain for accuracy */
+.vehicle-hero {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  background: #fafafa;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* --------------------------------------------------
+   DETAIL MODAL (detail.html modern layout)
+-------------------------------------------------- */
+#detail-container {
+  max-width: 1150px;
+  margin: 2rem auto;
+}
+
+#main-photo {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  background: #f7f7f7;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+/* Thumbnail strip — contain */
+#thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+#thumbnails img {
+  width: 90px;
+  height: 70px;
+  object-fit: contain;
+  background: #fff;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+#thumbnails img.active {
+  border-color: #0a7;
+  background: #f0fff7;
+}
+
+#thumbnails img:hover {
+  border-color: #0a7;
+}
+
+/* --------------------------------------------------
+   ADMIN LOGIN MODAL (separate styling!)
+-------------------------------------------------- */
+
+#admin-login-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+}
+
+#admin-login-modal .admin-modal-box {
+  width: 95%;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25)
+
+/* --------------------------------------------------
+   NEW VEHICLE DETAIL PAGE (vehicle.html)
+-------------------------------------------------- */
+
+#vehicle-container {
+  max-width: 1150px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 18px rgba(0,0,0,0.08);
+}
+
+#vehicle-main-photo {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  background: #fafafa;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  cursor: zoom-in;
+}
+
+/* THUMBNAILS */
+#vehicle-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.vehicle-thumb {
+  width: 95px;
+  height: 75px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.vehicle-thumb.active {
+  border-color: #0a7;
+}
+
+/* TITLE */
+#vehicle-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* SPEC GRID */
+#vehicle-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+#vehicle-description {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+/* FULLSCREEN VIEWER */
+#fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#fullscreen-image {
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* HOMEPAGE HERO (Option A) */
+.clean-hero {
+  max-width: 1150px;
+  margin: 3rem auto;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.clean-hero .hero-content h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+}
+.clean-hero .hero-content p {
+  margin: 0.8rem 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+.cta-btn {
+  display: inline-block;
+  background: #0a7;
+  color: white;
+  padding: 0.8rem 1.6rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta-btn.small {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+}
+
+/* GREY SECTION BAND (Section Title B) */
+.section-band {
+  background: #f2f2f2;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.section-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+.section-subtitle {
+  margin-top: 0.6rem;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* CAROUSEL */
+.car-carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem;
+  scroll-snap-type: x mandatory;
+}
+.carousel-card {
+  min-width: 280px;
+  scroll-snap-align: start;
+}
+
+/* STOCK GRID (Responsive + dynamic sizing) */
+.car-grid {
+  max-width: 1150px;
+  margin: 2rem auto;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
