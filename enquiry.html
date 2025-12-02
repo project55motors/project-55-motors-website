@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Enquiry – Project 55 Motors</title>
+
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <a href="/" class="logo"><img src="logo.png" alt="Project 55 Motors"></a>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/stock.html">Stock</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="enquiry-page container" style="max-width: 800px; padding: 4rem 1.5rem;">
+    <h1 style="font-size:2.1rem; margin-bottom:0.75rem;">Vehicle Enquiry</h1>
+
+    <!-- Vehicle summary populated by JS -->
+    <div id="enquiry-vehicle-summary" style="margin-bottom:1.8rem; padding:1rem 1.1rem; background:#ffffff; border-radius:12px; box-shadow:0 8px 22px rgba(15,23,42,0.06);">
+        <p id="enquiry-vehicle-title" style="font-weight:600; font-size:1.05rem; margin-bottom:0.2rem;"></p>
+        <p id="enquiry-vehicle-meta" style="font-size:0.95rem; color:#4b5563;"></p>
+    </div>
+
+    <p style="font-size:0.98rem; color:#4b5563; margin-bottom:1.5rem;">
+        Please confirm your details and we’ll get back to you as soon as possible regarding this vehicle.
+    </p>
+
+    <form action="https://formspree.io/f/xdkydoar" method="POST" id="enquiry-form" style="text-align:left;">
+        <input type="text" name="name" placeholder="Your name" required class="form-field">
+        <input type="email" name="email" placeholder="Your email" required class="form-field">
+        <input type="tel" name="phone" placeholder="Phone (optional)" class="form-field">
+
+        <textarea name="message" rows="5" placeholder="Your message or enquiry" required
+                  class="form-field" id="enquiry-message"></textarea>
+
+        <!-- Hidden fields to also send structured vehicle info -->
+        <input type="hidden" name="vehicle_title" id="hidden-vehicle-title">
+        <input type="hidden" name="vehicle_reg" id="hidden-vehicle-reg">
+        <input type="hidden" name="vehicle_price" id="hidden-vehicle-price">
+
+        <button type="submit" class="cta" style="width:100%;">Send Enquiry</button>
+    </form>
+</div>
+
+<footer>
+    <p>© 2025 Project 55 Motors – Sole Trader | Cleobury Mortimer, Shropshire<br>
+        <a href="mailto:nathan@project55motors.co.uk" style="color:#86868b;">nathan@project55motors.co.uk</a>
+    </p>
+</footer>
+
+<script src="enquiry.js"></script>
+<script src="admin-shortcut.js"></script>
+</body>
+</html>
