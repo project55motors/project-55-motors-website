@@ -1,0 +1,646 @@
+/* ======================================================
+   PROJECT 55 MOTORS – WORLD CLASS LIGHT THEME (BMW STYLE)
+   Clean, premium dealership styling
+   ====================================================== */
+
+/* ---------- GLOBAL RESET & BASE ---------- */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* ============================================================
+   TOP HERO BANNER (BMW / Land Rover style)
+============================================================ */
+
+.top-banner {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  overflow: hidden;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.78);
+}
+
+/* Floating logo on left */
+.banner-logo {
+  position: absolute;
+  top: 25px;
+  left: 40px;
+  z-index: 20;
+}
+
+.banner-logo img {
+  height: 70px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+/* HERO TEXT BELOW BANNER */
+.hero-text {
+  max-width: 1180px;
+  margin: 2rem auto 2rem;
+  padding: 0 1.5rem;
+  text-align: left;
+}
+
+.hero-text h1 {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.hero-text p {
+  font-size: 1.1rem;
+  color: #4b5563;
+  margin-bottom: 1.2rem;
+}
+
+.spec-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  vertical-align: middle;
+  opacity: 0.9;
+}
+
+#vehicle-spec-grid div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  padding: 0.3rem 0;
+}
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #f3f4f6; /* subtle grey, like BMW */
+  color: #111827;
+  line-height: 1.6;
+}
+
+/* Links */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utility container */
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ---------- NAVIGATION ---------- */
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+}
+
+nav img {
+  height: 42px;
+}
+
+nav .links a {
+  margin-left: 1.75rem;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+}
+
+nav .links a:hover {
+  color: #111827;
+}
+
+/* ---------- HERO (HOMEPAGE) ---------- */
+
+.hero.clean-hero {
+  max-width: 1180px;
+  margin: 2.5rem auto 2rem;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+}
+
+.hero-content h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+
+.hero-content p {
+  font-size: 1.05rem;
+  color: #4b5563;
+  margin-bottom: 1.1rem;
+}
+
+.hero-img img {
+  width: 100%;
+  max-width: 360px;
+  display: block;
+  margin-left: auto;
+  object-fit: contain;
+}
+
+/* Primary CTA button */
+
+.cta-btn {
+  display: inline-block;
+  background: #047857; /* deep green, premium feel */
+  color: #ffffff;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.98rem;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(4, 120, 87, 0.25);
+  transition: background 0.15s ease, transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.cta-btn.small {
+  padding: 0.6rem 1.3rem;
+  font-size: 0.9rem;
+  box-shadow: 0 5px 14px rgba(4, 120, 87, 0.18);
+}
+
+.cta-btn:hover {
+  background: #065f46;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(4, 120, 87, 0.28);
+}
+
+.cta-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);
+}
+
+/* ---------- SECTION BANDS & TITLES ---------- */
+
+.section-band {
+  background: #e5e7eb;
+  padding: 2rem 0 1.5rem;
+  margin-top: 0;
+}
+
+.section-band .section-title,
+.section-title {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.section-subtitle {
+  max-width: 1180px;
+  margin: 0.5rem auto 0;
+  padding: 0 1.5rem;
+  font-size: 1.02rem;
+  color: #4b5563;
+}
+
+/* ---------- HOMEPAGE CAROUSEL ---------- */
+
+.car-carousel {
+  max-width: 1180px;
+  margin: 1rem auto 0;
+  padding: 0.5rem 1.5rem 1.3rem;
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide default scrollbar in WebKit for clean look */
+.car-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+.car-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.car-carousel::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+/* bottom CTA under carousel */
+
+.carousel-bottom {
+  max-width: 1180px;
+  margin: 0 auto 1.8rem;
+  padding: 0 1.5rem;
+  text-align: right;
+}
+
+/* ---------- BMW-STYLE CAR CARDS (shared carousel + grid) ---------- */
+
+.car-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  max-width: 340px;
+  scroll-snap-align: start;
+  transition: transform 0.14s ease, box-shadow 0.14s ease,
+    border-color 0.14s ease;
+}
+
+/* Slight raised / depressed interaction */
+.car-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.15);
+  border-color: #d1d5db;
+}
+
+.car-card:active {
+  transform: translateY(-1px) scale(0.995);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+}
+
+/* Card image: BMW-style 16:9 crop, tight but tasteful */
+.car-thumb {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+  background: #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Card content */
+
+.car-info {
+  padding: 0.9rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.car-info h3 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.car-info .reg {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.car-info .price {
+  margin-top: 0.15rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #047857;
+}
+
+/* short description – two line clamp */
+
+.card-short-desc {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: #4b5563;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* spec line (mileage + MOT) */
+
+.card-spec-line {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* ---------- STOCK PAGE GRID ---------- */
+
+.car-grid {
+  max-width: 1180px;
+  margin: 2rem auto 3rem;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ---------- VEHICLE DETAIL PAGE (vehicle.html) ---------- */
+
+#vehicle-container {
+  max-width: 1180px;
+  margin: 2.5rem auto 3rem;
+  padding: 1.75rem 1.5rem 2.2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+}
+
+/* Main hero image – show whole car (contain) */
+
+#vehicle-main-photo {
+  width: 100%;
+  max-height: 460px;
+  object-fit: contain;
+  background: #f3f4f6;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  cursor: zoom-in;
+}
+
+/* Thumbnail strip */
+
+#vehicle-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+
+#vehicle-thumbnails::-webkit-scrollbar {
+  height: 5px;
+}
+#vehicle-thumbnails::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.vehicle-thumb {
+  width: 90px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.vehicle-thumb:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+}
+
+.vehicle-thumb.active {
+  border-color: #047857;
+}
+
+/* Vehicle title & spec grid */
+
+#vehicle-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.9rem;
+  color: #111827;
+}
+
+#vehicle-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem 2rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.98rem;
+  color: #111827;
+}
+
+#vehicle-spec-grid div span {
+  font-weight: 500;
+}
+
+/* Full description */
+
+#vehicle-description {
+  padding-top: 1.1rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 0.98rem;
+  color: #4b5563;
+}
+
+#vehicle-description p {
+  margin-bottom: 0.8rem;
+}
+
+/* ---------- FULLSCREEN IMAGE VIEWER ---------- */
+
+#fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: none; /* toggled by JS */
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+#fullscreen-image {
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* ---------- ABOUT & CONTACT PAGES (simple centre column) ---------- */
+
+.page-section {
+  max-width: 800px;
+  margin: 2.5rem auto 3rem;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.page-section h1,
+.page-section h2 {
+  font-size: 1.9rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.page-section p {
+  margin-bottom: 0.9rem;
+  color: #4b5563;
+}
+
+/* Contact form fields (if present) */
+
+.form-field {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+button,
+input[type="submit"] {
+  cursor: pointer;
+}
+
+/* ---------- ADMIN LOGIN MODAL (for triple-click & Shift+A) ---------- */
+
+#admin-login-modal {
+  position: fixed;
+  inset: 0;
+  display: none; /* shown via JS */
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 4000;
+}
+
+#admin-login-modal .admin-modal-box {
+  width: 95%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.8rem 1.6rem 1.6rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45);
+  position: relative;
+}
+
+#admin-login-modal .modal-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+#admin-login-modal h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+#admin-login-error {
+  display: none;
+  margin-bottom: 0.8rem;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+/* Simple admin login form fields inside modal */
+
+#admin-login-form input[type="text"],
+#admin-login-form input[type="password"] {
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  margin-bottom: 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+}
+
+#admin-login-form button {
+  width: 100%;
+  padding: 0.65rem;
+  border-radius: 999px;
+  border: none;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ---------- FOOTER ---------- */
+
+footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 1.7rem 1.5rem 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* ---------- RESPONSIVE ADJUSTMENTS ---------- */
+
+@media (max-width: 900px) {
+  .hero.clean-hero {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: left;
+  }
+
+  .hero-img {
+    display: none; /* hide image on small screens */
+  }
+
+  nav .container {
+    padding: 0.7rem 1rem;
+  }
+
+  .car-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .section-band {
+    padding: 1.5rem 0 1.2rem;
+  }
+
+  .car-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #vehicle-container {
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.3rem 1.1rem 1.8rem;
+  }
+
+  #vehicle-title {
+    font-size: 1.5rem;
+  }
+}
