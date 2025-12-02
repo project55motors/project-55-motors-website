@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Details – Project 55 Motors</title>
+
+    <!-- Inter font for premium typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="container">
+            <a href="index.html"><img src="logo.png" alt="Project 55 Motors" style="height:45px;"></a>
+            <div class="links">
+                <a href="index.html">Home</a>
+                <a href="stock.html">Current Stock</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE CONTENT -->
+    <div id="vehicle-container">
+
+        <!-- MAIN IMAGE -->
+        <img id="vehicle-main-photo" src="" alt="Vehicle photo">
+
+        <!-- THUMBNAILS -->
+        <div id="vehicle-thumbnails"></div>
+
+        <!-- TITLE -->
+        <h1 id="vehicle-title"></h1>
+
+        <!-- PREMIUM ICON SPEC GRID -->
+        <div id="vehicle-spec-grid">
+            <div>
+                <img src="assets/icons/registration.svg" class="spec-icon" alt="">
+                <span id="spec-reg"></span>
+            </div>
+            <div>
+                <img src="assets/icons/engine.svg" class="spec-icon" alt="">
+                <span id="spec-engine"></span>
+            </div>
+            <div>
+                <img src="assets/icons/fuel.svg" class="spec-icon" alt="">
+                <span id="spec-fuel"></span>
+            </div>
+            <div>
+                <img src="assets/icons/mileage.svg" class="spec-icon" alt="">
+                <span id="spec-mileage"></span>
+            </div>
+            <div>
+                <img src="assets/icons/mot.svg" class="spec-icon" alt="">
+                <span id="spec-mot"></span>
+            </div>
+        </div>
+
+        <!-- PRICE BLOCK -->
+        <div id="vehicle-price-block">
+            <h2 id="spec-price" class="vehicle-price"></h2>
+        </div>
+
+        <!-- FULL DESCRIPTION -->
+        <div id="vehicle-description"></div>
+
+    </div>
+
+    <!-- FULLSCREEN OVERLAY -->
+    <div id="fullscreen-overlay" style="display:none;">
+        <img id="fullscreen-image" src="">
+    </div>
+
+    <!-- STICKY ENQUIRY BAR (BMW-style) -->
+    <div id="enquiry-bar">
+        <div class="enquiry-bar-inner">
+            <div class="enquiry-bar-text">
+                <div class="enquiry-bar-title" id="enquiry-bar-title"></div>
+                <div class="enquiry-bar-meta">
+                    <span id="enquiry-bar-reg"></span>
+                    <span id="enquiry-bar-price"></span>
+                </div>
+            </div>
+            <button id="enquiry-bar-button" class="enquiry-bar-button">Enquire Now</button>
+        </div>
+    </div>
+
+    <script src="vehicle.js"></script>
+    <script src="enquiry-bar.js"></script>
+    <script src="admin-shortcut.js"></script>
+</body>
+</html>
