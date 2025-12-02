@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Details – Project 55 Motors</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="top-banner">
+        <img class="banner-image" src="assets/hero-banner.jpg" alt="Shropshire Hills Banner">
+        <div class="banner-logo">
+            <a href="index.html">
+                <img id="p55-logo" src="logo.png" alt="Project 55 Motors Logo">
+            </a>
+        </div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html">Home</a>
+            <a href="inventory.html">Current Stock</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <!-- VEHICLE DETAILS CONTAINER -->
+    <div id="vehicle-container">
+
+        <!-- MAIN IMAGE -->
+        <img id="vehicle-main-photo" src="" alt="Vehicle photo" class="vehicle-hero">
+
+        <!-- THUMBNAILS -->
+        <div id="vehicle-thumbnails"></div>
+
+        <!-- TITLE -->
+        <h1 id="vehicle-title"></h1>
+
+        <!-- SPEC GRID -->
+        <div id="vehicle-spec-grid">
+            <div><strong><img src="assets/icons/registration.svg" class="spec-icon"> Registration:</strong> <span id="spec-reg"></span></div>
+            <div><strong><img src="assets/icons/mileage.svg" class="spec-icon"> Mileage:</strong> <span id="spec-mileage"></span></div>
+            <div><strong><img src="assets/icons/engine.svg" class="spec-icon"> Engine Size:</strong> <span id="spec-engine"></span></div>
+            <div><strong><img src="assets/icons/fuel.svg" class="spec-icon"> Fuel Type:</strong> <span id="spec-fuel"></span></div>
+            <div><strong><img src="assets/icons/mot.svg" class="spec-icon"> MOT:</strong> <span id="spec-mot"></span></div>
+            <div><strong><img src="assets/icons/price.svg" class="spec-icon"> Price:</strong> <span id="spec-price"></span></div>
+        </div>
+
+        <!-- FULL DESCRIPTION -->
+        <div id="vehicle-description"></div>
+
+        <!-- ENQUIRE BUTTON -->
+        <div class="enquire-wrapper">
+            <a id="enquire-button" class="enquire-btn" href="contact.html">Enquire About This Vehicle</a>
+        </div>
+
+    </div>
+
+    <!-- FULLSCREEN OVERLAY FOR IMAGE VIEWING -->
+    <div id="fullscreen-overlay" style="display:none;">
+        <img id="fullscreen-image" src="">
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-login-modal" class="admin-modal
