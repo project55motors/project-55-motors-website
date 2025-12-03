@@ -1,0 +1,270 @@
+/* --------------------------------------------------------
+   GLOBAL RESET & BASE
+-------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: #f5f6f7;
+    color: #222;
+    line-height: 1.6;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.center {
+    text-align: center;
+}
+
+/* --------------------------------------------------------
+   HERO BANNER & LOGO
+-------------------------------------------------------- */
+.hero-header {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    overflow: hidden;
+}
+
+.hero-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-logo {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    height: 70px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* --------------------------------------------------------
+   NAVIGATION
+-------------------------------------------------------- */
+.main-nav {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 12px 0;
+    text-align: center;
+}
+
+.main-nav a {
+    margin: 0 18px;
+    font-weight: 500;
+    color: #333;
+}
+
+.main-nav a.active {
+    border-bottom: 2px solid #000;
+    padding-bottom: 4px;
+}
+
+/* --------------------------------------------------------
+   PAGE WRAPPER
+-------------------------------------------------------- */
+.page-wrapper {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-title {
+    font-size: 32px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.page-intro {
+    text-align: center;
+    max-width: 650px;
+    margin: 0 auto 30px auto;
+    color: #555;
+}
+
+/* --------------------------------------------------------
+   CAR GRID (BMW STYLE)
+-------------------------------------------------------- */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.car-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.25s ease;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.car-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.12);
+}
+
+.car-card-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+
+.car-card h3 {
+    font-size: 20px;
+    margin: 15px;
+}
+
+.car-card .reg {
+    margin: 0 15px;
+    color: #666;
+    font-size: 14px;
+}
+
+.car-card .price {
+    margin: 8px 15px 0 15px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.car-card .mini {
+    color: #666;
+    font-size: 13px;
+    margin: 10px 15px 20px 15px;
+}
+
+/* --------------------------------------------------------
+   VEHICLE DETAIL PAGE
+-------------------------------------------------------- */
+.vehicle-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.vehicle-main-photo {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    background: #fafafa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.vehicle-thumbnails {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.vehicle-thumbnails .thumb {
+    width: 90px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.vehicle-thumbnails .thumb:hover {
+    transform: scale(1.05);
+}
+
+.spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px 20px;
+    margin: 25px 0;
+    font-size: 15px;
+}
+
+.vehicle-description {
+    margin-top: 25px;
+    white-space: pre-line;
+    line-height: 1.7;
+}
+
+.enquire-btn {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 12px 26px;
+}
+
+/* --------------------------------------------------------
+   CONTACT FORM
+-------------------------------------------------------- */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.narrow-form {
+    width: 600px;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.contact-form label {
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+/* --------------------------------------------------------
+   BUTTONS
+-------------------------------------------------------- */
+.btn-primary {
+    background: #111;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 15px;
+    display: inline-block;
+    cursor: pointer;
+    transition: 0.25s;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background: #333;
+}
+
+/* --------------------------------------------------------
+   FOOTER
+-------------------------------------------------------- */
+footer {
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #666;
+}
