@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact – Project 55 Motors</title>
+
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css?v=20">
+
+    <!-- Admin Shortcut -->
+    <script src="admin-shortcut.js" defer></script>
+</head>
+
+<body>
+
+    <!-- =====================================
+         FULL-WIDTH BANNER + LOGO
+    ====================================== -->
+    <header class="hero-header">
+
+        <div class="hero-banner">
+            <img src="assets/hero-banner.jpg" alt="Shropshire Hills" class="hero-image">
+            <div class="hero-overlay"></div>
+
+            <!-- LOGO OVERLAY -->
+            <div class="hero-logo-box">
+                <a href="index.html">
+                    <img src="logo.png" alt="Project 55 Motors" class="hero-logo">
+                </a>
+            </div>
+        </div>
+
+        <!-- NAVIGATION BELOW BANNER -->
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="index.html">Home</a>
+                <a href="inventory.html">Current Stock</a>
+                <a href="about.html">About</a>
+                <a href="contact.html" class="active">Contact</a>
+            </div>
+        </nav>
+
+    </header>
+
+    <!-- =====================================
+         PAGE CONTENT
+    ====================================== -->
+    <main class="page-container">
+
+        <section class="standard-section">
+            <h1 class="page-title">Contact Us</h1>
+
+            <p>
+                If you have a question about one of our vehicles or would like to arrange a viewing,
+                please get in touch using the form below. We normally reply within a few hours.
+            </p>
+
+            <!-- CONTACT FORM -->
+            <form class="contact-form" action="https://formspree.io/f/mzbnjdaq" method="POST">
+
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" name="phone">
+
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit" class="btn-primary contact-btn">Send Message</button>
+            </form>
+
+        </section>
+
+    </main>
+
+    <!-- =====================================
+         FOOTER
+    ====================================== -->
+    <footer class="p55-footer">
+        © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+    </footer>
+
+</body>
+</html>
