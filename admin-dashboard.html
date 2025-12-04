@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – Project 55 Motors</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header class="hero-header">
+    <img src="assets/hero-banner.jpg" class="hero-banner" alt="">
+    <img src="logo.png" class="hero-logo" alt="Project 55 Motors">
+</header>
+
+<nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="inventory.html">Current Stock</a>
+    <a href="admin.html" class="active">Admin</a>
+</nav>
+
+<main class="admin-page-wrapper">
+
+    <div class="admin-header">
+        <h1>Vehicle Inventory Management</h1>
+        <button id="createNewCar" class="btn-primary">+ Add New Vehicle</button>
+    </div>
+
+    <div class="admin-layout">
+
+        <!-- LEFT: VEHICLE LIST -->
+        <div id="admin-car-list" class="admin-car-list">
+            <p class="loading-message">Loading vehicle data...</p>
+        </div>
+
+        <!-- RIGHT: SLIDE-IN EDIT PANEL -->
+        <aside id="admin-editor" class="admin-editor hidden">
+
+            <div class="editor-header">
+                <h2 id="editor-title">Edit Vehicle</h2>
+                <img id="editor-thumb" src="" alt="Vehicle Thumbnail" class="editor-thumb">
+                <button id="closeEditor" class="editor-close">×</button>
+            </div>
+
+            <div class="editor-body">
+
+                <label>Make & Model</label>
+                <input id="field-Make_Model" type="text">
+
+                <label>Registration</label>
+                <input id="field-Registration" type="text">
+
+                <label>Price (£)</label>
+                <input id="field-Price" type="number">
+
+                <label>Mileage</label>
+                <input id="field-Mileage" type="number">
+
+                <label>MOT Expiry</label>
+                <input id="field-MOT_Date" type="date">
+
+                <label>Status</label>
+                <select id="field-Status">
+                    <option value="Available">Available</option>
+                    <option value="Sold">Sold</option>
+                    <option value="Hidden">Hidden</option>
+                </select>
+
+                <label>Full Description</label>
+                <textarea id="field-Full_Description" rows="6"></textarea>
+
+            </div>
+
+            <div class="editor-footer">
+                <button id="saveBtn" class="btn-save">Save Changes</button>
+                <button id="markSoldBtn" class="btn-secondary">Mark Sold</button>
+            </div>
+
+        </aside>
+    </div>
+</main>
+
+<footer>
+    © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+</footer>
+
+<script src="admin-dashboard.js"></script>
+<script src="admin-shortcut.js"></script>
+
+</body>
+</html>
