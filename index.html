@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About – Project 55 Motors</title>
+    <title>Project 55 Motors – Premium Used Cars</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -11,40 +11,28 @@
 
 <!-- HERO -->
 <header class="hero-header">
-    <img src="assets/hero-banner.jpg" alt="Shropshire Hills" class="hero-banner">
+    <img src="assets/hero-banner.jpg" alt="" class="hero-banner">
     <img src="logo.png" alt="Project 55 Motors" class="hero-logo">
 </header>
 
 <!-- NAV -->
 <nav class="main-nav">
-    <a href="index.html">Home</a>
+    <a href="index.html" class="active">Home</a>
     <a href="inventory.html">Current Stock</a>
-    <a href="about.html" class="active">About</a>
+    <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
 </nav>
 
-<!-- CONTENT -->
-<main class="page-wrapper">
+<!-- MAIN CONTENT -->
+<section class="page-wrapper">
+    <h1>Premium Used Cars</h1>
+    <p>Quality, reliability and transparency — every vehicle prepared to a high standard.</p>
 
-    <h1 class="page-title">About Project 55 Motors</h1>
+    <a href="inventory.html" class="btn-primary">View All Vehicles</a>
 
-    <p class="page-intro">
-        Project 55 Motors was founded with one goal: to offer reliable, well-maintained cars 
-        backed by transparency, honesty, and customer respect.
-    </p>
-
-    <p>
-        Based in South Shropshire, we specialise in sourcing cars with excellent service history, 
-        careful ownership, and great specifications.
-    </p>
-
-    <p>
-        Whether you are purchasing your first vehicle or upgrading to something special, our 
-        approach remains simple: no pressure, clear communication, and high-quality preparation.
-    </p>
-
-</main>
-
+    <h2 class="featured-heading">Featured Vehicles</h2>
+    <div id="featured-cars" class="car-grid"></div>
+</section>
 
 <!-- FOOTER -->
 <footer>
@@ -52,7 +40,7 @@
 </footer>
 
 
-<!-- 🔐 HIDDEN STAFF LOGIN MODAL -->
+<!-- HIDDEN STAFF LOGIN MODAL -->
 <div id="admin-login-modal" class="modal">
     <div class="modal-content">
         <span class="modal-close">×</span>
@@ -68,6 +56,9 @@
     </div>
 </div>
 
+<!-- SCRIPTS -->
+<script src="cars.js"></script>
 <script src="admin-shortcut.js"></script>
+
 </body>
 </html>

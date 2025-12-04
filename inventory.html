@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About – Project 55 Motors</title>
+    <title>Current Stock – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -18,33 +18,18 @@
 <!-- NAV -->
 <nav class="main-nav">
     <a href="index.html">Home</a>
-    <a href="inventory.html">Current Stock</a>
-    <a href="about.html" class="active">About</a>
+    <a href="inventory.html" class="active">Current Stock</a>
+    <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
 </nav>
 
-<!-- CONTENT -->
+<!-- PAGE CONTENT -->
 <main class="page-wrapper">
+    <h1 class="page-title">Current Stock</h1>
+    <p class="page-intro">All vehicles are prepared to a high standard and ready for viewing.</p>
 
-    <h1 class="page-title">About Project 55 Motors</h1>
-
-    <p class="page-intro">
-        Project 55 Motors was founded with one goal: to offer reliable, well-maintained cars 
-        backed by transparency, honesty, and customer respect.
-    </p>
-
-    <p>
-        Based in South Shropshire, we specialise in sourcing cars with excellent service history, 
-        careful ownership, and great specifications.
-    </p>
-
-    <p>
-        Whether you are purchasing your first vehicle or upgrading to something special, our 
-        approach remains simple: no pressure, clear communication, and high-quality preparation.
-    </p>
-
+    <div id="car-grid" class="car-grid"></div>
 </main>
-
 
 <!-- FOOTER -->
 <footer>
@@ -68,6 +53,9 @@
     </div>
 </div>
 
+<!-- SCRIPTS -->
+<script src="cars.js"></script>
 <script src="admin-shortcut.js"></script>
+
 </body>
 </html>
