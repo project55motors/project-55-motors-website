@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Details – Project 55 Motors</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="hero-header">
+    <img src="assets/hero-banner.jpg" alt="Shropshire Hills" class="hero-banner">
+    <img src="logo.png" alt="Project 55 Motors" class="hero-logo">
+  </header>
+
+  <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="inventory.html" class="active">Current Stock</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <main class="vehicle-container">
+
+    <img id="vehicle-main-photo" src="" alt="Vehicle photo" class="vehicle-main-photo">
+    <div id="vehicle-thumbnails" class="vehicle-thumbs"></div>
+
+    <h1 id="vehicle-title" class="vehicle-title"></h1>
+    <p id="vehicle-sub" class="vehicle-sub"></p>
+
+    <div id="vehicle-spec-grid" class="vehicle-spec-grid">
+      <div>
+        <span class="label">Registration</span>
+        <span id="spec-reg" class="value"></span>
+      </div>
+      <div>
+        <span class="label">Price</span>
+        <span id="spec-price" class="value"></span>
+      </div>
+      <div>
+        <span class="label">Mileage</span>
+        <span id="spec-mileage" class="value"></span>
+      </div>
+      <div>
+        <span class="label">MOT</span>
+        <span id="spec-mot" class="value"></span>
+      </div>
+      <div>
+        <span class="label">Engine Size</span>
+        <span id="spec-engine" class="value"></span>
+      </div>
+      <div>
+        <span class="label">Fuel Type</span>
+        <span id="spec-fuel" class="value"></span>
+      </div>
+    </div>
+
+    <section class="vehicle-description">
+      <h2>Vehicle Description</h2>
+      <div id="vehicle-description"></div>
+    </section>
+
+    <p style="margin-top: 26px;">
+      <a id="enquire-link" href="contact.html" class="btn-primary">Enquire About This Vehicle</a>
+    </p>
+
+  </main>
+
+  <footer>
+    © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+  </footer>
+
+  <script src="admin-shortcut.js"></script>
+  <script src="vehicle.js"></script>
+</body>
+</html>
