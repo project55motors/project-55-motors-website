@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 55 Motors Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="hero-header">
+    <img src="assets/hero-banner.jpg" class="hero-banner">
+    <img src="logo.png" class="hero-logo">
+</header>
+
+<nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="inventory.html">Current Stock</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a class="active" href="admin.html">Admin</a>
+</nav>
+
+<div class="admin-wrapper">
+    <h1>Project 55 Motors Admin</h1>
+    <p style="opacity:0.6">Secure staff access only</p>
+</div>
+
+<!-- 🔐 HIDDEN ADMIN LOGIN MODAL -->
+    <div id="adminLoginModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="hideLoginModal()">×</span>
+            <h2>Staff Login</h2>
+
+            <input type="text" id="adminUser" placeholder="Username" required>
+            <input type="password" id="adminPass" placeholder="Password" required>
+   
+            <button class="login-btn" onclick="submitLogin()">Log In</button>
+
+            <p id="admin-login-error" style="color:red; display:none;"></p>
+        </div>
+    </div>
+
+// Auto-open login modal when on admin.html
+window.addEventListener("load", () => {
+    showLoginModal();
+});
+
+
+<footer>© 2025 Project 55 Motors – South Shropshire. All rights reserved.</footer>
+
+<script src="admin-shortcut.js"></script>
+</body>
+</html>
