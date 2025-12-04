@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – Project 55 Motors</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="hero-header">
+    <img src="assets/hero-banner.jpg" alt="" class="hero-banner">
+    <img src="logo.png" alt="Project 55 Motors" class="hero-logo">
+</header>
+
+<nav class="main-nav">
+    <div class="main-nav-inner">
+        <a href="index.html">Home</a>
+        <a href="inventory.html">Current Stock</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </div>
+</nav>
+
+<div class="admin-wrapper">
+    <div class="admin-header">
+        <h1>Vehicle Inventory Management</h1>
+        <div class="admin-actions">
+            <button class="admin-btn primary" onclick="createCar()">+ Add Vehicle</button>
+            <button class="admin-btn secondary" onclick="logout()">Log Out</button>
+        </div>
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Make & Model</th>
+                    <th>Registration</th>
+                    <th>Price</th>
+                    <th>Mileage</th>
+                    <th>MOT Date</th>
+                    <th>Status</th>
+                    <th>Short Description</th>
+                    <th>Full Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="admin-table-body">
+                <!-- Rows injected from admin-worker -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    © 2025 Project 55 Motors – Internal Use Only.
+</footer>
+
+<script>
+async function loadAdminTable() {
+    try {
+        const res = await fetch("/api/admin/all", { credentials: "include" });
+
+        if (res.status === 401) {
+            // Silent redirect to Home if not logged in
+            window.location.href = "index.html";
+            return;
+        }
+
+        if (!res.ok) {
+            console.error("Failed to load admin table", res.status);
+            return;
+        }
+
+        const html = await res.text();
+        document.getElementById("admin-table-body").innerHTML = html;
+
+        // Optional: attach behavior to textareas (expand on focus)
+        const textareas = document.querySelectorAll("#admin-table-body textarea");
+        textareas.forEach((ta) => {
+            ta.addEventListener("focus", () => {
+                ta.style.maxHeight = "300px";
+            });
+        });
+    } catch (err) {
+        console.error("Error loading admin table", err);
+    }
+}
+
+async function save(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if (!row) return;
+
+    const fields = {};
+    row.querySelectorAll("input, select, textarea").forEach((el) => {
+        if (!el.name) return;
+        fields[el.name] = el.value;
+    });
+
+    try {
+        const res = await fetch("/api/admin/update", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, fields })
+        });
+        if (!res.ok) alert("Save failed");
+    } catch (err) {
+        console.error("Save error", err);
+        alert("Save failed");
+    }
+}
+
+async function sold(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if (!row) return;
+
+    const fields = { Status: "Sold" };
+
+    row.querySelectorAll("input, select, textarea").forEach((el) => {
+        if (!el.name) return;
+        if (el.name === "Status") return;
+        fields[el.name] = el.value;
+    });
+
+    try {
+        const res = await fetch("/api/admin/update", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, fields })
+        });
+        if (!res.ok) {
+            alert("Mark sold failed");
+        } else {
+            loadAdminTable();
+        }
+    } catch (err) {
+        console.error("Sold error", err);
+        alert("Mark sold failed");
+    }
+}
+
+async function createCar() {
+    try {
+        const res = await fetch("/api/admin/create", {
+            method: "POST",
+            credentials: "include"
+        });
+        if (!res.ok) {
+            alert("Create failed");
+        } else {
+            loadAdminTable();
+        }
+    } catch (err) {
+        console.error("Create error", err);
+        alert("Create failed");
+    }
+}
+
+async function logout() {
+    try {
+        await fetch("/api/logout", {
+            method: "POST",
+            credentials: "include"
+        });
+    } catch (err) {
+        console.error("Logout error", err);
+    } finally {
+        window.location.href = "index.html";
+    }
+}
+
+// Expose functions for inline onclick handlers coming from the Worker
+window.save = save;
+window.sold = sold;
+window.createCar = createCar;
+window.logout = logout;
+
+loadAdminTable();
+</script>
+</body>
+</html>
