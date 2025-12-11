@@ -1,0 +1,402 @@
+/* ================================================================
+   PROJECT 55 MOTORS – PREMIUM BMW+ M-SPORT UI SYSTEM
+   Full-site styling (public pages + admin + analytics)
+   ================================================================ */
+
+/* ------------------------------------------------
+   1. Root Palette
+   ------------------------------------------------ */
+:root {
+    --midnight: #050B18;
+    --navy: #081426;
+    --warm-grey: #1A2233;
+    --soft-light: #F6F7FB;
+    --stroke: #D0D4E0;
+
+    --m-blue: #1A5FFF;
+    --m-blue-light: #53A9FF;
+    --m-red: #E0303A;
+
+    --success: #0E9F6E;
+    --warning: #F59E0B;
+    --error: #DC2626;
+
+    --text-dark: #0A0A0A;
+    --text-light: #E4E8F5;
+
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ------------------------------------------------
+   2. Global Base
+   ------------------------------------------------ */
+body {
+    margin: 0;
+    background: var(--soft-light);
+    color: var(--text-dark);
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    color: var(--m-blue);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--m-blue-light);
+}
+
+/* ------------------------------------------------
+   3. Premium Header
+   ------------------------------------------------ */
+header {
+    background: var(--midnight);
+    padding: 18px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+header img.logo {
+    height: 52px;
+    display: block;
+}
+
+nav a {
+    margin-left: 28px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+nav a:hover {
+    color: var(--m-blue-light);
+}
+
+/* ------------------------------------------------
+   4. Public Pages – Hero
+   ------------------------------------------------ */
+.hero {
+    background: url('/hero.jpg') center/cover no-repeat;
+    height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero h1 {
+    color: white;
+    font-family: Poppins, sans-serif;
+    font-weight: 600;
+    font-size: 48px;
+    text-shadow: 0 8px 20px rgba(0,0,0,0.45);
+}
+
+/* ------------------------------------------------
+   5. Stock Grid
+   ------------------------------------------------ */
+.stock-container {
+    max-width: 1280px;
+    margin: 60px auto;
+    padding: 0 20px;
+}
+
+.stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 28px;
+}
+
+.stock-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stock-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+}
+
+.stock-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.stock-card .details {
+    padding: 18px;
+}
+
+.stock-card .title {
+    font-family: Poppins, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.stock-card .price {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--m-blue);
+}
+
+.stock-card .meta {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* ------------------------------------------------
+   6. Vehicle Detail Page
+   ------------------------------------------------ */
+.vehicle-page {
+    max-width: 1280px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.vehicle-gallery {
+    display: flex;
+    gap: 18px;
+}
+
+.vehicle-gallery-main {
+    flex: 1;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.vehicle-gallery-thumbs {
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.vehicle-gallery-thumbs img {
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.vehicle-gallery-thumbs img:hover {
+    opacity: 1;
+}
+
+.vehicle-info {
+    margin-top: 32px;
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+}
+
+.vehicle-info h2 {
+    font-family: Poppins, sans-serif;
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.vehicle-info .price {
+    font-size: 36px;
+    color: var(--m-blue);
+    margin-bottom: 16px;
+}
+
+.vehicle-info ul {
+    padding-left: 20px;
+    line-height: 1.8em;
+}
+
+/* ------------------------------------------------
+   7. Buttons
+   ------------------------------------------------ */
+.btn {
+    background: var(--m-blue);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.btn:hover {
+    background: var(--m-blue-light);
+}
+
+.btn-red {
+    background: var(--m-red);
+}
+
+.btn-red:hover {
+    background: #b32029;
+}
+
+/* ------------------------------------------------
+   8. Admin Dashboard Layout
+   ------------------------------------------------ */
+.admin-shell {
+    max-width: 1380px;
+    margin: 45px auto;
+    padding: 0 24px;
+}
+
+.admin-panel {
+    background: var(--soft-light);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+}
+
+.admin-table th {
+    background: var(--navy);
+    color: var(--text-light);
+    padding: 10px;
+    font-size: 13px;
+    font-family: Poppins, sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.admin-table td {
+    padding: 8px;
+    background: white;
+    border-bottom: 1px solid var(--stroke);
+}
+
+/* Input fields inside table */
+.admin-table input,
+.admin-table textarea,
+.admin-table select {
+    width: 100%;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--stroke);
+    font-size: 14px;
+}
+
+.admin-thumb {
+    width: 120px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ------------------------------------------------
+   9. Traffic Analytics
+   ------------------------------------------------ */
+.traffic-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.stat-box {
+    background: white;
+    padding: 18px;
+    border-radius: 16px;
+    width: 200px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+
+.stat-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--m-blue);
+}
+
+.stat-wide {
+    flex: 1;
+}
+
+.stat-list .stat-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Canvas container */
+#traffic-chart {
+    width: 100%;
+    height: 260px;
+    margin: 30px 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+
+/* ------------------------------------------------
+   10. Dark Mode
+   ------------------------------------------------ */
+.dark {
+    background: var(--midnight);
+    color: var(--text-light);
+}
+
+.dark .admin-panel {
+    background: #0C1422;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+}
+
+.dark .admin-table th {
+    background: #121C2C;
+}
+
+.dark .admin-table td {
+    background: #0C1422;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+    background: #121C2C;
+    color: var(--text-light);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dark .btn {
+    background: var(--m-blue);
+}
+
+.dark .stat-box {
+    background: #121C2C;
+    color: var(--text-light);
+}
+
+/* ------------------------------------------------
+   11. Footer
+   ------------------------------------------------ */
+footer {
+    text-align: center;
+    padding: 40px;
+    margin-top: 80px;
+    background: var(--midnight);
+    color: var(--text-light);
+    font-size: 14px;
+}
+B
