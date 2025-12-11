@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Stock – Project 55 Motors</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="hero-header">
+    <img src="assets/hero-banner.jpg" alt="Shropshire Hills" class="hero-banner">
+    <img src="logo.png" alt="Project 55 Motors" class="hero-logo">
+</header>
+
+<nav class="main-nav">
+    <div class="main-nav-inner">
+        <a href="index.html">Home</a>
+        <a href="inventory.html" class="active">Current Stock</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </div>
+</nav>
+
+<main class="page-wrapper">
+    <h1 class="page-title">Current Stock</h1>
+    <p class="page-intro">
+        All vehicles below are available and prepared to our usual standards. Click a vehicle to see full details.
+    </p>
+
+    <div id="car-grid" class="car-grid"></div>
+</main>
+
+<footer>
+    © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+</footer>
+
+<!-- 🔐 Hidden staff login modal (triggered by Shift+A or triple-click logo) -->
+<div id="adminLoginModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAdminModal()">×</span>
+        <h2>Staff Login</h2>
+
+        <form onsubmit="submitAdminLogin(event)">
+            <input id="adminUser" type="text" placeholder="Username" required>
+            <input id="adminPass" type="password" placeholder="Password" required>
+            <button type="submit" class="modal-login-btn">Log In</button>
+        </form>
+
+        <p id="admin-login-error" class="modal-error" style="display:none;"></p>
+    </div>
+</div>
+
+<script src="cars.js"></script>
+<script src="admin-shortcut.js"></script>
+</body>
+</html>
