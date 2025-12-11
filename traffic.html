@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traffic Analytics – Project 55 Motors</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600&display=swap" 
+      rel="stylesheet" 
+    />
+</head>
+
+<body>
+
+    <!-- PREMIUM ADMIN HEADER -->
+    <header class="admin-header">
+        <img src="/logo.png" alt="Project 55 Motors" class="admin-logo" />
+
+        <div class="admin-actions">
+            <a href="admin-dashboard.html" class="btn">Dashboard</a>
+            <a href="traffic.html" class="btn btn-active">Traffic</a>
+            <button id="logout-btn" class="btn btn-red">Log Out</button>
+        </div>
+    </header>
+
+    <!-- ADMIN MAIN CONTENT SHELL -->
+    <div class="admin-shell">
+        <div class="admin-panel">
+
+            <h2 style="margin-bottom:0.8rem;">Website Traffic Overview</h2>
+            <p class="subtitle" style="margin-bottom:1.8rem;">
+                Live visitor analytics aggregated from public site activity.
+            </p>
+
+            <!-- SUMMARY BOXES -->
+            <div id="traffic-summary" class="traffic-summary"></div>
+
+            <!-- CHART -->
+            <div class="traffic-chart-wrapper">
+                <canvas id="traffic-chart" height="140"></canvas>
+            </div>
+
+            <!-- TABLE SECTION -->
+            <h3 style="margin-top:2rem; margin-bottom:0.8rem;">Detailed Visit Log</h3>
+            <p class="subtitle" style="margin-bottom:1.2rem;">
+                Most recent visitor events recorded across the entire website.
+            </p>
+
+            <div class="table-wrapper">
+                <table class="traffic-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Path</th>
+                            <th>Referrer</th>
+                            <th>Country</th>
+                            <th>User Agent</th>
+                        </tr>
+                    </thead>
+                    <tbody id="traffic-table-body">
+                        <!-- Rows injected dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="admin-traffic.js"></script>
+    <script src="admin-shortcut.js"></script>
+
+</body>
+</html>
