@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 55 Motors – Premium Used Cars in Shropshire</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<header>
+    <img src="logo.png" class="logo" alt="Project 55 Motors">
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="inventory.html">Stock</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>Premium, Well-Maintained Cars</h1>
+</div>
+
+<section class="stock-container">
+    <h2 style="font-family:Poppins,sans-serif;font-weight:600;font-size:32px;margin-bottom:15px;">
+        Featured Vehicles
+    </h2>
+
+    <div id="featured-grid" class="stock-grid"></div>
+</section>
+
+<footer>
+    © Project 55 Motors – Premium Used Vehicles in Shropshire
+</footer>
+
+<script>
+// Traffic analytics
+fetch("/cars-api/track", { method: "POST" });
+
+// Load up to 3 featured cars
+async function loadFeatured() {
+    const res = await fetch("/cars-api/vehicles");
+    const data = await res.json();
+
+    const grid = document.getElementById("featured-grid");
+    grid.innerHTML = "";
+
+    data.slice(0,3).forEach(rec => {
+        const f = rec.fields;
+
+        grid.innerHTML += `
+            <a href="vehicle.html?id=${rec.id}" class="stock-card">
+                <img src="${(f.Photos?.[0]?.url) || '/placeholder.png'}" alt="${f.Make_Model}">
+                <div class="details">
+                    <div class="title">${f.Make_Model}</div>
+                    <div class="price">£${f.Price?.toLocaleString() || ""}</div>
+                    <div class="meta">${f.Mileage?.toLocaleString()} miles</div>
+                </div>
+            </a>`;
+    });
+}
+
+loadFeatured();
+</script>
+
+</body>
+</html>
