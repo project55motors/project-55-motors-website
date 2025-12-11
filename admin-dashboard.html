@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – Project 55 Motors</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --admin-bg: #f4f6fa;
+            --admin-bg-dark: #0b1220;
+            --admin-card: #ffffff;
+            --admin-card-dark: #111827;
+            --admin-accent: #0b5ed7;
+            --admin-accent-soft: #d0e3ff;
+            --admin-border: #d0d7e2;
+            --admin-text: #111827;
+            --admin-text-soft: #4b5563;
+            --admin-text-muted: #6b7280;
+            --admin-error: #b91c1c;
+            --admin-success: #166534;
+        }
+
+        .admin-dark {
+            --admin-bg: var(--admin-bg-dark);
+            --admin-card: var(--admin-card-dark);
+            --admin-border: #1f2937;
+            --admin-text: #f9fafb;
+            --admin-text-soft: #d1d5db;
+            --admin-text-muted: #9ca3af;
+        }
+
+        body.admin-shell {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--admin-bg);
+            color: var(--admin-text);
+        }
+
+        .admin-shell * {
+            box-sizing: border-box;
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--admin-border);
+            background: linear-gradient(120deg, #020617, #0f172a);
+            color: #f9fafb;
+        }
+
+        .admin-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-brandmark {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-brandmark img {
+            height: 38px;
+            border-radius: 8px;
+            background: #020617;
+            padding: 4px 8px;
+        }
+
+        .admin-brandtext {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .admin-brandtext span:first-child {
+            font-size: 18px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .admin-brandtext span:last-child {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .admin-header-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .admin-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-chip {
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 11px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            color: #e5e7eb;
+        }
+
+        .admin-main {
+            padding: 18px 24px 32px;
+        }
+
+        .admin-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            margin-top: 4px;
+        }
+
+        .admin-toolbar-left h1 {
+            margin: 0 0 4px 0;
+            font-size: 22px;
+        }
+
+        .admin-toolbar-left p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--admin-text-muted);
+        }
+
+        .admin-toolbar-right {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .admin-btn {
+            border-radius: 999px;
+            border: 1px solid var(--admin-border);
+            padding: 6px 12px;
+            font-size: 13px;
+            background: var(--admin-card);
+            color: var(--admin-text-soft);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-btn-primary {
+            background: var(--admin-accent);
+            border-color: var(--admin-accent);
+            color: #f9fafb;
+        }
+
+        .admin-btn-destructive {
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
+        }
+
+        .admin-btn-ghost {
+            background: transparent;
+            border-color: rgba(148, 163, 184, 0.6);
+        }
+
+        .admin-btn-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .admin-status {
+            margin: 10px 0 14px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            border: 1px solid var(--admin-border);
+            background: var(--admin-card);
+            color: var(--admin-text-soft);
+        }
+
+        .admin-status-error {
+            border-color: rgba(248, 113, 113, 0.5);
+            color: #b91c1c;
+            background: #fef2f2;
+        }
+
+        .admin-status-success {
+            border-color: rgba(74, 222, 128, 0.5);
+            color: #166534;
+            background: #f0fdf4;
+        }
+
+        .admin-table-wrapper {
+            border-radius: 18px;
+            overflow: hidden;
+            background: var(--admin-card);
+            border: 1px solid var(--admin-border);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.20);
+        }
+
+        table.admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        table.admin-table thead {
+            background: #020617;
+            color: #d1d5db;
+        }
+
+        table.admin-table th,
+        table.admin-table td {
+            padding: 8px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--admin-border);
+            vertical-align: top;
+        }
+
+        table.admin-table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        table.admin-table tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.02);
+        }
+
+        .col-photo {
+            width: 80px;
+        }
+
+        .col-order {
+            width: 80px;
+        }
+
+        .col-actions {
+            width: 110px;
+            text-align: right;
+        }
+
+        .admin-table img.photo-thumb {
+            width: 70px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+        }
+
+        .admin-table input,
+        .admin-table select,
+        .admin-table textarea {
+            width: 100%;
+            font-size: 12px;
+            padding: 4px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--admin-border);
+            background: var(--admin-bg);
+            color: var(--admin-text);
+        }
+
+        .admin-table textarea {
+            min-height: 38px;
+            resize: vertical;
+        }
+
+        .full-desc-hidden {
+            display: none;
+        }
+
+        .sort-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sort-controls button {
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            border: 1px solid var(--admin-border);
+            background: var(--admin-bg);
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .sort-input {
+            width: 40px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 999px;
+            border: 1px solid var(--admin-border);
+            background: var(--admin-bg);
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: #10b981;
+            border-color: #059669;
+            color: #ecfdf5;
+            margin-bottom: 4px;
+        }
+
+        .btn-sold {
+            background: #f97316;
+            border-color: #ea580c;
+            color: #fff7ed;
+        }
+
+        .btn-small {
+            padding: 3px 6px;
+            font-size: 11px;
+            border-radius: 999px;
+            border: 1px solid var(--admin-border);
+            background: var(--admin-bg);
+            cursor: pointer;
+        }
+
+        .admin-footer-note {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--admin-text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .admin-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .admin-toolbar-right {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            table.admin-table {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body class="admin-shell">
+
+<header class="admin-header">
+    <div class="admin-header-left">
+        <div class="admin-brandmark admin-brand">
+            <img src="logo.png" alt="Project 55 Motors logo">
+            <div class="admin-brandtext">
+                <span>PROJECT 55 MOTORS</span>
+                <span>Stock Control Console</span>
+            </div>
+        </div>
+        <div class="admin-header-meta">
+            <span>Premium used cars – South Shropshire</span>
+            <span>Internal use only – Airtable linked</span>
+        </div>
+    </div>
+    <div class="admin-header-right">
+        <div class="admin-chip">Admin access</div>
+        <button id="btn-darkmode" class="admin-btn admin-btn-ghost">
+            <span class="admin-btn-icon">☾</span>
+            Dark Mode
+        </button>
+        <button id="btn-logout" class="admin-btn admin-btn-destructive">
+            <span class="admin-btn-icon">⎋</span>
+            Log Out
+        </button>
+    </div>
+</header>
+
+<main class="admin-main">
+    <section class="admin-toolbar">
+        <div class="admin-toolbar-left">
+            <h1>Live Stock Overview</h1>
+            <p>Edit prices, descriptions, status and order. Changes are written straight to Airtable.</p>
+        </div>
+        <div class="admin-toolbar-right">
+            <label style="display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--admin-text-muted);">
+                <input id="toggle-hidden" type="checkbox">
+                Hide Sold / Hidden
+            </label>
+            <button id="btn-refresh" class="admin-btn">
+                <span class="admin-btn-icon">⟳</span>
+                Refresh
+            </button>
+            <button id="btn-new-vehicle" class="admin-btn admin-btn-primary">
+                <span class="admin-btn-icon">＋</span>
+                New Vehicle
+            </button>
+        </div>
+    </section>
+
+    <div id="admin-status" class="admin-status">
+        Loading admin console…
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Make &amp; Model</th>
+                    <th>Reg</th>
+                    <th>Price (£)</th>
+                    <th>Mileage</th>
+                    <th>MOT</th>
+                    <th>Engine</th>
+                    <th>Fuel</th>
+                    <th>Transmission</th>
+                    <th>Short Description</th>
+                    <th>Full Description</th>
+                    <th>Order</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-table-body">
+                <!-- Filled by admin-dashboard.js using Worker HTML -->
+            </tbody>
+        </table>
+    </div>
+
+    <p class="admin-footer-note">
+        Use the ↑ / ↓ controls to adjust the display order. Sort_Index is saved back into Airtable so the public-facing listing matches what you see here.
+    </p>
+</main>
+
+<script src="admin-dashboard.js"></script>
+<script src="admin-shortcut.js"></script>
+</body>
+</html>
