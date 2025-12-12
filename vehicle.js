@@ -1,140 +1,125 @@
-// vehicle.js — Vehicle detail page (Project 55 Motors)
-//
-// Uses the same cars-api endpoint as cars.js and finds a single record
-// by its Airtable record id (?id=recXXXX).
-//
-// Shows:
-//   • Large main image
-//   • Scrollable thumbnail strip
-//   • Registration, price, mileage, MOT, engine size, fuel type
-//   • Full description with preserved line breaks
+/* ---------------------------------------------------------
+   Project 55 Motors — Vehicle Detail Page Controller
+   Includes: Hero image, swipeable gallery, enquire prefill
+--------------------------------------------------------- */
 
-const API_URL = 'https://project55motors.co.uk/cars-api';
+const VEHICLE_API_URL = "https://project55motors.co.uk/cars-api/";
 
-// URL param: ?id=recXXXX
-const CAR_ID = new URLSearchParams(window.location.search).get('id');
-
-const MAIN_PHOTO = document.getElementById('vehicle-main-photo');
-const THUMBS = document.getElementById('vehicle-thumbnails');
-
-// Fullscreen elements
-const FULLSCREEN = document.getElementById('fullscreen-overlay');
-const FULL_IMG = document.getElementById('fullscreen-image');
-
-async function loadVehicle() {
-  if (!CAR_ID) {
-    console.error('No CAR_ID in URL');
-    return;
-  }
-
-  try {
-    const res = await fetch(API_URL, { credentials: 'omit' });
-    if (!res.ok) {
-      throw new Error('cars-api returned ' + res.status);
-    }
-
-    const data = await res.json();
-    let records = [];
-    if (Array.isArray(data)) {
-      records = data;
-    } else if (Array.isArray(data.records)) {
-      records = data.records;
-    }
-
-    const rec = records.find(r => r.id === CAR_ID);
-    if (!rec) {
-      console.error('Vehicle not found for id:', CAR_ID);
-      document.getElementById('vehicle-title').textContent =
-        'Vehicle not found';
-      return;
-    }
-
-    const f = rec.fields || {};
-
-    // TITLE
-    document.getElementById('vehicle-title').textContent =
-      f.Make_Model || f.Registration || 'Vehicle';
-
-    // SPEC FIELDS
-    document.getElementById('spec-reg').textContent =
-      f.Registration || '';
-
-    document.getElementById('spec-price').textContent = f.Price
-      ? `£${Number(f.Price).toLocaleString()}`
-      : 'POA';
-
-    document.getElementById('spec-mileage').textContent = f.Mileage
-      ? `${Number(f.Mileage).toLocaleString()} miles`
-      : '';
-
-    document.getElementById('spec-mot').textContent = f.MOT_Date || '';
-    document.getElementById('spec-engine').textContent =
-      f.Engine_size || '';
-    document.getElementById('spec-fuel').textContent =
-      f.Fuel_type || '';
-
-    // FULL DESCRIPTION (preserve line breaks)
-    const desc = (f.Full_Description || '').replace(/\n/g, '<br>');
-    document.getElementById('vehicle-description').innerHTML =
-      desc ? `<p>${desc}</p>` : '';
-
-    // PHOTOS
-    const photos = Array.isArray(f.Photos) ? f.Photos : [];
-    if (photos.length) {
-      const firstPhoto =
-        photos[0].thumbnails?.large?.url ||
-        photos[0].thumbnails?.small?.url ||
-        photos[0].url;
-      if (firstPhoto) {
-        MAIN_PHOTO.src = firstPhoto;
-      }
-    }
-
-    // Build thumbnails
-    THUMBS.innerHTML = '';
-    photos.forEach((p, index) => {
-      const url =
-        p.thumbnails?.large?.url ||
-        p.thumbnails?.small?.url ||
-        p.url;
-
-      if (!url) return;
-
-      const t = document.createElement('img');
-      t.src = url;
-      t.className = 'vehicle-thumb';
-      if (index === 0) t.classList.add('active');
-
-      t.addEventListener('click', () => {
-        MAIN_PHOTO.src = url;
-
-        // update active state
-        document
-          .querySelectorAll('.vehicle-thumb')
-          .forEach(el => el.classList.remove('active'));
-        t.classList.add('active');
-      });
-
-      THUMBS.appendChild(t);
-    });
-
-    // Click to open full screen
-    MAIN_PHOTO.addEventListener('click', () => {
-      if (!MAIN_PHOTO.src) return;
-      FULL_IMAGESHOW(MAIN_PHOTO.src);
-    });
-  } catch (err) {
-    console.error('Error loading vehicle:', err);
-  }
-}
-
-function FULL_IMAGESHOW(src) {
-  FULL_IMG.src = src;
-  FULLSCREEN.style.display = 'flex';
-}
-
-FULLSCREEN.addEventListener('click', () => {
-  FULLSCREEN.style.display = 'none';
+document.addEventListener("DOMContentLoaded", () => {
+    loadVehicle();
 });
 
-loadVehicle();
+async function loadVehicle() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const container = document.getElementById("vehicle-page");
+
+    if (!id || !container) {
+        if (container) container.innerHTML = "<p style='color:red;'>Vehicle not found.</p>";
+        return;
+    }
+
+    try {
+        const res = await fetch(VEHICLE_API_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("API error " + res.status);
+
+        const data = await res.json();
+        const record = data.records?.find(r => r.id === id);
+
+        if (!record) {
+            container.innerHTML = "<p style='color:red;'>Vehicle not found.</p>";
+            return;
+        }
+
+        renderVehicle(record);
+    } catch (err) {
+        console.error("Vehicle fetch failed:", err);
+        container.innerHTML = "<p style='color:red;'>Failed to load vehicle details.</p>";
+    }
+}
+
+function renderVehicle(rec) {
+    const f = rec.fields;
+
+    const heroImg = document.getElementById("vehicle-hero");
+    const thumbs = document.getElementById("vehicle-thumbs");
+
+    /* ------- Populate Text ------- */
+    setText("vehicle-title", f.Make_Model);
+    setText("vehicle-reg", f.Registration ? `Registration: ${f.Registration}` : "");
+    setText("vehicle-price", f.Price ? `£${Number(f.Price).toLocaleString()}` : "POA");
+    setText("vehicle-mileage", f.Mileage ? `${Number(f.Mileage).toLocaleString()} miles` : "—");
+    setText("vehicle-mot", f.MOT_Date || "—");
+    setText("vehicle-engine", f.Engine_size || "—");
+    setText("vehicle-fuel", f.Fuel_type || "—");
+
+    formatDescription(f.Full_Description);
+
+    /* ------- Image Logic ------- */
+    const photos = Array.isArray(f.Photos) ? f.Photos : [];
+    let index = 0;
+
+    function updateHero(i) {
+        if (!photos.length || !heroImg) return;
+        index = i;
+        heroImg.src = photos[i].url;
+        heroImg.alt = f.Make_Model;
+        updateThumbHighlight();
+    }
+
+    function updateThumbHighlight() {
+        const all = document.querySelectorAll(".vehicle-thumb");
+        all.forEach((el, i) => el.classList.toggle("active", i === index));
+    }
+
+    if (thumbs) {
+        thumbs.innerHTML = "";
+        photos.forEach((p, i) => {
+            const btn = document.createElement("button");
+            btn.className = `vehicle-thumb ${i === 0 ? "active" : ""}`;
+            btn.innerHTML = `<img src="${p.url}" alt="Photo ${i + 1}">`;
+            btn.onclick = () => updateHero(i);
+            thumbs.appendChild(btn);
+        });
+    }
+
+    if (photos.length) updateHero(0);
+
+    /* ------- Swipe Support ------- */
+    let startX = 0;
+    heroImg?.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+
+    heroImg?.addEventListener("touchend", e => {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) < 50) return;
+        if (dx < 0 && index < photos.length - 1) updateHero(index + 1);
+        if (dx > 0 && index > 0) updateHero(index - 1);
+    });
+
+    /* ------- Enquire Button ------- */
+    const enquireBtn = document.getElementById("enquire-btn");
+    enquireBtn?.addEventListener("click", () => {
+        location.href = `contact.html?msg=${encodeURIComponent(
+            `I am interested in the ${f.Make_Model} (${f.Registration}).`
+        )}`;
+    });
+}
+
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value || "";
+}
+
+function formatDescription(text) {
+    const el = document.getElementById("vehicle-description");
+    if (!el) return;
+
+    if (!text.includes("\n") && !text.includes("•")) {
+        el.textContent = text;
+        return;
+    }
+
+    const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+    el.innerHTML = lines.map(line => `• ${line}`).join("<br>");
+}

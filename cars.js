@@ -1,38 +1,14 @@
-// cars.js — Public stock rendering (Project 55 Motors)
-
-// RESPONSIBILITIES:
-
-// - Fetch cars from /cars-api
-
-// - Render homepage carousel (if present)
-
-// - Render inventory grid (if present)
-
-// - Display ESSENTIALS with SVG icons
-
-// - Apply 2-car layout logic
-
-//
-
-// DOES NOT:
-
-// - Touch admin
-
-// - Touch vehicle.js
-
-// - Touch SEO
-
-// - Touch hero logic
+// cars.js — PUBLIC STOCK DISPLAY
 
 
 
-const API_URL = "/cars-api";
+const API_URL = "https://project55motors.co.uk/cars-api/";
 
 
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    loadCars();
+    if (document.getElementById("car-grid")) loadCars();
 
 });
 
@@ -40,272 +16,88 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadCars() {
 
-    const carousel = document.getElementById("car-carousel");
-
     const grid = document.getElementById("car-grid");
+
+    if (!grid) return;
 
 
 
     try {
 
-        const res = await fetch(API_URL);
+        const res = await fetch(API_URL, { cache: "no-store" });
 
-        if (!res.ok) throw new Error("cars-api failed");
+        if (!res.ok) throw new Error("API error");
 
 
 
         const data = await res.json();
 
-        const records = Array.isArray(data) ? data : data.records || [];
+        const records = data.records || [];
 
 
 
-        // Available cars only, sorted
-
-        const cars = records
-
-            .filter(r => (r.fields?.Status || "").toLowerCase() === "available")
-
-            .sort((a, b) => {
-
-                const ai = Number(a.fields?.Sort_Index ?? 999);
-
-                const bi = Number(b.fields?.Sort_Index ?? 999);
-
-                return ai - bi;
-
-            });
+        grid.innerHTML = "";
 
 
 
-        /* ---------------- Inventory Grid ---------------- */
+        if (!records.length) {
 
-        if (grid) {
+            grid.innerHTML = `<p>No vehicles currently available.</p>`;
 
-            grid.innerHTML = "";
-
-
-
-            // Apply 2-car layout class
-
-            if (cars.length === 2) {
-
-                grid.classList.add("two-cars");
-
-            } else {
-
-                grid.classList.remove("two-cars");
-
-            }
-
-
-
-            cars.forEach(rec => {
-
-                grid.appendChild(buildCarCard(rec));
-
-            });
+            return;
 
         }
 
 
 
-        /* ---------------- Homepage Carousel ---------------- */
+        records.forEach(rec => {
 
-        if (carousel) {
+            const f = rec.fields;
 
-            carousel.innerHTML = "";
+            const img = f.Photos?.[0]?.url || "";
 
-            cars.forEach(rec => {
+            const title = f.Make_Model || "";
 
-                carousel.appendChild(buildCarCard(rec, true));
+            const price = f.Price ? `£${Number(f.Price).toLocaleString()}` : "POA";
 
-            });
+
 
-        }
+            const card = document.createElement("a");
+
+            card.className = "car-card";
+
+            card.href = `vehicle.html?id=${rec.id}`; // FIXED
+
+
+
+            card.innerHTML = `
+
+                <img src="${img}" alt="${title}">
+
+                <div class="info">
+
+                    <h3>${title}</h3>
+
+                    <p>${price}</p>
+
+                </div>
+
+            `;
+
+
+
+            grid.appendChild(card);
+
+        });
 
 
 
     } catch (err) {
 
-        console.error("Error loading cars:", err);
+        console.error(err);
 
-        if (grid) {
-
-            grid.innerHTML =
-
-                "<p style='text-align:center;color:red;'>Failed to load stock.</p>";
-
-        }
+        grid.innerHTML = `<p style="color:red;">Failed to load stock.</p>`;
 
     }
-
-}
-
-
-
-/* =======================================================
-
-   Card Builder
-
-======================================================= */
-
-
-
-function buildCarCard(record, isCarousel = false) {
-
-    const f = record.fields || {};
-
-
-
-    const photo = f.Photos?.[0];
-
-    const image =
-
-        photo?.thumbnails?.large?.url ||
-
-        photo?.thumbnails?.small?.url ||
-
-        photo?.url ||
-
-        "";
-
-
-
-    const card = document.createElement("a");
-
-    card.href = `vehicle.html?id=${record.id}`;
-
-    card.className = "car-card" + (isCarousel ? " carousel-card" : "");
-
-
-
-    card.innerHTML = `
-
-        <img src="${image}" alt="${escape(f.Make_Model || f.Registration || "Vehicle")}">
-
-
-
-        <div class="car-info">
-
-            <h3>${escape(f.Make_Model || "")}</h3>
-
-            <p class="price">${formatPrice(f.Price)}</p>
-
-
-
-            <div class="car-essentials">
-
-                ${iconSpec("registration", f.Registration)}
-
-                ${iconSpec("engine", f.Engine_size)}
-
-                ${iconSpec("transmission", f.Transmission, true)}
-
-                ${iconSpec("mileage", f.Mileage ? `${Number(f.Mileage).toLocaleString()} miles` : "")}
-
-                ${iconSpec("mot", f.MOT_Date)}
-
-                ${iconSpec("fuel", f.Fuel_type)}
-
-            </div>
-
-
-
-            ${f.Short_Description
-
-                ? `<p class="car-short-desc">${escape(f.Short_Description)}</p>`
-
-                : ""
-
-            }
-
-        </div>
-
-    `;
-
-
-
-    return card;
-
-}
-
-
-
-/* =======================================================
-
-   Icon Helpers
-
-======================================================= */
-
-
-
-function iconSpec(type, value, isTransmission = false) {
-
-    if (!value) return "";
-
-
-
-    let icon = type;
-
-
-
-    if (isTransmission) {
-
-        icon = value.toLowerCase().includes("manual")
-
-            ? "transmission-manual"
-
-            : "transmission_auto";
-
-    }
-
-
-
-    return `
-
-        <span class="spec">
-
-            <img src="assets/icons/${icon}.svg" alt="">
-
-            <span>${escape(value)}</span>
-
-        </span>
-
-    `;
-
-}
-
-
-
-/* =======================================================
-
-   Utilities
-
-======================================================= */
-
-
-
-function formatPrice(price) {
-
-    return price
-
-        ? `£${Number(price).toLocaleString()}`
-
-        : "POA";
-
-}
-
-
-
-function escape(str) {
-
-    return String(str)
-
-        .replace(/&/g, "&amp;")
-
-        .replace(/</g, "&lt;")
-
-        .replace(/>/g, "&gt;");
 
 }
