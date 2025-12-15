@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard – Project 55 Motors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #6e6e6e;
+    }
+
+    /* Modal backdrop */
+    #login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    /* Modal box */
+    #login-box {
+      background: #fff;
+      padding: 28px 32px;
+      border-radius: 12px;
+      width: 320px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    #login-box h2 {
+      margin-top: 0;
+      margin-bottom: 6px;
+      font-size: 20px;
+    }
+
+    #login-box p {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    #login-box label {
+      font-size: 13px;
+      display: block;
+      margin-top: 12px;
+    }
+
+    #login-box input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      box-sizing: border-box;
+    }
+
+    #login-error {
+      margin-top: 10px;
+      color: #c00;
+      font-size: 13px;
+      display: none;
+    }
+
+    #login-btn {
+      margin-top: 16px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      background: #0b4aa2;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Admin UI */
+    #admin-app {
+      display: none;
+      padding: 20px;
+      background: #fff;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #333;
+      padding: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN MODAL -->
+  <div id="login-overlay">
+    <div id="login-box">
+      <h2>STAFF LOGIN</h2>
+      <p>Internal use only. Changes update live stock.</p>
+
+      <label>
+        Username
+        <input id="login-username" autocomplete="username" />
+      </label>
+
+      <label>
+        Password
+        <input id="login-password" type="password" autocomplete="current-password" />
+      </label>
+
+      <div id="login-error">Invalid login</div>
+
+      <button id="login-btn" type="button">LOG IN</button>
+    </div>
+  </div>
+
+  <!-- ADMIN APP -->
+  <div id="admin-app">
+    <header>
+      <h1>PROJECT 55 MOTORS</h1>
+      <button id="logout-btn" type="button">LOG OUT</button>
+    </header>
+
+    <h2>STOCK OVERVIEW</h2>
+    <table id="stock-table">
+      <thead>
+        <tr>
+          <th>Reg</th>
+          <th>Make / Model</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="admin-dashboard.js"></script>
+</body>
+</html>
