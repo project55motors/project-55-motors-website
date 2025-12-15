@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – Project 55 Motors</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<div id="login-modal" class="login-modal">
+  <div class="login-card">
+    <h2>STAFF LOGIN</h2>
+    <p>Internal use only. Changes update live stock.</p>
+
+    <label>
+      Username
+      <input id="login-username" type="text" autocomplete="username">
+    </label>
+
+    <label>
+      Password
+      <input id="login-password" type="password" autocomplete="current-password">
+    </label>
+
+    <button id="login-btn" type="button">LOG IN</button>
+  </div>
+</div>
+
+<div id="admin-app" style="display:none;">
+  <header>
+    <h1>PROJECT 55 MOTORS</h1>
+    <button id="logout-btn">LOG OUT</button>
+  </header>
+
+  <main>
+    <h2>STOCK OVERVIEW</h2>
+    <div id="stock-container"></div>
+  </main>
+</div>
+
+<script src="admin-dashboard.js"></script>
+</body>
+</html>
