@@ -14,160 +14,198 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 const usernameInput = document.getElementById("username");
 const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
 
-/* ---------- HELPERS ---------- */
+/* ---------- Helpers ---------- */
 
-const num = v => (v === "" || v === null ? null : Number(v));
-const txt = v => (v === "" ? null : v.trim());
+function num(v) {
+  if (v === "" || v === null || v === undefined) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
 
-const fuelOptions = ["Petrol", "Diesel", "Hybrid", "Electric"];
-const transmissionOptions = ["Manual", "Automatic", "Semi-automatic"];
-const statusOptions = ["Available", "Sold"];
+function txt(v) {
+  if (v === "" || v === null || v === undefined) return "";
+  return String(v).trim();
+}
 
-/* ---------- AUTH ---------- */
+/* ---------- Auth ---------- */
 
 async function checkLogin() {
   try {
-    const r = await fetch(`${API}/login-check`, { credentials: "include" });
-    const j = await r.json();
-    j.loggedIn ? showDashboard() : showLogin();
-  } catch {
-    showLogin();
+    const res = await fetch(`${API}/login-check`, {
+      method: "GET",
+      credentials: "include"
+    });
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (data.loggedIn) {
+        loginModal.style.display = "none";
+        dashboard.style.display = "block";
+        await loadStock();
+        return;
+      }
+    }
+  } catch (e) {
+    console.error("Login check failed", e);
   }
+
+  loginModal.style.display = "block";
+  dashboard.style.display = "none";
 }
 
 async function login() {
-  const r = await fetch(`${API}/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: usernameInput.value.trim(),
-      password: passwordInput.value
-    })
-  });
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
 
-  if (!r.ok) return alert("Login failed");
-  showDashboard();
+  try {
+    const res = await fetch(`${API}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ username, password })
+    });
+
+    if (!res.ok) throw new Error("Unauthorized");
+
+    await checkLogin();
+  } catch (e) {
+    alert("Login failed");
+  }
 }
 
 async function logout() {
-  await fetch(`${API}/logout`, {
-    method: "POST",
-    credentials: "include"
-  });
+  try {
+    await fetch(`${API}/logout`, {
+      method: "POST",
+      credentials: "include"
+    });
+  } catch (e) {
+    // ignore
+  }
   location.reload();
 }
 
-logoutBtn.onclick = logout;
-
-/* ---------- UI ---------- */
-
-function showLogin() {
-  loginModal.style.display = "block";
-  dashboard.style.display = "none";
-  logoutBtn.style.display = "none";
-}
-
-function showDashboard() {
-  loginModal.style.display = "none";
-  dashboard.style.display = "block";
-  logoutBtn.style.display = "inline-block";
-  loadStock();
-}
-
-/* ---------- LOAD STOCK ---------- */
+/* ---------- Stock ---------- */
 
 async function loadStock() {
-  table.innerHTML = "";
+  try {
+    const res = await fetch(`${API}/all`, {
+      method: "GET",
+      credentials: "include"
+    });
 
-  const r = await fetch(`${API}/all`, { credentials: "include" });
-  if (!r.ok) return alert("Failed to load stock");
+    if (!res.ok) {
+      const t = await res.text().catch(() => "");
+      console.error("Failed to load stock:", res.status, t);
+      throw new Error("Failed to load stock");
+    }
 
-  const cars = await r.json();
+    const cars = await res.json();
 
-  cars.forEach(c => {
-    const img = c.Photos?.[0]?.url || "";
+    table.innerHTML = "";
 
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${img ? `<img src="${img}" width="80">` : ""}</td>
+    for (const car of cars) {
+      const tr = document.createElement("tr");
 
-      <td><input value="${c.Make_Model || ""}"></td>
-      <td><input value="${c.Registration || ""}"></td>
-      <td><input type="number" value="${c.Price ?? ""}"></td>
-      <td><input type="number" value="${c.Mileage ?? ""}"></td>
-      <td><input type="date" value="${c.MOT_Date || ""}"></td>
-      <td><input type="number" step="0.1" value="${c.Engine_size ?? ""}"></td>
+      const fuelOptions = ["", "Petrol", "Diesel", "Hybrid", "Electric"];
+      const transOptions = ["", "Manual", "Automatic", "Semi-automatic"];
+      const statusOptions = ["", "Available", "Sold"];
 
-      <td>
-        <select>
-          ${fuelOptions.map(f =>
-            `<option value="${f}" ${c.Fuel_type === f ? "selected" : ""}>${f}</option>`
-          ).join("")}
-        </select>
-      </td>
+      tr.innerHTML = `
+        <td>
+          <img src="${(car.Photos && car.Photos[0] && car.Photos[0].url) ? car.Photos[0].url : "/placeholder.png"}" style="width:60px;height:40px;object-fit:cover;">
+        </td>
+        <td><input value="${car.Make_Model || ""}"></td>
+        <td><input value="${car.Registration || ""}"></td>
+        <td><input type="number" value="${car.Price ?? ""}"></td>
+        <td><input type="number" value="${car.Mileage ?? ""}"></td>
+        <td><input type="date" value="${car.MOT_Date || ""}"></td>
+        <td><input type="number" step="0.1" value="${car.Engine_size ?? ""}"></td>
 
-      <td>
-        <select>
-          ${transmissionOptions.map(t =>
-            `<option value="${t}" ${c.Transmission === t ? "selected" : ""}>${t}</option>`
-          ).join("")}
-        </select>
-      </td>
+        <td>
+          <select>
+            ${fuelOptions.map(v => `<option value="${v}" ${car.Fuel_type === v ? "selected" : ""}>${v || "—"}</option>`).join("")}
+          </select>
+        </td>
 
-      <td>
-        <select>
-          ${statusOptions.map(s =>
-            `<option value="${s}" ${c.Status === s ? "selected" : ""}>${s}</option>`
-          ).join("")}
-        </select>
-      </td>
+        <td>
+          <select>
+            ${transOptions.map(v => `<option value="${v}" ${car.Transmission === v ? "selected" : ""}>${v || "—"}</option>`).join("")}
+          </select>
+        </td>
 
-      <td><textarea>${c.Short_Description || ""}</textarea></td>
-      <td><textarea>${c.Full_Description || ""}</textarea></td>
+        <td>
+          <select>
+            ${statusOptions.map(v => `<option value="${v}" ${car.Status === v ? "selected" : ""}>${v || "—"}</option>`).join("")}
+          </select>
+        </td>
 
-      <td><button onclick="save('${c.id}', this)">Save</button></td>
-    `;
+        <td><textarea rows="2" style="width:240px">${car.Short_Description || ""}</textarea></td>
+        <td><textarea rows="2" style="width:260px">${car.Full_Description || ""}</textarea></td>
+        <td><button onclick="save('${car.id}', this)">Save</button></td>
+      `;
 
-    table.appendChild(tr);
-  });
+      table.appendChild(tr);
+    }
+  } catch (e) {
+    alert("Failed to load stock");
+    console.error(e);
+  }
 }
 
-/* ---------- SAVE (FIXED) ---------- */
+/* ---------- Save ---------- */
 
 async function save(id, btn) {
   const tds = btn.closest("tr").querySelectorAll("td");
 
-  const fields = {
-    Make_Model: txt(tds[1].firstChild.value),
-    Registration: txt(tds[2].firstChild.value),
-    Price: num(tds[3].firstChild.value),
-    Mileage: num(tds[4].firstChild.value),
-    MOT_Date: tds[5].firstChild.value || null,
-    Engine_size: num(tds[6].firstChild.value),
-
-    // ✅ SINGLE SELECTS – MUST BE STRINGS
-    Fuel_type: tds[7].firstChild.value,
-    Transmission: tds[8].firstChild.value,
-    Status: tds[9].firstChild.value,
-
-    Short_Description: txt(tds[10].firstChild.value),
-    Full_Description: txt(tds[11].firstChild.value)
+  // Helper: return the value from the first form control inside a cell
+  const cellValue = (td) => {
+    const el = td.querySelector("input, textarea, select");
+    return el ? el.value : "";
   };
 
-  const r = await fetch(`${API}/update/${id}`, {
+  const fields = {
+    Make_Model: txt(cellValue(tds[1])),
+    Registration: txt(cellValue(tds[2])),
+    Price: num(cellValue(tds[3])),
+    Mileage: num(cellValue(tds[4])),
+    MOT_Date: txt(cellValue(tds[5])),
+    Engine_size: num(cellValue(tds[6])),
+    Fuel_type: txt(cellValue(tds[7])),          // single select
+    Transmission: txt(cellValue(tds[8])),       // single select
+    Status: txt(cellValue(tds[9])),             // single select
+    Short_Description: txt(cellValue(tds[10])),
+    Full_Description: txt(cellValue(tds[11]))
+  };
+
+  // Normalise empty strings for select/text fields to null (Airtable clears field)
+  for (const k of ["Fuel_type", "Transmission", "Status", "Short_Description", "Full_Description", "Make_Model", "Registration", "MOT_Date"]) {
+    if (fields[k] === "") fields[k] = null;
+  }
+
+  const res = await fetch(`/api/update/${id}`, {
     method: "POST",
-    credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fields }) // ← REQUIRED BY WORKER
+    credentials: "include",
+    // IMPORTANT: Worker expects the fields object directly (not wrapped in {fields: ...})
+    body: JSON.stringify(fields)
   });
 
-  if (!r.ok) {
-    const e = await r.json();
-    alert("Save failed: " + (e.error || "Unknown error"));
+  const out = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    alert(`Save failed: ${out.error || "Unknown error"}`);
+  } else {
+    // Soft-confirm; keep it minimal to avoid UI noise
+    console.log("Saved", id);
   }
 }
+
+/* ---------- Wire up ---------- */
+
+if (loginBtn) loginBtn.addEventListener("click", login);
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
 
 /* ---------- START ---------- */
 
