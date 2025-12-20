@@ -9,8 +9,27 @@
 <body>
 
 <header class="hero-header">
-    <img src="assets/hero-banner.jpg" alt="Web banner" class="hero-banner">
-</header>
+        <picture>
+            <source type="image/webp"
+                    srcset="assets/hero-banner-512.webp 512w,
+                            assets/hero-banner-768.webp 768w,
+                            assets/hero-banner-1024.webp 1024w,
+                            assets/hero-banner-1536.webp 1536w,
+                            assets/hero-banner-2048.webp 2048w"
+                    sizes="100vw">
+            <img class="hero-banner"
+                 src="assets/hero-banner-2048.jpg"
+                 srcset="assets/hero-banner-512.jpg 512w,
+                         assets/hero-banner-768.jpg 768w,
+                         assets/hero-banner-1024.jpg 1024w,
+                         assets/hero-banner-1536.jpg 1536w,
+                         assets/hero-banner-2048.jpg 2048w"
+                 sizes="100vw"
+                 width="2048" height="576"
+                 alt="Project 55 Motors — Carefully Selected Used Cars"
+                 loading="eager" decoding="async" fetchpriority="high">
+        </picture>
+    </header>
 
 <nav class="main-nav">
     <div class="main-nav-inner">

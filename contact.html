@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 55 Motors – Premium Used Cars</title>
+    <title>Contact – Project 55 Motors</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -33,20 +33,39 @@
 
 <nav class="main-nav">
     <div class="main-nav-inner">
-        <a href="index.html" class="active">Home</a>
+        <a href="index.html">Home</a>
         <a href="inventory.html">Current Stock</a>
         <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
+        <a href="contact.html" class="active">Contact</a>
     </div>
 </nav>
 
 <main class="page-wrapper">
-    <h1 class="page-title">Featured Vehicles</h1>
+    <h1 class="page-title">Contact Us</h1>
     <p class="page-intro">
-        Carefully selected, well-maintained used cars prepared to a high standard in South Shropshire.
+        If you’d like to arrange a viewing, discuss a vehicle or ask a question, please use the form below.
+        We normally respond within a few hours.
     </p>
 
-    <div id="car-grid" class="car-grid"></div>
+    <div class="contact-layout">
+        <form action="https://formsubmit.co/YOUR_EMAIL_HERE" method="POST" class="contact-form">
+            <!-- Replace YOUR_EMAIL_HERE with your address -->
+
+            <label for="name">Your Name</label>
+            <input id="name" type="text" name="name" required>
+
+            <label for="email">Email Address</label>
+            <input id="email" type="email" name="email" required>
+
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="text" name="phone">
+
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit" class="btn-primary">Send Message</button>
+        </form>
+    </div>
 </main>
 
 <footer>
@@ -69,7 +88,15 @@
     </div>
 </div>
 
-<script src="cars.js"></script>
+<script>
+    // Pre-fill from ?msg= in query string
+    const params = new URLSearchParams(window.location.search);
+    const preMsg = params.get("msg");
+    if (preMsg) {
+        const msgField = document.getElementById("message");
+        if (msgField) msgField.value = preMsg;
+    }
+</script>
 <script src="admin-shortcut.js"></script>
 </body>
 </html>
