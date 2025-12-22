@@ -44,27 +44,34 @@ img{
 }
 
 /* =========================================================
-   HERO BANNER (index / inventory)
+   HERO BANNER (public pages)
+   Uses responsive images via <picture> and a height that
+   preserves the banner’s aspect ratio on small screens to
+   avoid cropping the right-hand message on phones.
    ========================================================= */
 .hero-header{
   background: var(--midnight);
   overflow: hidden;
 }
 
-/* Keep banner from dominating widescreen */
-.hero-header .hero-banner{
+.hero-header picture{
+  display: block;
   width: 100%;
-  height: 260px;
-  object-fit: cover;
-  object-position: center;
 }
 
-@media (max-width: 900px){
-  .hero-header .hero-banner{ height: 210px; }
+/*
+  Banner aspect ratio is 2048×576 (~3.56:1).
+  On narrow screens, the height tracks viewport width so the
+  full banner remains visible (no side-cropping).
+*/
+.hero-header .hero-banner{
+  width: 100%;
+  height: clamp(80px, 28.125vw, 260px);
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
-@media (max-width: 600px){
-  .hero-header .hero-banner{ height: 170px; }
-}
+
 
 /* =========================================================
    NAV
