@@ -3,8 +3,23 @@
    Includes: Hero image, swipeable gallery, enquire prefill
 --------------------------------------------------------- */
 
-// Always use SAME-ORIGIN API endpoint (avoids CORS issues between www/apex)
-const VEHICLE_API_URL = new URL("/cars-api", window.location.origin).toString();
+/*
+  IMPORTANT:
+  - Do not hard-code apex vs www. The site may load on either host.
+  - Always call the API on the SAME ORIGIN to avoid redirects/CORS issues.
+  - Avoid fetch cache bypass so Cloudflare edge caching remains effective.
+*/
+
+const VEHICLE_API_URL = (() => {
+  const u = new URL("/cars-api", window.location.origin);
+
+  // Debug aid: add &nocache=1 to the vehicle page URL to force Airtable refresh
+  // Example: /vehicle.html?id=recXXXX&nocache=1
+  const p = new URLSearchParams(window.location.search);
+  if (p.get("nocache") === "1") u.searchParams.set("nocache", "1");
+
+  return u.toString();
+})();
 
 document.addEventListener("DOMContentLoaded", () => {
   loadVehicle();
@@ -22,8 +37,8 @@ async function loadVehicle() {
   }
 
   try {
-    // Keep this a simple GET (no custom headers) to avoid preflights
-    const res = await fetch(VEHICLE_API_URL, { cache: "no-store" });
+    // Keep this a simple GET. The Worker handles edge caching.
+    const res = await fetch(VEHICLE_API_URL);
     if (!res.ok) throw new Error("API error " + res.status);
 
     const data = await res.json();
