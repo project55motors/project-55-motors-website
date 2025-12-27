@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Details – Project 55 Motors</title>
+    <link rel="stylesheet" href="/styles.css">
+<!-- Vehicle page enhancements (scoped to this page) -->
+<style>
+  /* Keep the key-info grid robust with an extra item (Transmission) */
+  #vehicle-page .vehicle-spec-grid{
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  /* Description: intro + section cards */
+  #vehicle-page .vehicle-description{
+    margin-top: 18px;
+  }
+  #vehicle-page .vehicle-desc-intro{
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.03);
+    line-height: 1.65;
+    color: inherit;
+  }
+  #vehicle-page .vehicle-desc-intro p{
+    margin: 0;
+  }
+  #vehicle-page .vehicle-desc-sections{
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 820px){
+    #vehicle-page .vehicle-desc-sections{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  #vehicle-page .vehicle-desc-card{
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.02);
+  }
+  #vehicle-page .vehicle-desc-card h2{
+    margin: 0 0 10px 0;
+    font-size: 1.05rem;
+    letter-spacing: .2px;
+  }
+  #vehicle-page .vehicle-desc-card ul{
+    margin: 0;
+    padding-left: 18px;
+  }
+  #vehicle-page .vehicle-desc-card li{
+    margin: 6px 0;
+    line-height: 1.5;
+  }
+
+  /* Vehicle CTA stack (Enquire + WhatsApp) */
+  #vehicle-page .vehicle-cta-stack{
+    margin-top: 18px;
+    display: grid;
+    gap: 10px;
+  }
+  #vehicle-page .vehicle-cta-stack .enquire-btn{
+    margin-top: 0; /* stack provides spacing */
+  }
+
+  /* Premium Enquire CTA */
+  #vehicle-page .enquire-btn{
+    margin-top: 18px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 2px 10px;
+    align-items: center;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: linear-gradient(135deg, rgba(26,95,255,.95), rgba(83,169,255,.85));
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(0,0,0,.25);
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  #vehicle-page .enquire-btn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 28px rgba(0,0,0,.32);
+  }
+  #vehicle-page .enquire-btn:active{
+    transform: translateY(0);
+  }
+  #vehicle-page .enquire-btn__main{
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    font-size: 1.08rem;
+    font-weight: 750;
+    letter-spacing: .2px;
+  }
+  #vehicle-page .enquire-btn__meta{
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    font-size: .92rem;
+    opacity: .95;
+  }
+  #vehicle-page .enquire-btn__icon{
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    font-size: 1.5rem;
+    line-height: 1;
+    opacity: .95;
+  }
+  #vehicle-page .enquire-btn:focus-visible{
+    outline: 3px solid rgba(83,169,255,.55);
+    outline-offset: 3px;
+  }
+</style>
+
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<header class="hero-header">
+    <picture class="hero-picture">
+        <source type="image/webp"
+                srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                        /assets/hero-banners/hero-banner-768.webp 768w,
+                        /assets/hero-banners/hero-banner-1024.webp 1024w,
+                        /assets/hero-banners/hero-banner-1536.webp 1536w,
+                        /assets/hero-banners/hero-banner-2048.webp 2048w,
+                        /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+                sizes="100vw">
+        <img class="hero-banner"
+             src="/assets/hero-banners/hero-banner-1024.jpg"
+             srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                     /assets/hero-banners/hero-banner-768.jpg 768w,
+                     /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                     /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                     /assets/hero-banners/hero-banner-2048.jpg 2048w"
+             sizes="100vw"
+             width="2048" height="576"
+             alt="Project 55 Motors — Carefully Selected Used Cars"
+             loading="eager" decoding="async" fetchpriority="high">
+    </picture>
+</header>
+
+<!-- NAVIGATION -->
+<nav class="main-nav">
+    <div class="main-nav-inner">
+        <a href="/index.html">Home</a>
+        <a href="/inventory.html">Current Stock</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+    </div>
+</nav>
+
+<!-- VEHICLE DETAILS -->
+<main class="page-wrapper" id="vehicle-page">
+    <div class="vehicle-layout">
+
+        <!-- PHOTO AREA -->
+        <div class="vehicle-media">
+            <div class="vehicle-hero-wrapper">
+                <img id="vehicle-hero" class="vehicle-hero" src="" alt="Vehicle Photo">
+            </div>
+
+            <div class="vehicle-thumbs-wrapper">
+                <button type="button" id="thumb-left" class="thumb-arrow" aria-label="Previous">‹</button>
+                <div id="vehicle-thumbs" class="vehicle-thumbs"></div>
+                <button type="button" id="thumb-right" class="thumb-arrow" aria-label="Next">›</button>
+            </div>
+        </div>
+
+        <!-- INFORMATION AREA -->
+        <div class="vehicle-info">
+
+            <h1 id="vehicle-title" class="vehicle-title"></h1>
+            <p id="vehicle-reg" class="vehicle-reg"></p>
+            <p id="vehicle-price" class="vehicle-price"></p>
+
+            <div class="vehicle-spec-grid">
+                <div class="vehicle-spec-item">
+                    <label>Mileage</label>
+                    <span id="vehicle-mileage"></span>
+                </div>
+                <div class="vehicle-spec-item">
+                    <label>Transmission</label>
+                    <span id="vehicle-transmission"></span>
+                </div>
+                <div class="vehicle-spec-item">
+                    <label>MOT</label>
+                    <span id="vehicle-mot"></span>
+                </div>
+                <div class="vehicle-spec-item">
+                    <label>Engine</label>
+                    <span id="vehicle-engine"></span>
+                </div>
+                <div class="vehicle-spec-item">
+                    <label>Fuel</label>
+                    <span id="vehicle-fuel"></span>
+                </div>
+            </div>
+
+            <div id="vehicle-description" class="vehicle-description"></div>
+
+<div class="vehicle-cta-stack">
+            <button id="enquire-btn" class="btn-primary enquire-btn" type="button">
+                <span class="enquire-btn__main">Enquire About This Vehicle</span>
+                <span class="enquire-btn__meta">Fast response • No obligation</span>
+                <span class="enquire-btn__icon" aria-hidden="true">→</span>
+            </button>
+
+            <a id="whatsapp-btn" class="cta-secondary cta-secondary--whatsapp" href="#" target="_blank" rel="noopener">
+                <span class="cta-secondary__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor" d="M12.04 2C6.52 2 2.04 6.21 2.04 11.4c0 1.77.58 3.42 1.58 4.8L2 22l5.96-1.14c1.33.45 2.76.7 4.25.7 5.52 0 10-4.21 10-9.4S17.56 2 12.04 2Zm.22 17.55c-1.42 0-2.73-.25-3.9-.75l-.27-.12-3.65.7.74-3.45-.16-.24a7.8 7.8 0 0 1-1.35-4.37c0-4.16 3.64-7.54 8.13-7.54 4.49 0 8.13 3.38 8.13 7.54 0 4.16-3.64 7.54-8.13 7.54h-.54Z"/>
+                    </svg>
+                </span>
+                <span class="cta-secondary__text">
+                    <span class="cta-secondary__main">WhatsApp about this car</span>
+                    <span class="cta-secondary__meta">Quick question • Viewing times • Part-exchange</span>
+                </span>
+                <span class="cta-secondary__chev" aria-hidden="true">→</span>
+            </a>
+        </div>
+        </div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+</footer>
+
+<!-- 🔐 HIDDEN STAFF LOGIN MODAL (only shown via shortcut) -->
+<div id="adminLoginModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAdminModal()">×</span>
+        <h2>Staff Login</h2>
+
+        <form onsubmit="submitAdminLogin(event)">
+            <input id="adminUser" type="text" placeholder="Username" required>
+            <input id="adminPass" type="password" placeholder="Password" required>
+            <button type="submit" class="modal-login-btn">Log In</button>
+        </form>
+
+        <p id="admin-login-error" class="modal-error" style="display:none;"></p>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="/site-config.js"></script>
+<script src="/site.js"></script>
+<script src="/vehicle.js"></script>
+<script src="/admin-shortcut.js"></script>
+
+
+<!-- Anonymous analytics ping (aggregated) -->
+<script>
+  (function(){
+    try {
+      fetch("/cars-api/track", { method: "POST", keepalive: true }).catch(function(){});
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>

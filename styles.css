@@ -1334,3 +1334,74 @@ footer{
   .p55-fab{ padding: 12px; }
   .p55-fab__label{ display: none; }
 }
+/* =========================================================
+   WhatsApp (premium integration)
+   ========================================================= */
+:root{
+  --whatsapp: #25D366;
+}
+
+.p55-fab{
+  position: fixed;
+  right: calc(18px + env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 14px;
+  border-radius: 999px;
+
+  background: rgba(8, 20, 38, 0.92);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+
+  transition: opacity .14s ease, transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+}
+.p55-fab.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.p55-fab:hover{
+  border-color: rgba(83,169,255,.45);
+  box-shadow: 0 20px 54px rgba(0,0,0,0.28);
+}
+.p55-fab:focus-visible{
+  outline: 3px solid rgba(83,169,255,.45);
+  outline-offset: 3px;
+}
+.p55-fab__icon{
+  display: inline-flex;
+}
+.p55-fab__icon img{
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.p55-fab__label{
+  font-weight: 850;
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+
+/* Keep label visible on iPhone (no mystery icon-only button) */
+@media (max-width: 520px){
+  .p55-fab{
+    padding: 12px 14px;
+  }
+  .p55-fab__label{
+    display: inline;
+    font-size: 12px;
+  }
+}
