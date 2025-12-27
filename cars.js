@@ -173,8 +173,12 @@ async function loadCars() {
 
 
 // SOLD ribbon (premium): keep imagery vivid; show corner ribbon when Status === "Sold"
-const status = String(getField(f, ["Status"]) || "").trim();
-if (status === "Sold") {
+const statusRaw = getField(f, ["Status"]);
+const statusNorm = String(
+  (statusRaw && typeof statusRaw === "object" && "name" in statusRaw) ? statusRaw.name : statusRaw
+).trim().toLowerCase();
+
+if (statusNorm === "sold") {
   card.classList.add("is-sold");
 
   const ribbon = document.createElement("div");
