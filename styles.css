@@ -1,0 +1,905 @@
+/* =========================================================
+   Project 55 Motors — Public site stylesheet (Index + Inventory)
+   NOTE: Vehicle detail page intentionally NOT targeted.
+   ========================================================= */
+
+/* ---------- Base / Reset ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+  color: #0f172a;
+  background: #f6f7fb;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a{ color: inherit; }
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---------- Tokens ---------- */
+:root{
+  --midnight: #050B18;
+  --navy:     #081426;
+  --stroke:   rgba(15, 23, 42, 0.12);
+  --muted:    #5b6778;
+  --panel:    #ffffff;
+
+  --accent:   #1A5FFF;
+  --danger:   #E0303A;
+
+  --radius:   18px;
+  --shadow:   0 12px 30px rgba(15, 23, 42, 0.14);
+}
+
+/* =========================================================
+   HERO BANNER (public pages) — ALWAYS SHOW FULL IMAGE (NO CROP)
+   Goal: keep the full banner visible (incl. reflections & logo)
+   ========================================================= */
+.hero-header{
+  width: 100%;
+  background: #000;
+}
+
+.hero-header .hero-picture{
+  display: block;
+  width: 100%;
+  height: clamp(140px, 28.125vw, 520px);
+}
+
+.hero-header .hero-banner{
+  display: block;
+
+  /* No zoom/crop: keep the entire image visible */
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 640px){
+  .hero-header .hero-picture{
+    height: clamp(120px, 32vw, 220px);
+  }
+}
+
+/* =========================================================
+   NAV
+   ========================================================= */
+.main-nav{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(15,23,42,0.08);
+}
+
+.main-nav .main-nav-inner{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 14px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.main-nav a{
+  text-decoration: none;
+  color: rgba(15,23,42,0.78);
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+  transition: background .12s ease, border-color .12s ease, color .12s ease;
+}
+
+.main-nav a:hover{
+  color: #0F172A;
+  border-color: rgba(15,23,42,0.12);
+  background: rgba(15,23,42,0.04);
+}
+
+.main-nav a.active{
+  color: #0F172A;
+  border-color: rgba(26,95,255,0.22);
+  background: rgba(26,95,255,0.10);
+}
+
+/* =========================================================
+   PAGE WRAPPER / TYPO
+   ========================================================= */
+.page-wrapper{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 34px 14px 46px;
+}
+
+.page-title{
+  margin: 0 0 10px;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.page-intro{
+  margin: 0 0 22px;
+  color: rgba(15,23,42,0.70);
+  line-height: 1.6;
+}
+
+/* =========================================================
+   GRID
+   ========================================================= */
+#car-grid,
+.car-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* =========================================================
+   CAR CARD
+   ========================================================= */
+.car-card{
+  position: relative;
+  background: var(--panel);
+  border: 1px solid rgba(15,23,42,0.10);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+
+.car-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(26,95,255,0.20);
+  box-shadow: 0 18px 60px rgba(15,23,42,0.16);
+}
+
+.car-card img{
+  border-radius: 0;
+}
+
+.car-card .car-image{
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  background: #000;
+}
+
+/* Card info block */
+.car-card .info{
+  padding: 14px 14px 16px;
+}
+
+.car-card .car-card-top{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.car-card .car-card-top h3{
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 850;
+  letter-spacing: 0.2px;
+  line-height: 1.25;
+}
+
+.car-card .price{
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.car-card .car-specs{
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 640px){
+  .car-card .car-specs{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.car-card .spec{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(15,23,42,0.08);
+  background: rgba(15,23,42,0.03);
+  min-width: 0;
+}
+
+/* Force icon sizes inside specs (prevents “massive icons” regressions) */
+.car-card .car-specs img{
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.car-card .spec-value{
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(15,23,42,0.90);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.car-card .car-desc{
+  margin: 12px 0 0;
+  color: rgba(15,23,42,0.70);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   CONTACT PAGE FORM (centred, stacked, premium inputs)
+   Applies only to the main page content (.page-wrapper),
+   not to the staff login modal.
+   ========================================================= */
+.page-wrapper form{
+  width: min(720px, 92vw);
+  margin: 18px auto 0;
+  padding: 22px 22px 20px;
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.page-wrapper form label{
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 750;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.page-wrapper form input[type="text"],
+.page-wrapper form input[type="email"],
+.page-wrapper form input[type="tel"],
+.page-wrapper form textarea{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.04);
+  margin: 0 0 12px;
+  font: inherit;
+}
+
+.page-wrapper form textarea{
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+footer{
+  text-align: center;
+  padding: 18px 10px 28px;
+  color: rgba(15,23,42,0.56);
+  font-size: 13px;
+  border-top: 1px solid rgba(15,23,42,0.08);
+  background: rgba(15,23,42,0.02);
+}
+
+/* =========================================================
+   MODAL (admin login)
+   ========================================================= */
+.modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+
+.modal-content{
+  width: min(420px, calc(100% - 24px));
+  background: #fff;
+  border: 1px solid rgba(15,23,42,0.12);
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 18px 80px rgba(0,0,0,0.25);
+}
+
+.modal-close{
+  float: right;
+  cursor: pointer;
+  font-size: 22px;
+  opacity: .8;
+}
+
+.modal-close:hover{ opacity: 1; }
+
+.modal-content h2{
+  margin: 4px 0 14px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modal-content input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,0.14);
+  margin: 0 0 10px;
+}
+
+.modal-login-btn{
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modal-error{
+  display: none;
+  margin: 10px 0 0;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+/* =========================================================
+   VEHICLE DETAILS PAGE (restored)
+   ========================================================= */
+
+.vehicle-hero-wrapper {
+    background: #f5f5f5;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 460px;
+}
+
+.vehicle-hero {
+    max-width: 100%;
+    max-height: 460px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.vehicle-thumbs-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.vehicle-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px;
+    scrollbar-width: thin;
+}
+
+.vehicle-thumb {
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+
+.vehicle-thumb img {
+    display: block;
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.vehicle-thumb.active {
+    border-color: #1a3b6b;
+}
+
+.vehicle-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.vehicle-lightbox.open {
+    display: flex;
+}
+
+.vehicle-lightbox-inner {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.vehicle-lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 16px;
+    display: block;
+}
+
+.vehicle-lightbox-close {
+    position: absolute;
+    top: -48px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 34px;
+    cursor: pointer;
+}
+
+.vehicle-lightbox-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.vehicle-lightbox-arrow.left { left: -56px; }
+.vehicle-lightbox-arrow.right { right: -56px; }
+
+.thumb-arrow{
+    border: none;
+    background: rgba(255,255,255,0.9);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-weight: 800;
+    color: #000;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* =========================================================
+   SOLD RIBBON (inventory cards)
+   ========================================================= */
+
+.car-card.is-sold{
+  filter: none;
+}
+
+.car-card-ribbon{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 132px;
+  height: 132px;
+  overflow: hidden;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.car-card-ribbon > span{
+  position: absolute;
+  top: 26px;
+  left: -44px;
+  width: 188px;
+  padding: 10px 0 9px;
+  text-align: center;
+
+  transform: rotate(-45deg);
+  transform-origin: center;
+
+  background: linear-gradient(135deg, rgba(8, 20, 38, 0.94), rgba(5, 11, 24, 0.88));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 38px rgba(0,0,0,0.45);
+
+  color: rgba(255,255,255,0.97);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.car-card-ribbon > span::after{
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #53A9FF, var(--danger));
+  opacity: 0.95;
+}
+
+/* =========================================================
+   BUTTONS (shared)
+   ========================================================= */
+
+.btn,
+.btn-primary{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.14);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  text-decoration: none;
+}
+
+.btn:hover,
+.btn-primary:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.20);
+}
+
+.btn:active,
+.btn-primary:active{
+  transform: translateY(0);
+}
+
+.btn:focus-visible,
+.btn-primary:focus-visible{
+  outline: 3px solid rgba(83,169,255,.45);
+  outline-offset: 3px;
+}
+
+/* Contact page helper (keeps form centred even if markup changes slightly) */
+.contact-layout{
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================================================
+   WHATSAPP (premium badge FAB)
+   ========================================================= */
+
+.p55-fab{
+  position: fixed;
+  right: calc(18px + env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index: 9999;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px;
+  border-radius: 999px;
+
+  /* UPDATED: translucent grey “read-through” */
+  background: rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.16);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+
+  transition: opacity .14s ease, transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+}
+
+.p55-fab.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.p55-fab:hover{
+  /* UPDATED: neutral premium hover */
+  border-color: rgba(15, 23, 42, 0.22);
+  box-shadow: 0 16px 44px rgba(15, 23, 42, 0.22);
+}
+
+.p55-fab:focus-visible{
+  outline: 3px solid rgba(83,169,255,.45);
+  outline-offset: 3px;
+}
+
+.p55-fab__icon{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Preserve official SVG aspect ratio: height-driven sizing */
+.p55-fab__icon .p55-wa-badge{
+  height: 42px;     /* desktop */
+  width: auto;
+  max-width: 210px;
+  display: block;
+}
+
+/* UPDATED: smaller on mobile */
+@media (max-width: 520px){
+  .p55-fab__icon .p55-wa-badge{
+    height: 34px;
+    max-width: 170px;
+  }
+}
+
+/* Vehicle page WhatsApp CTA icon (wordmark SVG) */
+.cta-secondary--whatsapp .cta-secondary__icon img{
+  height: 30px;
+  width: auto;
+  max-width: 160px;
+  display: block;
+}
+
+@media (max-width: 520px){
+  .cta-secondary--whatsapp .cta-secondary__icon img{
+    height: 28px;
+  }
+}
+
+/* Safety: if any older build still renders separate label text, hide it */
+.p55-fab__label{ display: none !important; }
+
+/* =========================================================
+   Project 55 Motors — Vehicle Detail Premium Patch (append-only)
+   Purpose: Vehicle specs pill grid + WhatsApp FAB + hide legacy inline WhatsApp rows
+   Source: styles.premium.vehicle.v7.4.1.css (vehicle block)
+   ========================================================= */
+
+/* =========================================================
+   VEHICLE PAGE (premium header + larger icon specs)
+   Template-robust: relies on IDs/classes injected by vehicle.js.
+   ========================================================= */
+
+#vehicle-page{
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+/* Two-column on desktop: photos + key details */
+#vehicle-page .vehicle-top{
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px){
+  #vehicle-page .vehicle-top{
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+/* Title + price */
+#vehicle-page .vehicle-title-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+#vehicle-page #vehicle-title{
+  margin: 0;
+  font-size: clamp(1.7rem, 2.2vw, 2.2rem);
+  letter-spacing: -0.02em;
+}
+
+#vehicle-page #vehicle-price{
+  font-weight: 850;
+  font-size: 1.25rem;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Icon pills */
+#vehicle-page .vehicle-specs{
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 560px){
+  #vehicle-page .vehicle-specs{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+#vehicle-page .vehicle-specs .spec{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(15,23,42,0.08);
+  background: rgba(15,23,42,0.03);
+  min-width: 0;
+}
+
+#vehicle-page .vehicle-specs .spec-icon{
+  width: 20px !important;
+  height: 20px !important;
+  flex: 0 0 auto;
+}
+
+@media (min-width: 900px){
+  #vehicle-page .vehicle-specs .spec-icon{
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
+#vehicle-page .vehicle-specs .spec-value{
+  font-weight: 650;
+  color: rgba(15,23,42,0.86);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#vehicle-page .vehicle-specs .spec.span-2{ grid-column: span 2; }
+#vehicle-page .vehicle-specs .spec.span-3{ grid-column: span 3; }
+
+/* Floating WhatsApp: keep but reveal late */
+#whatsapp-btn.p55-fab{ opacity: 0; transform: translateY(10px); pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+#whatsapp-btn.p55-fab.is-visible{ opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+
+
+/* =========================================================
+   VEHICLE PAGE — v6 consistency layer
+   - Keep vertical layout across browsers (no side-by-side)
+   - Hide legacy rows marked by JS (.p55-legacy-row)
+   - Force-hide any inline WhatsApp links inside vehicle page
+   ========================================================= */
+
+/* Responsive layout:
+   - Default: vertical stack (mobile portrait / narrow screens)
+   - Wider / landscape: side-by-side to use space (premium)
+*/
+#vehicle-page .vehicle-top{
+  display: block;
+}
+
+@media (min-width: 900px), (orientation: landscape) and (min-width: 700px){
+  #vehicle-page .vehicle-top{
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 28px;
+    align-items: start;
+  }
+}
+
+#vehicle-page .p55-legacy-row{
+  display: none !important;
+}
+
+#vehicle-page a[href*="wa.me"]:not(#whatsapp-btn),
+#vehicle-page a[href*="whatsapp.com"]:not(#whatsapp-btn),
+#vehicle-page a[href^="whatsapp:"]:not(#whatsapp-btn){
+  display: none !important;
+}
+
+/* Slightly larger icons on vehicle page (bigger than index cards) */
+#vehicle-page .vehicle-specs .spec-icon{
+  width: 22px !important;
+  height: 22px !important;
+}
+@media (min-width: 900px){
+  #vehicle-page .vehicle-specs .spec-icon{
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+
+
+/* Safety: if any inline WhatsApp remnant is marked, hide it completely */
+#vehicle-page .p55-legacy-row{
+  display: none !important;
+}
+
+
+/* =========================================================
+   Vehicle page safety: apply key rules even if template lacks #vehicle-page
+   ========================================================= */
+.p55-vehicle-page .p55-legacy-row{ display:none !important; }
+.p55-vehicle-page .vehicle-specs .spec-icon{ width:22px; height:22px; }
+@media (min-width: 900px){
+  .p55-vehicle-page .vehicle-specs .spec-icon{ width:28px; height:28px; }
+}
+
+
+/* Vehicle page — WhatsApp floating FAB (single icon, no label) */
+.whatsapp-fab{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(0,0,0,0.10);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  transform: translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.whatsapp-fab.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.whatsapp-fab img{
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+.whatsapp-fab span{ display:none !important; }
+
+/* Hard-hide any legacy inline WhatsApp helper rows if they exist in templates */
+#vehicle-page .whatsapp-inline,
+#vehicle-page .whatsapp-links,
+#vehicle-page .whatsapp-quick,
+#vehicle-page .wa-links,
+#vehicle-page .quicklinks{
+  display:none !important;
+}
