@@ -180,6 +180,7 @@ const P55_ICONS = {
   mileage: `${P55_ICON_BASE}/mileage.svg`,
   fuel: `${P55_ICON_BASE}/fuel.svg`,
   engine: `${P55_ICON_BASE}/engine.svg`
+  registration: `${P55_ICON_BASE}/registration.svg`,
 };
 
 function p55Esc(str) {
@@ -375,6 +376,7 @@ function p55ApplyPremiumSpecs(fields) {
   const mileage = p55FormatMileageShort(fields.Mileage) || "";
   const fuel = String(fields.Fuel_type || "").trim();
   const engine = p55FormatEngineSize(fields.Engine_size);
+  const regValue = String(fields?.Registration || fields?.Reg || fields?.registration || "").trim();
 
   // Put MOT last (typically longest value) so it can span if needed
   specs.innerHTML =
@@ -382,6 +384,7 @@ function p55ApplyPremiumSpecs(fields) {
     p55SpecItem(P55_ICONS.mileage, "Mileage", mileage) +
     p55SpecItem(P55_ICONS.fuel, "Fuel", fuel) +
     p55SpecItem(P55_ICONS.engine, "Engine", engine) +
+    p55SpecItem(P55_ICONS.registration, "Registration", regValue || (document.getElementById("vehicle-reg")?.textContent || "").replace(/^\s*registration\s*:\s*/i, "").trim()) +
     p55SpecItem(P55_ICONS.mot, "MOT Expiry", mot);
 
   p55TidySpecsGrid(specs);
@@ -392,6 +395,8 @@ function p55ApplyPremiumSpecs(fields) {
 function p55ApplyPremiumSpecsFromDom() {
   // Build pills from existing DOM values (fallback when field-based render differs across browsers/templates)
   const regEl = document.getElementById("vehicle-reg");
+  const regText = (regEl?.textContent || "");
+  const regValue = regText.replace(/^\s*registration\s*:\s*/i, "").trim();
   if (!regEl) return;
 
   const container =
@@ -439,6 +444,13 @@ function p55ApplyPremiumSpecsFromDom() {
     specs = document.createElement("div");
     specs.className = "vehicle-specs";
     regEl.insertAdjacentElement("afterend", specs);
+
+  // Hide the old 'Registration: ...' line (we show it as a pill instead)
+  try {
+    const regRow = regEl.closest("p, li, div");
+    if (regRow) regRow.classList.add("p55-legacy-row");
+    else regEl.classList.add("p55-legacy-row");
+  } catch(e) {}
   }
 
   specs.innerHTML =
@@ -446,6 +458,7 @@ function p55ApplyPremiumSpecsFromDom() {
     p55SpecItem(P55_ICONS.mileage, "Mileage", mileage) +
     p55SpecItem(P55_ICONS.fuel, "Fuel", fuel) +
     p55SpecItem(P55_ICONS.engine, "Engine", engine) +
+    p55SpecItem(P55_ICONS.registration, "Registration", regValue) +
     p55SpecItem(P55_ICONS.mot, "MOT Expiry", mot);
 
   p55TidySpecsGrid(specs);
