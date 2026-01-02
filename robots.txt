@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Sitemap: https://project55motors.co.uk/sitemap.xml
+
+# Block private/admin surfaces (robots is NOT security, just indexing guidance)
+Disallow: /admin-dashboard.html
+Disallow: /admin-shortcut.js
+Disallow: /api/
+Disallow: /cars-api/
