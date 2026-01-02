@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Sitemap: https://project55motors.co.uk/sitemap.xml
+
+# Indexing guidance only (not security)
+Disallow: /admin.html
+Disallow: /admin-dashboard.html
+Disallow: /admin-dashboard
+Disallow: /admin-shortcut.js
+Disallow: /api/
+Disallow: /cars-api/
