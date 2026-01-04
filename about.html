@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About – Project 55 Motors</title>
+      <link rel="canonical" href="https://project55motors.co.uk/about.html">
+<link rel="stylesheet" href="/styles.css?v=20260104b">
+</head>
+<body>
+
+<header class="hero-header">
+    <picture class="hero-picture">
+        <source type="image/webp"
+                srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                        /assets/hero-banners/hero-banner-768.webp 768w,
+                        /assets/hero-banners/hero-banner-1024.webp 1024w,
+                        /assets/hero-banners/hero-banner-1536.webp 1536w,
+                        /assets/hero-banners/hero-banner-2048.webp 2048w,
+                        /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+                sizes="100vw">
+        <img class="hero-banner"
+             src="/assets/hero-banners/hero-banner-1024.jpg"
+             srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                     /assets/hero-banners/hero-banner-768.jpg 768w,
+                     /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                     /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                     /assets/hero-banners/hero-banner-2048.jpg 2048w"
+             sizes="100vw"
+             width="2048" height="576"
+             alt="Project 55 Motors — Carefully Selected Used Cars"
+             loading="eager" decoding="async" fetchpriority="high">
+    </picture>
+</header>
+
+<nav class="main-nav">
+    <div class="main-nav-inner">
+        <a href="/index.html">Home</a>
+        <a href="/inventory.html">Current Stock</a>
+        <a href="/about.html" class="active">About</a>
+        <a href="/contact.html">Contact</a>
+    </div>
+</nav>
+
+<main class="page-wrapper">
+    <h1 class="page-title">About Project 55 Motors</h1>
+    <p class="page-intro">
+        Project 55 Motors is a small, independent used car business based in South Shropshire, 
+        focused on quality, transparency and an enjoyable driving experience.
+    </p>
+
+    <p>
+        Every vehicle is hand-picked, with particular attention paid to service history, previous ownership, 
+        MOT record and overall condition. The aim is simple: to offer cars we would confidently recommend to 
+        friends and family.
+    </p>
+    <p>
+        Before sale, each car receives a thorough check, professional valet and clear, honest presentation – 
+        including detailed descriptions and high-quality photography – so you know exactly what you are buying.
+    </p>
+    <p>
+        The long-term goal behind Project 55 is sustainable growth: a small, trusted operation that does things 
+        properly, without pressure or gimmicks. If a car isn’t right, it won’t be offered for sale.
+    </p>
+</main>
+
+<footer>
+    © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+</footer>
+
+<!-- Staff login modal -->
+<div id="adminLoginModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAdminModal()">×</span>
+        <h2>Staff Login</h2>
+
+        <form onsubmit="submitAdminLogin(event)">
+            <input id="adminUser" type="text" placeholder="Username" required>
+            <input id="adminPass" type="password" placeholder="Password" required>
+            <button type="submit" class="modal-login-btn">Log In</button>
+        </form>
+
+        <p id="admin-login-error" class="modal-error"></p>
+    </div>
+</div>
+
+<script src="/site-config.js"></script>
+<script src="/site.js"></script>
+
+<script src="/admin-shortcut.js"></script>
+
+<!-- Anonymous analytics ping (aggregated) -->
+<script>
+  (function(){
+    try {
+      fetch("/cars-api/track", { method: "POST", keepalive: true }).catch(function(){});
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>
