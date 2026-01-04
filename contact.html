@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact – Project 55 Motors</title>
+<link href="https://project55motors.co.uk/contact.html" rel="canonical"/>
+<link href="/styles.css?v=20260103i" rel="stylesheet"/>
+<style>
+/* Contact form premium micro-polish (scoped) */
+.contact-form input, .contact-form textarea, .contact-form select{
+  font-size: 16px; /* avoids iOS zoom */
+}
+.form-note{
+  margin: 10px 0 14px;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+.form-success{
+  margin: 14px 0 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.04);
+}
+.contact-form button[disabled]{
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+</style></head>
+<body>
+<header class="hero-header">
+<picture class="hero-picture">
+<source sizes="100vw" srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                        /assets/hero-banners/hero-banner-768.webp 768w,
+                        /assets/hero-banners/hero-banner-1024.webp 1024w,
+                        /assets/hero-banners/hero-banner-1536.webp 1536w,
+                        /assets/hero-banners/hero-banner-2048.webp 2048w,
+                        /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w" type="image/webp"/>
+<img alt="Project 55 Motors — Carefully Selected Used Cars" class="hero-banner" decoding="async" fetchpriority="high" height="576" loading="eager" sizes="100vw" src="/assets/hero-banners/hero-banner-1024.jpg" srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                     /assets/hero-banners/hero-banner-768.jpg 768w,
+                     /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                     /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                     /assets/hero-banners/hero-banner-2048.jpg 2048w" width="2048"/>
+</picture>
+</header>
+<nav class="main-nav">
+<div class="main-nav-inner">
+<a href="/index.html">Home</a>
+<a href="/inventory.html">Current Stock</a>
+<a href="/about.html">About</a>
+<a class="active" href="/contact.html">Contact</a>
+</div>
+</nav>
+<main class="page-wrapper">
+<h1 class="page-title">Contact Us</h1>
+<p class="page-intro">
+        If you’d like to arrange a viewing, discuss a vehicle or ask a question, please use the form below.
+        We normally respond within a few hours.
+    </p>
+<div class="contact-layout">
+<form action="https://formsubmit.co/nathan@project55motors.co.uk" class="contact-form" id="contactForm" method="POST"><input aria-hidden="true" autocomplete="off" name="_honey" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" tabindex="-1" type="text"/><input name="_next" type="hidden" value="https://project55motors.co.uk/contact.html?sent=1"/><input name="_captcha" type="hidden" value="false"/><input name="_template" type="hidden" value="table"/><input name="_subject" type="hidden" value="Project 55 Motors — Website Enquiry"/>
+
+<label for="name">Your Name</label>
+<input autocomplete="name" id="name" inputmode="text" name="name" placeholder="Your full name" required="" type="text"/>
+<label for="email">Email Address</label>
+<input autocomplete="email" id="email" inputmode="email" name="email" placeholder="you@example.com" required="" type="email"/>
+<label for="phone">Phone Number</label>
+<input autocomplete="tel" id="phone" inputmode="tel" name="phone" pattern="[0-9+()\s-]{7,}" placeholder="Optional" title="Please enter a valid phone number" type="tel"/>
+<label for="message">Your Message</label>
+<textarea id="message" minlength="20" name="message" placeholder="Tell us which vehicle you’re interested in and how you’d like us to respond…" required="" rows="6"></textarea>
+<p class="form-note">We’ll use your details only to respond to your enquiry. No marketing.</p><button class="btn-primary" type="submit">Send Message</button>
+</form>
+</div>
+</main>
+<footer>
+    © 2025 Project 55 Motors – South Shropshire. All rights reserved.
+</footer>
+<!-- Staff login modal -->
+<div class="modal" id="adminLoginModal">
+<div class="modal-content">
+<span class="modal-close" onclick="closeAdminModal()">×</span>
+<h2>Staff Login</h2>
+<form onsubmit="submitAdminLogin(event)">
+<input id="adminUser" placeholder="Username" required="" type="text"/>
+<input id="adminPass" placeholder="Password" required="" type="password"/>
+<button class="modal-login-btn" type="submit">Log In</button>
+</form>
+<p class="modal-error" id="admin-login-error"></p>
+</div>
+</div>
+<script src="/site-config.js"></script>
+<script src="/site.js"></script>
+<script>
+    // Pre-fill from ?msg= in query string
+    const params = new URLSearchParams(window.location.search);
+    const preMsg = params.get("msg");
+    if (preMsg) {
+        const msgField = document.getElementById("message");
+        if (msgField) msgField.value = preMsg;
+    }
+// Show success banner on return from FormSubmit (?sent=1)
+    const sent = params.get("sent");
+    if (sent === "1") {
+        const wrapper = document.querySelector(".page-wrapper");
+        const banner = document.createElement("div");
+        banner.className = "form-success";
+        banner.setAttribute("role", "status");
+        banner.innerHTML = "<strong>Message sent.</strong> Thank you — we’ll be in touch shortly.";
+        wrapper.insertBefore(banner, wrapper.children[1] || null);
+
+        // Clean URL for a premium finish
+        params.delete("sent");
+        const clean = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
+        window.history.replaceState({}, "", clean);
+    }
+
+    // Prevent double-submit + provide immediate feedback
+    const contactForm = document.getElementById("contactForm");
+    if (contactForm) {
+        contactForm.addEventListener("submit", function () {
+            const btn = contactForm.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.dataset.originalText = btn.textContent;
+                btn.textContent = "Sending…";
+            }
+            contactForm.setAttribute("aria-busy", "true");
+        });
+    }
+</script>
+<script src="/admin-shortcut.js"></script>
+<!-- Anonymous analytics ping (aggregated) -->
+<script>
+  (function(){
+    try {
+      fetch("/cars-api/track", { method: "POST", keepalive: true }).catch(function(){});
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>
