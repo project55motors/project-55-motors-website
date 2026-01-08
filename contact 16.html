@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Project 55 Motors — carefully selected used cars prepared to a high standard in South Shropshire. View current stock and enquire online."/>
+  <title>Contact – Project 55 Motors</title>
+
+  <link rel="canonical" href="https://project55motors.co.uk/contact"/>
+  <link rel="stylesheet" href="/styles.css?v=20260108a"/>
+
+  <meta property="og:site_name" content="Project 55 Motors"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Contact – Project 55 Motors"/>
+  <meta property="og:description" content="Project 55 Motors — carefully selected used cars prepared to a high standard in South Shropshire. View current stock and enquire online."/>
+  <meta property="og:url" content="https://project55motors.co.uk/contact"/>
+  <meta property="og:image" content="https://project55motors.co.uk/assets/hero-banners/hero-banner-2048.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <link rel="icon" href="/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+
+  <style>
+    /* Suppress iOS image callout on hero banner (admin long-press shortcut) */
+    .hero-banner{
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Premium: on-page status banner */
+    .form-status{
+      width: min(760px, 92vw);
+      margin: 14px auto 0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(15,23,42,0.92);
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      letter-spacing: .2px;
+    }
+    .form-status small{ display:block; color: rgba(255,255,255,0.8); margin-top: 6px; }
+  </style>
+</head>
+
+<body>
+  <header class="hero-banner" style="background-image: url('/assets/hero-banners/hero-banner-2048.jpg');">
+    <div class="hero-overlay">
+      <div class="hero-topbar">
+        <div class="brandline">
+          <img class="brand-logo" src="/assets/logo.svg" alt="Project 55 Motors"
+               onerror="this.onerror=null;this.src='/assets/logo.png';"/>
+          <div class="brand-text">
+            <div class="brand-title">PROJECT 55 MOTORS</div>
+            <div class="brand-subtitle">Premium Used Cars</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-center">
+        <h1 class="hero-title">Contact</h1>
+        <p class="hero-subtitle">Get in touch to arrange a viewing or ask a question about any vehicle.</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <div class="main-nav-inner">
+      <a href="/">Home</a>
+      <a href="/inventory">Current Stock</a>
+      <a href="/about">About</a>
+      <a class="active" href="/contact">Contact</a>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <section class="content-card contact-layout">
+      <div class="contact-card-inner">
+        <h2>Send a message</h2>
+        <p>Fill in the form below and we will respond as soon as possible.</p>
+      </div>
+    </section>
+
+    <div id="formStatus" class="form-status" role="status" aria-live="polite" hidden></div>
+
+    <!--
+      Primary endpoint (non-JS fallback):
+      - Uses your FormSubmit “invisible email” token string.
+      - We include _captcha=false to prevent inconsistent CAPTCHA flows.
+      - We still keep a honeypot for basic bot filtering.
+    -->
+    <form id="contactForm" class="contact-form"
+          action="https://formsubmit.co/4f494987fba30d06e09c30445899cf4c"
+          method="POST">
+
+      <!-- FormSubmit options -->
+      <input type="hidden" name="_subject" value="New enquiry — Project 55 Motors"/>
+      <input type="hidden" name="_template" value="table"/>
+      <input type="hidden" name="_captcha" value="false"/>
+      <input type="hidden" name="_next" value="https://project55motors.co.uk/contact.html?sent=1"/>
+
+      <!-- Honeypot (spam trap). Must remain hidden. -->
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"/>
+
+      <label for="name">Your Name</label>
+      <input id="name" name="name" type="text" required/>
+
+      <label for="email">Email Address</label>
+      <input id="email" name="email" type="email" required/>
+
+      <label for="phone">Phone Number</label>
+      <input id="phone" name="phone" type="tel"/>
+
+      <label for="message">Your Message</label>
+      <textarea id="message" name="message" required></textarea>
+
+      <button id="submitBtn" class="btn-primary" type="submit">Send Message</button>
+    </form>
+
+    <section class="content-card">
+      <h2>Alternatively</h2>
+      <p>You can also contact us via WhatsApp from any vehicle page, or call during reasonable hours. If we miss you, leave a message and we will call you back.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© Project 55 Motors</div>
+      <div class="footer-links">
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/site-config.js"></script>
+  <script src="/site.js"></script>
+  <script src="/admin-shortcut.js"></script>
+
+  <script>
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      const statusEl = document.getElementById("formStatus");
+      const form = document.getElementById("contactForm");
+      const submitBtn = document.getElementById("submitBtn");
+
+      // Pre-fill from ?msg=
+      const preMsg = params.get("msg");
+      if (preMsg) {
+        const msgField = document.getElementById("message");
+        if (msgField) msgField.value = preMsg;
+      }
+
+      // Vehicle structured prefill
+      const vehicle = params.get("vehicle");
+      const reg = params.get("reg");
+      const sourceUrl = params.get("url");
+
+      if (vehicle || reg || sourceUrl) {
+        const msgField = document.getElementById("message");
+        const headerLines = [];
+        if (vehicle) headerLines.push("Vehicle: " + decodeURIComponent(vehicle));
+        if (reg) headerLines.push("Registration: " + decodeURIComponent(reg));
+        if (sourceUrl) headerLines.push("Link: " + decodeURIComponent(sourceUrl));
+        const header = headerLines.join("\n");
+
+        if (form) {
+          const addHidden = (name, val) => {
+            if (!val) return;
+            if (form.querySelector("input[name='" + name + "']")) return;
+            const i = document.createElement("input");
+            i.type = "hidden"; i.name = name; i.value = val;
+            form.appendChild(i);
+          };
+          addHidden("vehicle", vehicle);
+          addHidden("registration", reg);
+          addHidden("vehicle_link", sourceUrl);
+        }
+
+        if (msgField) {
+          const existing = (msgField.value || "").trim();
+          if (!existing || !existing.includes("Vehicle:")) {
+            msgField.value = header + "\n\n" + existing;
+          }
+        }
+      }
+
+      // Success banner if redirected back with ?sent=1 (non-JS fallback path)
+      if (params.get("sent") === "1" && statusEl) {
+        statusEl.hidden = false;
+        statusEl.textContent = "Thank you — your message has been sent. We’ll get back to you as soon as possible.";
+      }
+
+      // Premium: Always show an on-page confirmation by submitting via FormSubmit AJAX.
+      // This eliminates inconsistent CAPTCHA/redirect behaviour.
+      if (form && window.fetch) {
+        form.addEventListener("submit", async function(e){
+          e.preventDefault();
+
+          if (statusEl) {
+            statusEl.hidden = false;
+            statusEl.textContent = "Sending…";
+          }
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending…";
+          }
+
+          try {
+            const fd = new FormData(form);
+
+            // Use the FormSubmit AJAX endpoint. We keep your invisible-token string.
+            // If FormSubmit ever changes this behaviour, the non-JS form action still works.
+            const ajaxUrl = "https://formsubmit.co/ajax/4f494987fba30d06e09c30445899cf4c";
+
+            const resp = await fetch(ajaxUrl, {
+              method: "POST",
+              body: fd,
+              headers: { "Accept": "application/json" }
+            });
+
+            // Some failures may return HTML; treat any non-2xx as error
+            if (!resp.ok) throw new Error("Non-200 response");
+
+            // If JSON is returned, great; if not, still treat as sent (best-effort UX)
+            try { await resp.json(); } catch (_) {}
+
+            if (statusEl) {
+              statusEl.innerHTML = "Thank you — your message has been sent. We’ll get back to you as soon as possible." +
+                "<small>If you do not receive a response, please call or message via WhatsApp from a vehicle page.</small>";
+              statusEl.hidden = false;
+            }
+
+            form.reset();
+
+            // Update URL to reflect sent state (helps repeat tests + avoids cache confusion)
+            const url = new URL(window.location.href);
+            url.searchParams.set("sent", "1");
+            window.history.replaceState({}, "", url.toString());
+
+          } catch (err) {
+            if (statusEl) {
+              statusEl.innerHTML = "Sorry — we couldn’t confirm sending your message from this device. Please try again, or contact us via WhatsApp." +
+                "<small>If you are on an iPhone/iPad, try Private Browsing (or refresh with a new cache-bust query string).</small>";
+              statusEl.hidden = false;
+            }
+
+            // Fall back to standard submission (will navigate away) if desired:
+            // form.submit();
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Send Message";
+            }
+          }
+        });
+      }
+
+      // Lightweight analytics ping
+      try {
+        fetch("/cars-api/track", { method: "POST", keepalive: true }).catch(function(){});
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
