@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard – Project 55 Motors</title>
-  <link rel="stylesheet" href="/styles.css?v=20260117adminlogo" />
+  <link rel="stylesheet" href="/styles.css?v=20260117b" />
 
   <!-- Admin-only: expandable description editor (scoped; does not affect public site) -->
   <style>
@@ -146,17 +146,10 @@
       <div class="admin-sub">Staff Portal</div>
     </div>
 
-    <!-- centred logo: click to return to the public site (force refresh) -->
-    <div class="admin-home-wrap">
-      <a id="adminHomeLogo" class="admin-home-logo" href="/index.html?nocache=1" title="Back to public website" aria-label="Back to public website">
-        <img src="/logo.png" alt="Project 55 Motors" />
-      </a>
-
-      <div class="admin-home-hint" aria-hidden="true">
-        <span class="admin-home-hint__arrow"></span>
-        <span class="admin-home-hint__text">Back to public website</span>
-      </div>
-    </div>
+    <!-- centred logo: click to force-refresh public site -->
+    <a class="admin-home-logo" href="/index.html?nocache=1" title="Open website (force refresh)" aria-label="Open Project 55 Motors website">
+      <img src="/logo.png" alt="Project 55 Motors" />
+    </a>
 
     <div class="admin-actions">
       <button class="admin-btn ghost admin-logout" id="logoutBtn" style="display:none">Log out</button>
@@ -265,6 +258,12 @@
           <div class="admin-kpi-label">Top countries</div>
           <div class="admin-mini" id="topCountries">—</div>
           <canvas id="topCountriesChart" class="admin-chart" height="120" style="width:100%;display:block;margin-top:10px"></canvas>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-kpi-label">Lead actions</div>
+          <div class="admin-mini" id="topEvents">—</div>
+          <div class="admin-kpi-sub">Calls, WhatsApp, email, enquiry clicks</div>
         </div>
       </div>
 
@@ -379,6 +378,6 @@
 </div>
 
 
-<script src="/admin-dashboard.js?v=20260117adminlogo" defer></script>
+<script src="/admin-dashboard.js?v=20260117b" defer></script>
 </body>
 </html>

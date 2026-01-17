@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About – Project 55 Motors</title>
-      <link rel="canonical" href="https://project55motors.co.uk/about.html">
+    <title>Contact – Project 55 Motors</title>
+      <link rel="canonical" href="https://project55motors.co.uk/contact.html">
 <link rel="stylesheet" href="/styles.css?v=20260117b">
 </head>
 <body>
@@ -37,31 +37,36 @@
     <div class="main-nav-inner">
         <a href="/index.html">Home</a>
         <a href="/inventory.html">Current Stock</a>
-        <a href="/about.html" class="active">About</a>
-        <a href="/contact.html">Contact</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html" class="active">Contact</a>
     </div>
 </nav>
 
 <main class="page-wrapper">
-    <h1 class="page-title">About Project 55 Motors</h1>
+    <h1 class="page-title">Contact Us</h1>
     <p class="page-intro">
-        Project 55 Motors is a small, independent used car business based in South Shropshire, 
-        focused on quality, transparency and an enjoyable driving experience.
+        If you’d like to arrange a viewing, discuss a vehicle or ask a question, please use the form below.
+        We normally respond within a few hours.
     </p>
 
-    <p>
-        Every vehicle is hand-picked, with particular attention paid to service history, previous ownership, 
-        MOT record and overall condition. The aim is simple: to offer cars we would confidently recommend to 
-        friends and family.
-    </p>
-    <p>
-        Before sale, each car receives a thorough check, professional valet and clear, honest presentation – 
-        including detailed descriptions and high-quality photography – so you know exactly what you are buying.
-    </p>
-    <p>
-        The long-term goal behind Project 55 is sustainable growth: a small, trusted operation that does things 
-        properly, without pressure or gimmicks. If a car isn’t right, it won’t be offered for sale.
-    </p>
+    <div class="contact-layout">
+        <form action="https://formsubmit.co/4f494987fba30d06e09c30445899cf4c" method="POST" class="contact-form" id="contactForm">
+            
+            <label for="name">Your Name</label>
+            <input id="name" type="text" name="name" required>
+
+            <label for="email">Email Address</label>
+            <input id="email" type="email" name="email" required>
+
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="tel" name="phone">
+
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit" class="btn-primary">Send Message</button>
+        </form>
+    </div>
 </main>
   <footer class="site-footer">
     <div class="footer-inner">
@@ -97,6 +102,57 @@
 <script src="/site-config.js?v=20260117b"></script>
 <script src="/site.js?v=20260117b"></script>
 
+<script>
+    // Pre-fill from ?msg= in query string
+    const params = new URLSearchParams(window.location.search);
+    const preMsg = params.get("msg");
+    if (preMsg) {
+        const msgField = document.getElementById("message");
+        if (msgField) msgField.value = preMsg;
+    }
+
+    // Premium: support structured pre-fill from vehicle pages
+    // Usage: /contact.html?vehicle=Fiat%20500%20Lounge&reg=WO21%20KZU&url=https%3A%2F%2Fproject55motors.co.uk%2Fvehicle.html%3Fid%3D...
+    const vehicle = params.get("vehicle");
+    const reg = params.get("reg");
+    const sourceUrl = params.get("url");
+    if (vehicle || reg || sourceUrl) {
+        const msgField = document.getElementById("message");
+        const lines = [];
+        if (vehicle) lines.push(`Vehicle: ${vehicle}`);
+        if (reg) lines.push(`Registration: ${reg}`);
+        if (sourceUrl) lines.push(`Link: ${sourceUrl}`);
+        const header = lines.join(" | ");
+
+        // Add hidden fields so the email contains structured context
+        const form = document.getElementById("contactForm");
+        if (form) {
+            if (vehicle) {
+                const i = document.createElement("input");
+                i.type = "hidden"; i.name = "vehicle"; i.value = vehicle;
+                form.appendChild(i);
+            }
+            if (reg) {
+                const i = document.createElement("input");
+                i.type = "hidden"; i.name = "registration"; i.value = reg;
+                form.appendChild(i);
+            }
+            if (sourceUrl) {
+                const i = document.createElement("input");
+                i.type = "hidden"; i.name = "vehicle_link"; i.value = sourceUrl;
+                form.appendChild(i);
+            }
+        }
+
+        // Prepend to message if it's empty or doesn't already include it
+        if (msgField) {
+            const existing = (msgField.value || "").trim();
+            if (!existing || !existing.includes("Vehicle:")) {
+                msgField.value = header + "\n\n" + existing;
+            }
+        }
+    }
+</script>
 <script defer src="/final-seo.js?v=20260117b"></script>
   <script src="/admin-shortcut.js?v=20260117b"></script>
 

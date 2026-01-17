@@ -40,6 +40,7 @@ const kpiTotal = document.getElementById("kpiTotal");
 const kpiMeta = document.getElementById("kpiMeta");
 const topPagesEl = document.getElementById("topPages");
 const topCountriesEl = document.getElementById("topCountries");
+const topEventsEl = document.getElementById("topEvents");
 const dailyViewsEl = document.getElementById("dailyViews");
 
 const topCarsEl = document.getElementById("topCars");
@@ -870,6 +871,7 @@ async function loadAnalytics() {
   kpiMeta.textContent = "Loading…";
   topPagesEl.innerHTML = "";
   topCountriesEl.innerHTML = "";
+  if (topEventsEl) topEventsEl.innerHTML = "";
   dailyViewsEl.innerHTML = "";
 
   if (topCarsEl) topCarsEl.innerHTML = "";
@@ -903,6 +905,24 @@ async function loadAnalytics() {
 
   topPagesEl.innerHTML = renderKeyValueList(j.topPages);
   topCountriesEl.innerHTML = renderKeyValueList(j.topCountries);
+
+  // Lead actions (conversion events)
+  if (topEventsEl) {
+    topEventsEl.innerHTML = `<div class="admin-muted">Loading…</div>`;
+    try {
+      const er = await fetch(`${API}/events?days=${days}`, { credentials: "include" });
+      const ej = await er.json().catch(() => null);
+      if (er.ok && ej?.ok) {
+        topEventsEl.innerHTML = (ej.topEvents && ej.topEvents.length)
+          ? renderKeyValueList(ej.topEvents)
+          : `<div class="admin-muted">No lead events captured yet.</div>`;
+      } else {
+        topEventsEl.innerHTML = `<div class="admin-muted">Events unavailable.</div>`;
+      }
+    } catch (e) {
+      topEventsEl.innerHTML = `<div class="admin-muted">Events unavailable.</div>`;
+    }
+  }
 
   // Top vehicles: prefer server-provided, otherwise derive from topPages using vehicle page URLs.
   const derivedCars = deriveTopCarsFromPages(j.topPages, lastCars);
