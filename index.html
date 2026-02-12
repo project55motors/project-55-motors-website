@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Project 55 Motors — Premium Used Cars in South Shropshire</title>
+  <meta name="description" content="Project 55 Motors — carefully selected, well-maintained used cars prepared to a high standard in South Shropshire. View current stock and enquire online." />
+  <link rel="canonical" href="https://project55motors.co.uk/" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles.css?v=20260117b" />
+
+  <!-- Social -->
+  <meta property="og:site_name" content="Project 55 Motors" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Project 55 Motors — Carefully Selected Used Cars" />
+  <meta property="og:description" content="Carefully selected, well-maintained used cars prepared to a high standard in South Shropshire." />
+  <meta property="og:url" content="https://project55motors.co.uk/" />
+  <meta property="og:image" content="https://project55motors.co.uk/assets/hero-banners/hero-banner-2048.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <style>
+    /* Home page hero-to-content pacing */
+    .home-intro {
+      width: min(1100px, 92vw);
+      margin: 20px auto 10px;
+      text-align: center;
+    }
+    .home-intro h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 2.9vw, 2.6rem);
+      letter-spacing: .2px;
+      color: #0f172a;
+    }
+    .home-intro p {
+      margin: 10px auto 0;
+      max-width: 75ch;
+      color: rgba(15, 23, 42, 0.72);
+      line-height: 1.5;
+      font-size: 1.05rem;
+    }
+
+    /* Ensure the stock grid breathes on the home page */
+    .home-stock {
+      margin-top: 18px;
+    }
+    .home-stock h2 {
+      width: min(1100px, 92vw);
+      margin: 0 auto 10px;
+      font-size: 1.25rem;
+      color: rgba(15, 23, 42, 0.85);
+      letter-spacing: .2px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HERO -->
+  <header class="hero-header">
+    <picture class="hero-picture">
+      <source
+        type="image/webp"
+        srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                /assets/hero-banners/hero-banner-768.webp 768w,
+                /assets/hero-banners/hero-banner-1024.webp 1024w,
+                /assets/hero-banners/hero-banner-1536.webp 1536w,
+                /assets/hero-banners/hero-banner-2048.webp 2048w,
+                /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+        sizes="100vw"
+      />
+      <img
+        class="hero-banner"
+        src="/assets/hero-banners/hero-banner-1024.jpg"
+        srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                /assets/hero-banners/hero-banner-768.jpg 768w,
+                /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                /assets/hero-banners/hero-banner-2048.jpg 2048w"
+        sizes="100vw"
+        width="2048" height="576"
+        alt="Project 55 Motors"
+        loading="eager" decoding="async" fetchpriority="high" draggable="false"
+      />
+    </picture>
+  </header>
+
+  <!-- NAV -->
+  <nav class="main-nav" aria-label="Primary">
+    <div class="main-nav-inner">
+      <a class="active" href="/">Home</a>
+      <a href="/inventory">Current Stock</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- INTRO -->
+  <section class="home-intro">
+    <h1>Carefully selected, prepared to a high standard.</h1>
+    <p>
+      Premium used cars, transparently presented and prepared with attention to detail.
+      Browse current stock below — open any vehicle for full specification, photos, and enquiry options.
+    </p>
+  </section>
+
+  <!-- STOCK GRID (same renderer as /inventory) -->
+  <main class="page-wrapper home-stock">
+    <h2>Current stock</h2>
+    <div id="car-grid" class="car-grid"></div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-links">
+        <a href="/about" data-p55-event="footer_nav_click" data-p55-label="about">About</a>
+        <a href="/inventory" data-p55-event="footer_nav_click" data-p55-label="inventory">Current stock</a>
+        <a href="/contact" data-p55-event="footer_nav_click" data-p55-label="contact">Contact</a>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts (align with /inventory so status pills behave identically) -->
+  <script src="/site-config.js?v=20260117b"></script>
+  <script src="/site.js?v=20260117b"></script>
+
+  <!-- IMPORTANT: match /inventory cars build so status pills render consistently -->
+  <script src="/cars.js?v=20260117b"></script>
+
+  <script defer src="/final-seo.js?v=20260117b"></script>
+  <script src="/admin-shortcut.js?v=20260117b"></script>
+</body>
+</html>
