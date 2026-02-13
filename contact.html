@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting… — Project 55 Motors</title>
+
+  <!-- This is a routing helper only; keep it out of the index -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Canonical destination -->
+  <link rel="canonical" href="https://project55motors.co.uk/contact/" />
+
+  <!-- Fast fallback redirect (JS below preserves query/hash) -->
+  <meta http-equiv="refresh" content="0; url=/contact/" />
+
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#050B18;color:#fff;}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+    .card{max-width:520px;width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:18px 18px 16px;backdrop-filter:blur(10px);}
+    h1{margin:0 0 6px;font-size:18px;letter-spacing:.2px;}
+    p{margin:0 0 12px;color:rgba(255,255,255,.82);line-height:1.5;}
+    a{color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(26,95,255,.92);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Redirecting…</h1>
+      <p>Taking you to the Contact page.</p>
+      <a href="/contact/">Continue</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var target = "/contact/" + (window.location.search || "") + (window.location.hash || "");
+      if (window.location.pathname !== "/contact/") {
+        window.location.replace(target);
+      }
+    })();
+  </script>
+</body>
+</html>
