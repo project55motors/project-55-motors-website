@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle — Project 55 Motors</title>
+  <meta name="description" content="View full specification, photos, and enquiry options for this vehicle at Project 55 Motors.">
+
+  <!-- Social -->
+  <meta property="og:site_name" content="Project 55 Motors">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Vehicle — Project 55 Motors">
+  <meta property="og:description" content="View full specification, photos, and enquiry options.">
+  <meta property="og:url" content="https://project55motors.co.uk/vehicle">
+  <meta property="og:image" content="https://project55motors.co.uk/assets/hero-banners/hero-banner-2048.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="stylesheet" href="/styles.css?v=20260117b">
+</head>
+
+<body>
+  <header class="hero-header">
+    <picture class="hero-picture">
+      <source type="image/webp"
+              srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                      /assets/hero-banners/hero-banner-768.webp 768w,
+                      /assets/hero-banners/hero-banner-1024.webp 1024w,
+                      /assets/hero-banners/hero-banner-1536.webp 1536w,
+                      /assets/hero-banners/hero-banner-2048.webp 2048w,
+                      /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+              sizes="100vw">
+      <img class="hero-banner"
+           src="/assets/hero-banners/hero-banner-1024.jpg"
+           srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                   /assets/hero-banners/hero-banner-768.jpg 768w,
+                   /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                   /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                   /assets/hero-banners/hero-banner-2048.jpg 2048w"
+           sizes="100vw"
+           width="2048" height="576"
+           alt="Project 55 Motors — Carefully Selected Used Cars"
+           loading="eager" decoding="async" fetchpriority="high" draggable="false">
+    </picture>
+  </header>
+
+  <nav class="main-nav" aria-label="Primary">
+    <div class="main-nav-inner">
+      <a href="/">Home</a>
+      <a href="/inventory">Current Stock</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </div>
+  </nav>
+
+  <main class="page-wrapper" id="vehicle-page">
+    <div class="vehicle-layout">
+
+      <!-- PHOTO AREA -->
+      <div class="vehicle-media">
+        <div class="vehicle-hero-wrapper">
+          <img id="vehicle-hero" class="vehicle-hero" src="" alt="Vehicle Photo">
+          <button id="vehicle-open-gallery" class="vehicle-hero-open" type="button" aria-label="Open full-screen gallery">
+            <span aria-hidden="true">Full screen</span>
+          </button>
+        </div>
+
+        <div class="vehicle-thumbs-wrapper">
+          <button type="button" id="vehicle-prev" class="thumb-arrow" aria-label="Previous">‹</button>
+          <div id="vehicle-thumbs" class="vehicle-thumbs"></div>
+          <button type="button" id="vehicle-next" class="thumb-arrow" aria-label="Next">›</button>
+        </div>
+      </div>
+
+      <!-- INFO AREA -->
+      <div class="vehicle-info">
+        <div class="vehicle-title-row">
+          <h1 id="vehicle-title">Loading…</h1>
+          <div id="vehicle-price"></div>
+        </div>
+
+        <div id="vehicle-specs" class="vehicle-specs"></div>
+
+        <div class="vehicle-cta-row" id="vehicle-cta-row"></div>
+
+        <section class="vehicle-section">
+          <h2>Description</h2>
+          <div id="vehicle-description"></div>
+        </section>
+      </div>
+
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="vehicle-lightbox" id="vehicle-lightbox" aria-hidden="true">
+      <div class="vehicle-lightbox__backdrop" data-close="1"></div>
+      <div class="vehicle-lightbox__panel" role="dialog" aria-modal="true" aria-label="Vehicle photos">
+        <div class="vehicle-lightbox__meta">
+          <div class="vehicle-lightbox__title" id="vehicle-lightbox-title"></div>
+          <div class="vehicle-lightbox__count" id="vehicle-lightbox-count"></div>
+        </div>
+        <button class="vehicle-lightbox__close" id="vehicle-lightbox-close" type="button" aria-label="Close">×</button>
+        <button class="vehicle-lightbox__nav vehicle-lightbox__nav--prev" id="vehicle-lightbox-prev" type="button" aria-label="Previous">‹</button>
+        <button class="vehicle-lightbox__nav vehicle-lightbox__nav--next" id="vehicle-lightbox-next" type="button" aria-label="Next">›</button>
+
+        <div class="vehicle-lightbox__viewport" id="vehicle-lightbox-viewport">
+          <img class="vehicle-lightbox__img" id="vehicle-lightbox-img" alt="">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-links">
+        <a href="/about/" data-p55-event="footer_nav_click" data-p55-label="about">About</a>
+        <a href="/inventory" data-p55-event="footer_nav_click" data-p55-label="inventory">Current stock</a>
+        <a href="/contact/" data-p55-event="footer_nav_click" data-p55-label="contact">Contact</a>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/site-config.js?v=20260117b"></script>
+  <script src="/site.js?v=20260215b"></script>
+  <script src="/vehicle.js?v=20260215b"></script>
+  <script defer src="/final-seo.js?v=20260117b"></script>
+</body>
+</html>
