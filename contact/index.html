@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Contact — Project 55 Motors</title>
+  <meta name="description" content="Contact Project 55 Motors to arrange a viewing or ask a question. We aim to respond promptly." />
+  <link rel="canonical" href="https://project55motors.co.uk/contact/" />
+
+  <link rel="stylesheet" href="/styles.css?v=20260117b">
+
+  <!-- Social -->
+  <meta property="og:site_name" content="Project 55 Motors" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Contact — Project 55 Motors" />
+  <meta property="og:description" content="Arrange a viewing or ask a question. We aim to respond promptly." />
+  <meta property="og:url" content="https://project55motors.co.uk/contact/" />
+  <meta property="og:image" content="https://project55motors.co.uk/assets/hero-banners/hero-banner-2048.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <style>
+    .hero-banner{
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero-header">
+  <picture class="hero-picture">
+    <source type="image/webp"
+            srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                    /assets/hero-banners/hero-banner-768.webp 768w,
+                    /assets/hero-banners/hero-banner-1024.webp 1024w,
+                    /assets/hero-banners/hero-banner-1536.webp 1536w,
+                    /assets/hero-banners/hero-banner-2048.webp 2048w,
+                    /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+            sizes="100vw">
+    <img class="hero-banner"
+         src="/assets/hero-banners/hero-banner-1024.jpg"
+         srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                 /assets/hero-banners/hero-banner-768.jpg 768w,
+                 /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                 /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                 /assets/hero-banners/hero-banner-2048.jpg 2048w"
+         sizes="100vw"
+         width="2048" height="576"
+         alt="Project 55 Motors — Carefully Selected Used Cars"
+         loading="eager" decoding="async" fetchpriority="high" draggable="false">
+  </picture>
+</header>
+
+<nav class="main-nav" aria-label="Primary">
+  <div class="main-nav-inner">
+    <a href="/">Home</a>
+    <a href="/inventory">Current Stock</a>
+    <a href="/about/">About</a>
+    <a href="/contact/" class="active">Contact</a>
+  </div>
+</nav>
+
+<main class="page-wrapper">
+  <h1 class="page-title">Contact</h1>
+  <p class="page-intro">
+    To arrange a viewing, discuss a vehicle or ask a question, please use the form below. We aim to respond promptly.
+  </p>
+
+  <div class="contact-layout">
+    <form action="https://formsubmit.co/4f494987fba30d06e09c30445899cf4c" method="POST" class="contact-form" id="contactForm">
+
+      <label for="name">Your Name</label>
+      <input id="name" type="text" name="name" required>
+
+      <label for="email">Email Address</label>
+      <input id="email" type="email" name="email" required>
+
+      <label for="phone">Phone Number</label>
+      <input id="phone" type="tel" name="phone">
+
+      <label for="message">Your Message</label>
+      <textarea id="message" name="message" required></textarea>
+
+      <button type="submit" class="btn-primary">Send Message</button>
+    </form>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+    <div class="footer-links">
+      <a href="/about/" data-p55-event="footer_nav_click" data-p55-label="about">About</a>
+      <a href="/inventory" data-p55-event="footer_nav_click" data-p55-label="inventory">Current stock</a>
+      <a href="/contact/" data-p55-event="footer_nav_click" data-p55-label="contact">Contact</a>
+    </div>
+    <div class="footer-contact">
+      <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+      <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Staff login modal -->
+<div id="adminLoginModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeAdminModal()">×</span>
+    <h2>Staff Login</h2>
+
+    <form onsubmit="submitAdminLogin(event)">
+      <input id="adminUser" type="text" placeholder="Username" required>
+      <input id="adminPass" type="password" placeholder="Password" required>
+      <button type="submit" class="modal-login-btn">Log In</button>
+    </form>
+
+    <p id="admin-login-error" class="modal-error"></p>
+  </div>
+</div>
+
+<script src="/site-config.js?v=20260117b"></script>
+<script src="/site.js?v=20260215a"></script>
+
+<script>
+  // Pre-fill from ?msg= in query string
+  const params = new URLSearchParams(window.location.search);
+  const preMsg = params.get("msg");
+  if (preMsg) {
+    const msgField = document.getElementById("message");
+    if (msgField) msgField.value = preMsg;
+  }
+
+  // Premium: support structured pre-fill from vehicle pages
+  // Usage: /contact?vehicle=Fiat%20500%20Lounge&reg=WO21%20KZU&url=https%3A%2F%2Fproject55motors.co.uk%2Fvehicle%3Fid%3D...
+  const vehicle = params.get("vehicle");
+  const reg = params.get("reg");
+  const sourceUrl = params.get("url");
+
+  if (vehicle || reg || sourceUrl) {
+    const msgField = document.getElementById("message");
+    const lines = [];
+    if (vehicle) lines.push(`Vehicle: ${vehicle}`);
+    if (reg) lines.push(`Registration: ${reg}`);
+    if (sourceUrl) lines.push(`Link: ${sourceUrl}`);
+    const header = lines.join(" | ");
+
+    // Add hidden fields so the email contains structured context
+    const form = document.getElementById("contactForm");
+    if (form) {
+      if (vehicle) {
+        const i = document.createElement("input");
+        i.type = "hidden"; i.name = "vehicle"; i.value = vehicle;
+        form.appendChild(i);
+      }
+      if (reg) {
+        const i = document.createElement("input");
+        i.type = "hidden"; i.name = "registration"; i.value = reg;
+        form.appendChild(i);
+      }
+      if (sourceUrl) {
+        const i = document.createElement("input");
+        i.type = "hidden"; i.name = "vehicle_link"; i.value = sourceUrl;
+        form.appendChild(i);
+      }
+    }
+
+    // Prepend to message if it's empty or doesn't already include it
+    if (msgField) {
+      const existing = (msgField.value || "").trim();
+      if (!existing || !existing.includes("Vehicle:")) {
+        msgField.value = header + "\n\n" + existing;
+      }
+    }
+  }
+</script>
+
+<script defer src="/final-seo.js?v=20260117b"></script>
+<script src="/admin-shortcut.js?v=20260117b"></script>
+
+<!-- Anonymous analytics ping (aggregated) -->
+<script>
+  (function(){
+    try {
+      fetch("/cars-api/track", { method: "POST", keepalive: true }).catch(function(){});
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>
