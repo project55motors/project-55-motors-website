@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current Stock — Project 55 Motors</title>
+  <meta name="description" content="Browse current stock at Project 55 Motors. Open a vehicle for full details, photos, and enquiry options." />
+  <link rel="canonical" href="https://project55motors.co.uk/inventory" />
+
+  <link rel="stylesheet" href="/styles.css?v=20260215b" />
+
+  <style>
+    /* Inventory: trust-first polish (no filters, no extra CTAs) */
+    .inv-proof{
+      margin: 12px 0 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.70);
+      box-shadow: 0 12px 26px rgba(15,23,42,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+    }
+    .inv-proof .ip-item{
+      font-weight: 900;
+      color: rgba(15,23,42,0.80);
+      letter-spacing: -0.01em;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    .inv-proof .ip-dot{
+      width:4px;height:4px;border-radius:999px;background:rgba(15,23,42,0.35);
+    }
+    .inv-subtle{
+      margin: 8px 0 0;
+      text-align:center;
+      color: rgba(15,23,42,0.62);
+      font-weight: 850;
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+    @media (max-width: 420px){
+      .inv-proof .ip-item{ white-space: normal; text-align:center; }
+    }
+  </style>
+
+</head>
+
+<body>
+  <header class="hero-header">
+    <picture class="hero-picture">
+      <source type="image/webp"
+              srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                      /assets/hero-banners/hero-banner-768.webp 768w,
+                      /assets/hero-banners/hero-banner-1024.webp 1024w,
+                      /assets/hero-banners/hero-banner-1536.webp 1536w,
+                      /assets/hero-banners/hero-banner-2048.webp 2048w,
+                      /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+              sizes="100vw" />
+      <img class="hero-banner"
+           src="/assets/hero-banners/hero-banner-1024.jpg"
+           srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                   /assets/hero-banners/hero-banner-768.jpg 768w,
+                   /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                   /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                   /assets/hero-banners/hero-banner-2048.jpg 2048w"
+           sizes="100vw"
+           width="2048" height="576"
+           alt="Project 55 Motors — Carefully Selected Used Cars"
+           loading="eager" decoding="async" fetchpriority="high" draggable="false" />
+    </picture>
+  </header>
+
+  <nav class="main-nav" aria-label="Primary">
+    <div class="main-nav-inner">
+      <a href="/">Home</a>
+      <a href="/inventory" class="active">Current Stock</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <h1 class="page-title">Current stock</h1>
+    <p class="page-intro">Browse our current selection below. Open a vehicle for full details, photos, and enquiry options.</p>
+    <div id="car-grid" class="car-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-links">
+        <a href="/about/" data-p55-event="footer_nav_click" data-p55-label="about">About</a>
+        <a href="/inventory" data-p55-event="footer_nav_click" data-p55-label="inventory">Current stock</a>
+        <a href="/contact/" data-p55-event="footer_nav_click" data-p55-label="contact">Contact</a>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/site-config.js?v=20260117b"></script>
+  <script src="/site.js?v=20260216t"></script>
+  <script src="/cars.js?v=20260117b"></script>
+  <script defer src="/final-seo.js?v=20260117b"></script>
+  <script src="/admin-shortcut.js?v=20260117b"></script>
+</body>
+</html>
