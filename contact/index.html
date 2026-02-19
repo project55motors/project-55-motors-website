@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Contact — Project 55 Motors</title>
+  <meta name="description" content="Arrange a viewing, ask a question, or request a Warrantywise quote. The fastest options are call or WhatsApp." />
+  <link rel="canonical" href="https://project55motors.co.uk/contact/" />
+
+  <link rel="stylesheet" href="/styles.css?v=20260219b" />
+
+  <style>
+    /* =========================================================
+       Contact tiles — premium icon sizing + no copy repetition
+       ========================================================= */
+
+    .contact-intro { max-width: 72ch; }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .contact-tile{
+      position:relative;
+      display:block;
+      text-decoration:none;
+      border-radius:18px;
+      border:1px solid rgba(15,23,42,0.12);
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding:18px 18px 16px;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      min-height: 112px;
+      overflow:hidden;
+    }
+
+    .contact-tile:hover{
+      transform: translateY(-2px);
+      border-color: rgba(26,95,255,0.20);
+      box-shadow: 0 22px 54px rgba(15,23,42,0.10);
+    }
+
+    .contact-tile:focus-visible{
+      outline: 3px solid rgba(26,95,255,0.35);
+      outline-offset: 2px;
+    }
+
+    .contact-tile-kicker{
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      color: rgba(15,23,42,0.55);
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+
+    .contact-tile-main{
+      margin: 0;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+      color: rgba(15,23,42,0.92);
+      font-size: 1.35rem;
+      line-height: 1.1;
+      padding-right: 74px; /* space for icon */
+      word-break: break-word;
+    }
+
+    .contact-tile-sub{
+      margin: 10px 0 0;
+      color: rgba(15,23,42,0.60);
+      font-weight: 750;
+      font-size: 0.95rem;
+      padding-right: 74px;
+    }
+
+    .contact-icon{
+      position:absolute;
+      right: 14px;
+      top: 14px;
+      width: 52px;
+      height: 52px;
+      display:grid;
+      place-items:center;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.72);
+    }
+
+    /* Premium outline icons (consistent stroke) */
+    .contact-icon svg{
+      width: 30px;
+      height: 30px;
+      display:block;
+      stroke: rgba(15,23,42,0.78);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* WhatsApp asset: use your real /whatsapp.svg */
+    .contact-icon img{
+      width: 42px;
+      height: 42px;
+      display:block;
+      object-fit: contain;
+    }
+
+    /* Slightly larger phone/mail presence (your request) */
+    .contact-tile.call .contact-icon svg,
+    .contact-tile.email .contact-icon svg{
+      width: 32px;
+      height: 32px;
+      stroke-width: 1.9;
+    }
+
+    /* Make tiles stack on smaller screens */
+    @media (max-width: 980px){
+      .contact-grid{ grid-template-columns: 1fr; }
+      .contact-tile{ min-height: 0; }
+    }
+
+    /* iPhone: keep icon confident (not tiny) */
+    @media (max-width: 420px){
+      .contact-tile{ padding: 16px 16px 14px; border-radius: 16px; }
+      .contact-tile-main{ font-size: 1.22rem; padding-right: 70px; }
+      .contact-tile-sub{ padding-right: 70px; }
+      .contact-icon{
+        width: 54px;
+        height: 54px;
+        right: 12px;
+        top: 12px;
+        border-radius: 16px;
+      }
+      .contact-icon img{ width: 44px; height: 44px; }
+      .contact-icon svg{ width: 30px; height: 30px; }
+      .contact-tile.call .contact-icon svg,
+      .contact-tile.email .contact-icon svg{ width: 33px; height: 33px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="hero-header">
+    <picture class="hero-picture">
+      <source type="image/webp"
+              srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                      /assets/hero-banners/hero-banner-768.webp 768w,
+                      /assets/hero-banners/hero-banner-1024.webp 1024w,
+                      /assets/hero-banners/hero-banner-1536.webp 1536w,
+                      /assets/hero-banners/hero-banner-2048.webp 2048w,
+                      /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+              sizes="100vw">
+      <img class="hero-banner"
+           src="/assets/hero-banners/hero-banner-1024.jpg"
+           srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                   /assets/hero-banners/hero-banner-768.jpg 768w,
+                   /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                   /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                   /assets/hero-banners/hero-banner-2048.jpg 2048w"
+           sizes="100vw"
+           width="2048" height="576"
+           alt="Project 55 Motors"
+           loading="eager" decoding="async" fetchpriority="high" draggable="false">
+    </picture>
+  </header>
+
+  <nav class="main-nav" aria-label="Primary">
+    <div class="main-nav-inner">
+      <a href="/">Home</a>
+      <a href="/inventory">Current Stock</a>
+      <a href="/about">About</a>
+      <a class="active" href="/contact">Contact</a>
+    </div>
+  </nav>
+
+  <main class="page-wrapper">
+    <h1 class="page-title">Contact</h1>
+
+    <p class="page-intro contact-intro">
+      Arrange a viewing, ask a question, or request a Warrantywise quote. The fastest options are call or WhatsApp.
+    </p>
+
+    <section class="contact-grid" aria-label="Contact options">
+      <!-- CALL -->
+      <a class="contact-tile call" href="tel:07795311799" data-p55-event="call_click" data-p55-label="contact_tile">
+        <p class="contact-tile-kicker">Call</p>
+        <p class="contact-tile-main">07795 311799</p>
+        <p class="contact-tile-sub">Typically the quickest option.</p>
+        <span class="contact-icon" aria-hidden="true">
+          <!-- Premium phone outline -->
+          <svg viewBox="0 0 24 24">
+            <path d="M7.5 4.5h2l1 4-1.6 1.6a14 14 0 0 0 6 6L16.5 15l4 1v2a2 2 0 0 1-2 2A16 16 0 0 1 4.5 7.5a2 2 0 0 1 2-2z"/>
+            <path d="M14.5 4.8a5 5 0 0 1 4.7 4.7"/>
+            <path d="M14.8 2.7a8 8 0 0 1 6.5 6.5"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- WHATSAPP (uses /whatsapp.svg from root, no “Message” duplication) -->
+      <a class="contact-tile whatsapp"
+         href="https://wa.me/447795311799"
+         target="_blank" rel="noopener noreferrer"
+         data-p55-event="whatsapp_click" data-p55-label="contact_tile">
+        <p class="contact-tile-kicker">WhatsApp</p>
+        <p class="contact-tile-main">Message us</p>
+        <p class="contact-tile-sub">Ideal for quick questions.</p>
+        <span class="contact-icon" aria-hidden="true">
+          <img src="/whatsapp.svg" alt="" loading="lazy" decoding="async">
+        </span>
+      </a>
+
+      <!-- EMAIL -->
+      <a class="contact-tile email"
+         href="mailto:nathan@project55motors.co.uk"
+         data-p55-event="email_click" data-p55-label="contact_tile">
+        <p class="contact-tile-kicker">Email</p>
+        <p class="contact-tile-main">nathan@project55motors.co.uk</p>
+        <p class="contact-tile-sub">For longer enquiries.</p>
+        <span class="contact-icon" aria-hidden="true">
+          <!-- Premium mail outline -->
+          <svg viewBox="0 0 24 24">
+            <path d="M4.5 7.5h15a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-15a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/>
+            <path d="M4.5 9l7.5 5 7.5-5"/>
+          </svg>
+        </span>
+      </a>
+    </section>
+
+    <p class="page-intro" style="margin-top:16px;">
+      Viewing is typically by appointment, so you get unhurried time with the car. If you’re enquiring about a specific
+      vehicle, include the registration or the link to the listing.
+    </p>
+
+    <h2 style="margin-top:26px;">What to send us</h2>
+    <ul>
+      <li>The vehicle link (or registration)</li>
+      <li>Your preferred day/time for a viewing</li>
+      <li>Any questions (finance, part-exchange, warranty options)</li>
+    </ul>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-links">
+        <a href="/about" data-p55-event="footer_nav_click" data-p55-label="about">About</a>
+        <a href="/inventory" data-p55-event="footer_nav_click" data-p55-label="inventory">Current stock</a>
+        <a href="/contact" data-p55-event="footer_nav_click" data-p55-label="contact">Contact</a>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/site-config.js?v=20260219b"></script>
+  <script src="/site.js?v=20260219b"></script>
+  <script defer src="/final-seo.js?v=20260219b"></script>
+  <script src="/admin-shortcut.js?v=20260219b"></script>
+</body>
+</html>
