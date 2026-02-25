@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle | Project 55 Motors</title>
+  <link rel="stylesheet" href="/styles.css?v=20260225a" />
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="brand">Project 55 Motors</a>
+  <nav>
+    <a href="/inventory">Current Stock</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<main id="vehicle-container" style="max-width:1100px;margin:0 auto;padding:20px;">
+  <p>Loading vehicle...</p>
+</main>
+
+<script>
+/*
+  Supports:
+  /vehicle?id=recXXXX
+  /stock/some-slug  (future use)
+*/
+
+(function () {
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const slugFromPath = pathParts[0] === "stock" ? pathParts[1] : null;
+  const idFromQuery = new URLSearchParams(location.search).get("id");
+
+  if (slugFromPath) {
+    fetch("/cars-api/resolve?slug=" + encodeURIComponent(slugFromPath))
+      .then(r => r.json())
+      .then(data => {
+        if (!data.id) throw new Error("No match");
+        location.replace("/vehicle?id=" + data.id);
+      })
+      .catch(() => showError());
+  } else if (!idFromQuery) {
+    showError();
+  }
+})();
+</script>
+
+<script src="/vehicle/vehicle.js?v=20260225a" defer></script>
+
+</body>
+</html>
