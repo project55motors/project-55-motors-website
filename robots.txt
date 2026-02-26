@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://project55motors.co.uk/sitemap.xml
+
+# Keep admin pages out of the index
+Disallow: /admin-dashboard.html
+Disallow: /admin/
+
+# Keep APIs out of crawl/discovery, BUT allow the tiny analytics endpoints used by pages
+Disallow: /api/
+Disallow: /cars-api/
+Allow: /cars-api/track
+Allow: /cars-api/event
+
+# Do NOT block public JS assets (blocking doesn’t secure them anyway)
+# (remove any Disallow for /admin-shortcut.js)
