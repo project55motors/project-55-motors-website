@@ -303,7 +303,26 @@
 <!-- SCRIPTS -->
 <script src="/site-config.js?v=20260117b"></script>
 <script src="/site.js?v=20260117b"></script>
-<script src="/vehicle.js?v=20260117b" defer></script>
+<script>
+  // Shareable /stock/...-recXXXX URLs arrive without ?id=.
+  // Add the Airtable record ID to the current URL before vehicle.js runs,
+  // so copied links from the browser work in external platforms such as motors.co.uk.
+  (function () {
+    try {
+      var params = new URLSearchParams(window.location.search || "");
+      if (params.get("id") || params.get("record") || params.get("rec")) return;
+
+      var path = window.location.pathname || "";
+      var match = path.match(/(?:^|[-/])(rec[A-Za-z0-9]{8,})\/?$/);
+      if (!match) return;
+
+      params.set("id", match[1]);
+      var nextUrl = path + "?" + params.toString() + (window.location.hash || "");
+      window.history.replaceState(window.history.state, document.title, nextUrl);
+    } catch (_) {}
+  })();
+</script>
+<script src="/vehicle.js?v=20260426a" defer></script>
 <script defer src="/final-seo.js?v=20260117b"></script>
   <script src="/admin-shortcut.js?v=20260117b"></script>
 
