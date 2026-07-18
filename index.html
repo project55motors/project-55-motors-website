@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Project 55 Motors — Premium Used Cars</title>
+  <meta name="description" content="Based in South Shropshire, Project 55 Motors offers carefully selected premium used cars and works with buyers nationwide for the right vehicle." />
+  <link rel="canonical" href="https://project55motors.co.uk/" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles.css?v=20260117b" />
+
+  <!-- Social -->
+  <meta property="og:site_name" content="Project 55 Motors" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Project 55 Motors — Premium Used Cars" />
+  <meta property="og:description" content="Based in South Shropshire, Project 55 Motors offers carefully selected premium used cars and works with buyers nationwide for the right vehicle." />
+  <meta property="og:url" content="https://project55motors.co.uk/" />
+  <meta property="og:image" content="https://project55motors.co.uk/assets/hero-banners/hero-banner-2048.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <style>
+    /* =========================================================
+       HOME — Premium hierarchy (Stage 3)
+       - No repeated synonyms (listings/clear/detailed)
+       - Chips communicate proof, not reworded headlines
+       ========================================================= */
+
+    .home-top{
+      width: min(1100px, 92vw);
+      margin: 16px auto 8px;
+      text-align: center;
+    }
+
+    .home-top h1{
+      margin: 0;
+      font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+      letter-spacing: -0.02em;
+      font-weight: 950;
+      color: #0f172a;
+    }
+
+        .home-subnote{
+      display:inline-block;
+      margin-top:6px;
+      font-size:0.95rem;
+      color: rgba(15,23,42,0.62);
+      font-weight:700;
+    }
+
+    .home-top p{
+      margin: 10px auto 0;
+      max-width: 72ch;
+      color: rgba(15,23,42,0.72);
+      line-height: 1.55;
+      font-size: 1rem;
+    }
+
+    .home-chips{
+      margin: 14px auto 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+    }
+
+    .home-chip{
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,0.10);
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 10px 24px rgba(15,23,42,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      font-weight: 850;
+      color: rgba(15,23,42,0.82);
+      font-size: 0.95rem;
+      letter-spacing: 0.1px;
+    }
+
+    main.page-wrapper.home-stock{
+      padding-top: 18px; /* overrides global page wrapper spacing for home */
+    }
+
+    .home-stock h2{
+      width: min(1100px, 92vw);
+      margin: 0 auto 8px;
+      font-size: 1.15rem;
+      font-weight: 950;
+      letter-spacing: -0.01em;
+      color: rgba(15,23,42,0.90);
+      text-align: center;
+    }
+
+    .page-intro-mini{
+      width: min(1100px, 92vw);
+      margin: 0 auto 14px;
+      color: rgba(15,23,42,0.65);
+      line-height: 1.5;
+      font-size: 0.98rem;
+      text-align: center;
+    }
+
+    @media (max-width: 900px){ .home-chips{ flex-wrap: wrap; } }
+
+    @media (max-width: 640px){
+      .home-top{ margin: 12px auto 6px; }
+      .home-top p{ font-size: 0.98rem; }
+      .home-chip{ font-size: 0.88rem; padding: 8px 10px; }
+      main.page-wrapper.home-stock{ padding-top: 14px; }
+    }
+  </style>
+</head>
+<script>
+
+  const hero = document.querySelector('.hero-header');
+
+  window.addEventListener('scroll', () => {
+
+    hero?.classList.toggle('is-scrolled', window.scrollY > 40);
+
+  }, { passive: true });
+
+</script>
+<body>
+  <!-- HERO -->
+  <header class="hero-header">
+    <picture class="hero-picture">
+      <source
+        type="image/webp"
+        srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                /assets/hero-banners/hero-banner-768.webp 768w,
+                /assets/hero-banners/hero-banner-1024.webp 1024w,
+                /assets/hero-banners/hero-banner-1536.webp 1536w,
+                /assets/hero-banners/hero-banner-2048.webp 2048w,
+                /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+        sizes="100vw"
+      />
+      <img
+        class="hero-banner"
+        src="/assets/hero-banners/hero-banner-1024.jpg"
+        srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                /assets/hero-banners/hero-banner-768.jpg 768w,
+                /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                /assets/hero-banners/hero-banner-2048.jpg 2048w"
+        sizes="100vw"
+        width="2048" height="576"
+        alt="Project 55 Motors"
+        loading="eager" decoding="async" fetchpriority="high" draggable="false"
+      />
+    </picture>
+  </header>
+
+  <!-- NAV -->
+  <nav class="main-nav" aria-label="Primary">
+    <div class="main-nav-inner">
+      <a class="active" href="/">Home</a>
+      <a href="/inventory">Current Stock</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- INTRO -->
+  <section class="home-top">
+    <h1>Premium used cars.</h1>
+    <p>Based in South Shropshire — happy to work with buyers further afield for the right car.<br><span class="home-subnote">Open a vehicle for full specification, photos, and enquiry options.</span></p>
+
+    <div class="home-chips" aria-label="Buying confidence">
+  <span class="home-chip">Attention to detail</span>
+  <span class="home-chip">Service history checked</span>
+  <span class="home-chip">Warranty options</span>
+  <span class="home-chip">2 keys supplied</span>
+</div>
+  </section>
+
+  <!-- STOCK GRID (same renderer as /inventory) -->
+  <main class="page-wrapper home-stock" id="stock">
+    <h2>Current stock</h2>
+    <p class="page-intro-mini">Tap a vehicle for full details, photos, and to enquire.</p>
+    <div id="car-grid" class="car-grid"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links" aria-label="Legal">
+        <a href="/terms.html" data-p55-event="footer_legal_click" data-p55-label="terms">Terms</a>
+        <a href="/privacy.html" data-p55-event="footer_legal_click" data-p55-label="privacy">Privacy</a>
+        <a href="/cookies.html" data-p55-event="footer_legal_click" data-p55-label="cookies">Cookies</a>
+      </div>
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-contact">
+        <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts (align with /inventory so status pills behave identically) -->
+  <script src="/site-config.js?v=20260117b"></script>
+  <script src="/site.js?v=20260117b"></script>
+  <script src="/cars.js?v=20260718a"></script>
+
+  <script defer src="/final-seo.js?v=20260117b"></script>
+  <script src="/admin-shortcut.js?v=20260117b"></script>
+</body>
+</html>
