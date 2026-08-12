@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle — Project 55 Motors</title>
+    <meta name="description" content="View full specification, photos, walk-around video and enquiry options for this vehicle at Project 55 Motors." />
+
+  <!-- Social -->
+  <meta property="og:site_name" content="Project 55 Motors" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Vehicle — Project 55 Motors" />
+  <meta property="og:description" content="View full specification, photos, walk-around video and enquiry options." />
+  <meta property="og:url" content="https://project55motors.co.uk/vehicle" />
+  <meta property="og:image" content="https://project55motors.co.uk/assets/hero-banners/hero-banner-2048.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      <link rel="canonical" href="https://project55motors.co.uk/vehicle" />
+<link rel="stylesheet" href="/styles.css?v=20260812a">
+
+<!-- Vehicle page enhancements (scoped to this page) -->
+<style>
+
+  /* Description: intro + section cards */
+  #vehicle-page .vehicle-description{
+    margin-top: 18px;
+  }
+  #vehicle-page .vehicle-desc-intro{
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(15,23,42,.10);
+    background: rgba(15,23,42,.03);
+    line-height: 1.65;
+    color: inherit;
+  }
+  #vehicle-page .vehicle-desc-intro p{
+    margin: 0;
+  }
+  #vehicle-page .vehicle-desc-sections{
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 820px){
+    #vehicle-page .vehicle-desc-sections{
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  #vehicle-page .vehicle-desc-card{
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(15,23,42,.10);
+    background: rgba(15,23,42,.02);
+  }
+  #vehicle-page .vehicle-desc-card h2{
+    margin: 0 0 10px 0;
+    font-size: 1.05rem;
+    letter-spacing: .2px;
+  }
+  #vehicle-page .vehicle-desc-card ul{
+    margin: 0;
+    padding-left: 18px;
+  }
+  #vehicle-page .vehicle-desc-card li{
+    margin: 6px 0;
+    line-height: 1.5;
+  }
+
+  /* Vehicle CTA stack (Enquire + WhatsApp) */
+  #vehicle-page .vehicle-cta-stack{
+    margin-top: 18px;
+    display: grid;
+    gap: 10px;
+  }
+  #vehicle-page .vehicle-cta-stack .enquire-btn{
+    margin-top: 0;
+  }
+
+  /* Premium Enquire CTA */
+  #vehicle-page .enquire-btn{
+    margin-top: 18px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 2px 10px;
+    align-items: center;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(15,23,42,.14);
+    background: linear-gradient(135deg, rgba(26,95,255,.95), rgba(83,169,255,.85));
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(15,23,42,.18);
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  #vehicle-page .enquire-btn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 14px 28px rgba(15,23,42,.22);
+  }
+  #vehicle-page .enquire-btn:active{
+    transform: translateY(0);
+  }
+  #vehicle-page .enquire-btn__main{
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    font-size: 1.08rem;
+    font-weight: 750;
+    letter-spacing: .2px;
+  }
+  #vehicle-page .enquire-btn__meta{
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    font-size: .92rem;
+    opacity: .95;
+  }
+  #vehicle-page .enquire-btn__icon{
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    font-size: 1.5rem;
+    line-height: 1;
+    opacity: .95;
+  }
+  #vehicle-page .enquire-btn:focus-visible{
+    outline: 3px solid rgba(83,169,255,.55);
+    outline-offset: 3px;
+  }
+
+  /* Warranty trust row (subtle, premium) */
+  #vehicle-page .vehicle-trust{
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(15,23,42,0.10);
+    background: rgba(255,255,255,0.75);
+    box-shadow: 0 14px 30px rgba(15,23,42,0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px;
+  }
+  #vehicle-page .vehicle-trust__logo img{
+    height: 20px;
+    width: auto;
+    opacity: 0.96;
+  }
+  #vehicle-page .vehicle-trust__title{
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: rgba(15,23,42,0.92);
+    font-size: 0.98rem;
+    line-height: 1.15;
+  }
+  #vehicle-page .vehicle-trust__meta{
+    margin-top: 2px;
+    color: rgba(15,23,42,0.64);
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+  @media (max-width: 560px){
+    #vehicle-page .vehicle-trust{
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+  }
+
+</style>
+
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<header class="hero-header">
+    <picture class="hero-picture">
+        <source type="image/webp"
+                srcset="/assets/hero-banners/hero-banner-512.webp 512w,
+                        /assets/hero-banners/hero-banner-768.webp 768w,
+                        /assets/hero-banners/hero-banner-1024.webp 1024w,
+                        /assets/hero-banners/hero-banner-1536.webp 1536w,
+                        /assets/hero-banners/hero-banner-2048.webp 2048w,
+                        /assets/hero-banners/hero-banner-5120x1440-master.webp 5120w"
+                sizes="100vw">
+        <img class="hero-banner"
+             src="/assets/hero-banners/hero-banner-1024.jpg"
+             srcset="/assets/hero-banners/hero-banner-512.jpg 512w,
+                     /assets/hero-banners/hero-banner-768.jpg 768w,
+                     /assets/hero-banners/hero-banner-1024.jpg 1024w,
+                     /assets/hero-banners/hero-banner-1536.jpg 1536w,
+                     /assets/hero-banners/hero-banner-2048.jpg 2048w"
+             sizes="100vw"
+             width="2048" height="576"
+             alt="Project 55 Motors — Carefully Selected Used Cars"
+             loading="eager" decoding="async" fetchpriority="high" draggable="false">
+    </picture>
+</header>
+
+<!-- NAVIGATION -->
+<nav class="main-nav" aria-label="Primary">
+    <div class="main-nav-inner">
+        <a href="/">Home</a>
+        <a href="/inventory">Current Stock</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+</nav>
+
+<!-- VEHICLE DETAILS -->
+<main class="page-wrapper" id="vehicle-page">
+    <div class="vehicle-layout">
+
+        <!-- PHOTO AREA -->
+        <div class="vehicle-media">
+            <div class="vehicle-hero-wrapper">
+                <img id="vehicle-hero" class="vehicle-hero" src="" alt="Vehicle Photo">
+                <button id="vehicle-open-gallery" class="vehicle-hero-open" type="button" aria-label="Open full-screen gallery">
+                  <span aria-hidden="true">Full screen</span>
+                </button>
+            </div>
+
+            <div class="vehicle-thumbs-wrapper">
+                <button type="button" id="vehicle-prev" class="thumb-arrow" aria-label="Previous">‹</button>
+                <div id="vehicle-thumbs" class="vehicle-thumbs"></div>
+                <button type="button" id="vehicle-next" class="thumb-arrow" aria-label="Next">›</button>
+            </div>
+
+            <section id="vehicle-video" class="vehicle-video" aria-labelledby="vehicle-video-title" hidden>
+              <div class="vehicle-video__heading">
+                <div>
+                  <p class="vehicle-video__eyebrow">Project 55 Motors</p>
+                  <h2 id="vehicle-video-title">Vehicle walk-around</h2>
+                  <p class="vehicle-video__intro">A closer look at the condition, specification and features.</p>
+                </div>
+                <a id="vehicle-video-link" class="vehicle-video__link" href="#" target="_blank" rel="noopener noreferrer">
+                  Watch on YouTube <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+
+              <div class="vehicle-video__frame">
+                <button id="vehicle-video-play" class="vehicle-video__play" type="button">
+                  <img id="vehicle-video-poster" class="vehicle-video__poster" src="" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                  <span class="vehicle-video__shade" aria-hidden="true"></span>
+                  <span class="vehicle-video__play-ui">
+                    <span class="vehicle-video__play-icon" aria-hidden="true"><span></span></span>
+                    <span class="vehicle-video__play-label">Play walk-around</span>
+                  </span>
+                </button>
+                <div id="vehicle-video-embed" class="vehicle-video__embed" hidden></div>
+              </div>
+            </section>
+        </div>
+
+        <!-- INFORMATION AREA -->
+        <div class="vehicle-info">
+
+            <div class="vehicle-title-row">
+                <h1 id="vehicle-title" class="vehicle-title"></h1>
+                <p id="vehicle-price" class="vehicle-price"></p>
+            </div>
+            <p id="vehicle-reg" class="vehicle-reg"></p>
+
+            <div id="vehicle-description" class="vehicle-description"></div>
+
+            
+            <div class="vehicle-trust" role="note" aria-label="Warranty options">
+              <div class="vehicle-trust__logo">
+                <img src="/assets/partners/warrantywise/ww-logo-orange-blue.png" alt="Warrantywise" loading="lazy" decoding="async">
+              </div>
+              <div class="vehicle-trust__text">
+                <div class="vehicle-trust__title">Warranty options available</div>
+                <div class="vehicle-trust__meta">Warranty cover available via Warrantywise. Ask for a quote when you enquire.</div>
+              </div>
+            </div>
+
+<div class="vehicle-cta-stack">
+              <button id="enquire-btn" class="btn-primary enquire-btn" type="button">
+                  <span class="enquire-btn__main">Enquire About This Vehicle</span>
+                  <span class="enquire-btn__meta">Fast response • No obligation</span>
+                  <span class="enquire-btn__icon" aria-hidden="true">→</span>
+              </button>
+
+              <a id="whatsapp-btn" class="p55-fab is-delayed" href="#" target="_blank" rel="noopener" data-fab="1"><span class="p55-fab__icon"><img class="p55-wa-badge" src="/assets/icons/whatsapp.svg" alt="" loading="eager" decoding="async"></span></a>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links" aria-label="Legal">
+        <a href="/terms.html" data-p55-event="footer_legal_click" data-p55-label="terms">Terms</a>
+        <a href="/privacy.html" data-p55-event="footer_legal_click" data-p55-label="privacy">Privacy</a>
+        <a href="/cookies.html" data-p55-event="footer_legal_click" data-p55-label="cookies">Cookies</a>
+      </div>
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-contact">
+        <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="footer">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk" data-p55-event="email_click" data-p55-label="footer">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+
+<!-- 🔐 HIDDEN STAFF LOGIN MODAL (only shown via shortcut) -->
+<div id="adminLoginModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAdminModal()">×</span>
+        <h2>Staff Login</h2>
+
+        <form onsubmit="submitAdminLogin(event)">
+            <input id="adminUser" type="text" placeholder="Username" required>
+            <input id="adminPass" type="password" placeholder="Password" required>
+            <button type="submit" class="modal-login-btn">Log In</button>
+        </form>
+
+        <p id="admin-login-error" class="modal-error" style="display:none;"></p>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="/site-config.js?v=20260117b"></script>
+<script src="/site.js?v=20260117b"></script>
+<script>
+  // Shareable /stock/...-recXXXX URLs arrive without ?id=.
+  // Add the Airtable record ID before vehicle.js runs.
+  (function () {
+    try {
+      var params = new URLSearchParams(window.location.search || "");
+      if (params.get("id") || params.get("record") || params.get("rec")) return;
+
+      var path = window.location.pathname || "";
+      var match = path.match(/(?:^|[-/])(rec[A-Za-z0-9]{8,})\/?$/);
+      if (!match) return;
+
+      params.set("id", match[1]);
+      var nextUrl = path + "?" + params.toString() + (window.location.hash || "");
+      window.history.replaceState(window.history.state, document.title, nextUrl);
+    } catch (_) {}
+  })();
+</script>
+<script src="/vehicle.js?v=20260812a" defer></script>
+<script defer src="/final-seo.js?v=20260117b"></script>
+  <script src="/admin-shortcut.js?v=20260117b"></script>
+
+<!-- Anonymous analytics ping (aggregated) -->
+<script>
+  (function(){
+    try {
+      fetch("/cars-api/track", { method: "POST", keepalive: true }).catch(function(){});
+    } catch (e) {}
+  })();
+</script>
+
+<!-- Premium full-screen gallery (injected/controlled by vehicle.js) -->
+<div id="vehicle-lightbox" class="vehicle-lightbox" role="dialog" aria-modal="true" aria-label="Vehicle photos" aria-hidden="true">
+  <div class="vehicle-lightbox__backdrop" data-lb="backdrop"></div>
+  <div class="vehicle-lightbox__panel" role="document">
+    <button class="vehicle-lightbox__close" type="button" aria-label="Close gallery" data-lb="close">×</button>
+    <button class="vehicle-lightbox__nav vehicle-lightbox__nav--prev" type="button" aria-label="Previous photo" data-lb="prev">‹</button>
+    <button class="vehicle-lightbox__nav vehicle-lightbox__nav--next" type="button" aria-label="Next photo" data-lb="next">›</button>
+
+    <div class="vehicle-lightbox__meta">
+      <div class="vehicle-lightbox__title" id="vehicle-lightbox-title">Gallery</div>
+      <div class="vehicle-lightbox__count" data-lb="count">1 / 1</div>
+    </div>
+
+    <div class="vehicle-lightbox__viewport" data-lb="viewport">
+      <img class="vehicle-lightbox__img" data-lb="img" alt="">
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
