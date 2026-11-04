@@ -865,7 +865,7 @@ async function quickStatusUpdate(id, nextStatus, btn) {
 }
 
 function markSold(id, btn) {
-  return quickStatusUpdate(id, "Sold", btn);
+  return window.openStockBook(id, true);
 }
 
 function markAvailable(id, btn) {
@@ -1106,6 +1106,7 @@ function renderStockTable() {
           <button class="admin-btn tiny primary" onclick="save('${c.id}', this)">Save</button>
 	  <button class="admin-btn tiny ghost" onclick="generateAI('${c.id}', this)">AI</button>
 	  <button class="admin-btn tiny ghost" onclick="openPdi('${c.id}')">PDI</button>
+          <button class="admin-btn tiny ghost" onclick="openStockBook('${c.id}')">Stock book / Print</button>
 	  <button class="admin-btn tiny ghost" onclick="markSold('${c.id}', this)">Mark sold</button>
 	  <button class="admin-btn tiny ghost" onclick="markInactive('${c.id}', this)">Inactive</button>
 	  <button class="admin-btn tiny ghost" onclick="markAvailable('${c.id}', this)">Revert</button>
@@ -1215,18 +1216,33 @@ async function createNewCar(btn) {
     return;
   }
 
+  if (!fields.Registration && !fields.VIN) {
+    alert("Registration or VIN is required for the stock book.");
+    return;
+  }
+  const stockBook = await window.collectPurchaseDetails(fields, newCarDraft?.stockBook || {});
+  if (!stockBook) return;
+  if (newCarDraft) newCarDraft.stockBook = stockBook;
+
   setRowBusy(btn, true, "Creating…");
   try {
     const res = await fetch(`${API}/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(fields)
+      body: JSON.stringify({ fields, stockBook })
     });
 
     const out = await res.json().catch(() => ({}));
     if (!res.ok || !out?.ok) {
-      alert(`Create failed: ${out?.error || "Unknown error"}`);
+      if (out.vehicleCreated && out.id) {
+        newCarDraft = null;
+        alert(`${out.error} The car already exists. Complete its Stock book; do not add it again.`);
+        await loadStock();
+        await window.openStockBook(out.id, false, stockBook);
+      } else {
+        alert(`Create failed: ${out?.error || "Unknown error"}`);
+      }
       return;
     }
 
@@ -1868,3 +1884,4 @@ checkLogin();
 window.addEventListener("resize", debounce(() => {
   if (lastAnalytics) renderCharts(lastAnalytics);
 }, 200));
+
