@@ -571,7 +571,7 @@ function refreshPublicStockCache({ delayMs = 2500 } = {}) {
         __p55RefreshTimer = null;
         const done = __p55RefreshInFlight;
         __p55RefreshInFlight = null;
-        resolve(done);
+        resolve();
       }
     }, Math.max(0, Number(delayMs) || 0));
   });
