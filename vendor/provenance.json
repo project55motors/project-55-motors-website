@@ -1,0 +1,10 @@
+{
+  "jspdf_version": "3.0.4",
+  "source": "npm registry integrity-checked installation",
+  "assets": {
+    "DejaVuSans.ttf": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+    "jspdf-LICENSE.txt": "dc388ec35ff463288cdde3588a36fd4ed12a45deff053243b37309acc9ef583b",
+    "jspdf.umd.min.js": "0e2ca540064bc064b338700e82e1507772297a5ebf66bb85b83d7890abfa5131",
+    "font-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+  }
+}

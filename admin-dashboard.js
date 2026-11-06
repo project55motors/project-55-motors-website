@@ -292,7 +292,7 @@ const txt = v => (v === "" ? null : v.trim());
 
 const fuelOptions = ["Petrol", "Diesel", "Hybrid", "Electric"];
 const transmissionOptions = ["Manual", "Automatic", "Semi-automatic"];
-const statusOptions = ["Available", "In_prep", "Arriving_soon", "Sold", "Inactive", "Hidden"];
+const statusOptions = ["Reserved", "Available", "In_prep", "Arriving_soon", "Sold", "Inactive", "Hidden"];
 
 const fmt = new Intl.NumberFormat("en-GB");
 
@@ -533,6 +533,7 @@ function setActiveTab(view) {
     b.classList.toggle("is-active", b.dataset.view === view);
   });
 
+  document.getElementById("vatStockView").style.display = view === "stockbook" ? "block" : "none";
   stockView.style.display = view === "stock" ? "block" : "none";
   analyticsView.style.display = view === "analytics" ? "block" : "none";
   if (settingsView) settingsView.style.display = view === "settings" ? "block" : "none";
@@ -570,7 +571,7 @@ function refreshPublicStockCache({ delayMs = 2500 } = {}) {
         __p55RefreshTimer = null;
         const done = __p55RefreshInFlight;
         __p55RefreshInFlight = null;
-        resolve(done);
+        resolve();
       }
     }, Math.max(0, Number(delayMs) || 0));
   });
@@ -656,42 +657,12 @@ adminTabs?.addEventListener("click", (e) => {
 
   if (view === "analytics") loadAnalytics();
   if (view === "settings") loadSoldSettings();
+  if (view === "stockbook") loadVatStock();
 });
 
 refreshStockBtn?.addEventListener("click", () => loadStock());
 
-addCarBtn?.addEventListener("click", () => {
-  // Keep UX simple: always show the draft row (even if a filter is active).
-  if (stockFilter !== "All") setStockFilter("All");
-
-  if (!newCarDraft) {
-    newCarDraft = {
-      Make_Model: "",
-      Registration: "",
-      VIN: "",
-      V5C_number: "",
-      HPI_report_number: "",
-      Price: "",
-      Mileage: "",
-      MOT_Date: "",
-      Engine_size: "",
-      Fuel_type: fuelOptions[0] || "",
-      Transmission: transmissionOptions[0] || "",
-      Status: "Available",
-      ETA_in_stock: "",
-      Short_Description: "",
-      Full_Description: ""
-    };
-  }
-
-  renderStockTable();
-
-  // Focus Make/Model for fast entry.
-  setTimeout(() => {
-    const first = table?.querySelector("tr[data-newcar='1'] input.col-make");
-    first?.focus();
-  }, 0);
-});
+addCarBtn?.addEventListener("click", () => beginVatPurchase({Status:'In_prep'}));
 
 refreshAnalyticsBtn?.addEventListener("click", () => loadAnalytics());
 exportAnalyticsBtn?.addEventListener("click", () => exportAnalyticsCsv());
@@ -864,8 +835,13 @@ async function quickStatusUpdate(id, nextStatus, btn) {
   }
 }
 
-function markSold(id, btn) {
-  return quickStatusUpdate(id, "Sold", btn);
+async function markSold(id, btn) {
+  try {
+    const j = await vatRequest('car/'+id);
+    if (j.legacy && !j.record) return quickStatusUpdate(id, 'Sold', btn);
+    const tr=table?.querySelector(`tr[data-id="${id}"]`);
+    return openVat(id,tr?collectFieldsFromRow(tr):{},'Sale');
+  } catch(e) { alert(e.message); }
 }
 
 function markAvailable(id, btn) {
@@ -1048,6 +1024,7 @@ function renderStockTable() {
     const img = c.Photos?.[0]?.url || "";
 
     const tr = document.createElement("tr");
+    tr.dataset.id = c.id;
     tr.innerHTML = `      <td class="col-photo">${img ? `<img class="admin-thumb" src="${escapeHtml(img)}" alt="">` : ""}</td>
 
       <td class="col-make"><input class="admin-cell-input col-make" value="${escapeHtml(c.Make_Model || "")}"></td>
@@ -1104,6 +1081,7 @@ function renderStockTable() {
       <td class="col-actions">
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="admin-btn tiny primary" onclick="save('${c.id}', this)">Save</button>
+          <button class="admin-btn tiny ghost" onclick="openVat('${c.id}')">Accounts</button>
 	  <button class="admin-btn tiny ghost" onclick="generateAI('${c.id}', this)">AI</button>
 	  <button class="admin-btn tiny ghost" onclick="openPdi('${c.id}')">PDI</button>
 	  <button class="admin-btn tiny ghost" onclick="markSold('${c.id}', this)">Mark sold</button>
@@ -1215,35 +1193,7 @@ async function createNewCar(btn) {
     return;
   }
 
-  setRowBusy(btn, true, "Creating…");
-  try {
-    const res = await fetch(`${API}/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(fields)
-    });
-
-    const out = await res.json().catch(() => ({}));
-    if (!res.ok || !out?.ok) {
-      alert(`Create failed: ${out?.error || "Unknown error"}`);
-      return;
-    }
-
-    newCarDraft = null;
-
-    // Keep public site in sync immediately.
-    refreshPublicStockCache();
-
-    // Re-load to pick up Airtable-computed fields (e.g., attachments) consistently.
-    await loadStock();
-  } catch (err) {
-    console.error(err);
-    alert("Create failed due to a network error.");
-  } finally {
-    setRowBusy(btn, false, "Create");
-    if (addCarBtn) addCarBtn.disabled = false;
-  }
+  beginVatPurchase(fields);
 }
 
 function cancelNewCar() {
@@ -1294,6 +1244,13 @@ async function save(id, btn) {
     ...(v5cVal !== null ? { V5C_number: v5cVal } : {}),
     ...(hpiVal !== null ? { HPI_report_number: hpiVal } : {})
   };
+
+  if (fields.Status === 'Sold') {
+    try {
+      const j=await vatRequest('car/'+id);
+      if(!j.legacy || j.record) { await openVat(id, fields,'Sale'); return; }
+    } catch(e) { alert(e.message); return; }
+  }
 
   setRowBusy(btn, true);
   try {
@@ -1868,3 +1825,271 @@ checkLogin();
 window.addEventListener("resize", debounce(() => {
   if (lastAnalytics) renderCharts(lastAnalytics);
 }, 200));
+
+
+/* PRIVATE STOCK BOOK — no financial data is written to public car fields. */
+let vatActive = null;
+let vatRecords = [];
+let vatNewFields = null;
+let vatCreateKey = null;
+let vatAdvert = {};
+let vatDirty = false;
+let vatSection = "Vehicle";
+const vatDialog = document.getElementById('vatDialog');
+const vatForm = document.getElementById('vatForm');
+const vatNote = document.getElementById('vatNote');
+const vatFields = [
+ ['Vehicle','description','Make, model & variant','text',true],
+ ['Vehicle','registration','Registration','text',false],['Vehicle','vin','Vehicle identification number (VIN)','text',true],
+ ['Vehicle','unregistered','This vehicle is unregistered (VIN is used instead of a registration number).','check',false],
+ ['Purchase','purchaseDate','Date purchased','date',true],
+ ['Purchase','purchaseClass','Supplier VAT classification','class',true],
+ ['Purchase','supplierType','Supplier type','supplier',true],
+ ['Purchase','supplierName','Seller named on invoice','text',true],
+ ['Purchase','supplierAddress','Seller address (optional here; retain on invoice)','textarea',false],
+ ['Purchase','purchaseInvoice','Purchase invoice / document number','text',true],
+ ['Purchase','supplierStockNo','Supplier stock-book number (VAT-registered margin supplier)','text',false],
+ ['Purchase','purchaseEvidence','Where the purchase invoice copy is retained','text',true],
+ ['Purchase','purchasePrice','Purchase consideration, gross (£)','money',true],
+ ['Purchase','purchaseVat','VAT shown separately on purchase invoice (£)','money',false],
+ ['Purchase','purchaseInvoiceChecked','I hold and have checked the purchase invoice and required seller/buyer details.','check',true],
+ ['Purchase','eligibilityConfirmed','Margin only: this is an eligible used vehicle, with no VAT charged separately, and the required Margin Scheme wording is on the VAT-registered seller’s invoice.','check',false],
+ ['Deposit','depositDate','Deposit received on','date',false],['Deposit','depositAmount','Deposit received (£)','money',false],['Deposit','depositReference','Deposit payment reference','text',false],
+ ['Sale','buyerName','Buyer’s full name / business','text',false],['Sale','buyerAddress','Buyer address (optional here; held in Zoho)','textarea',false],
+ ['Sale','saleDate','Completed sale date','date',false],['Sale','salePrice','Total sale consideration, including any part exchange (£)','money',false],
+ ['Sale','salesInvoice','Zoho sales invoice number','text',false],
+ ['Sale','vatRecorded','VAT recorded in Zoho (£, optional penny-rounding check)','money',false],
+ ['Sale','vatAdjustmentReason','Reason for a rounding difference (required if adjusted)','text',false],
+ ['Sale','saleEvidence','Zoho invoice link / retained sale evidence reference','text',false],
+ ['Sale','saleConfirmed','The completed sale matches the Zoho invoice. Required invoice details and Margin Scheme wording (where applicable) have been checked, copies are retained, and the total includes all consideration.','check',false]
+];
+function vatStatus(message, bad = false) { vatNote.textContent = message; vatNote.classList.toggle('vat-error',bad); }
+async function vatRequest(path, body) {
+ const r=await fetch('/api/vat/'+path,{method:body?'POST':'GET',credentials:'include',headers:body?{'Content-Type':'application/json'}:{},...(body?{body:JSON.stringify(body)}:{})});
+ const j=await r.json();if(!r.ok){const e=new Error(j.error||'Stock-book request failed');e.fields=j.errors;throw e;}return j;
+}
+function vatControl(k,label,type,value,required) {
+ if(type==='money' && /^\d{1,9}(\.\d{1,2})?$/.test(String(value??''))){const [whole,fraction='']=String(value).split('.');value=whole+'.'+fraction.padEnd(2,'0');}
+ const id='vat-'+k, base=`id="${id}" name="${k}" aria-describedby="vat-error-${k}" data-kind="${type}" ${required?'required':''}`;
+ if(type==='check')return `<label class="vat-check"><input type="checkbox" ${base} ${value===true?'checked':''}><span>${escapeHtml(label)}<small class="vat-field-error" id="vat-error-${k}" data-error="${k}"></small></span></label>`;
+ let control='';
+ if(type==='textarea')control=`<textarea ${base} rows="3" maxlength="4000">${escapeHtml(value??'')}</textarea>`;
+ else if(['class','supplier','fuel','gearbox','availability'].includes(type)) {
+  const extraOptions={fuel:fuelOptions.map(v=>[v,v]),gearbox:transmissionOptions.map(v=>[v,v]),availability:[['In_prep','In preparation'],['Available','Available'],['Arriving_soon','Arriving soon'],['Reserved','Reserved — deposit must be recorded'],['Inactive','Hidden / inactive'],...(vatActive?.completed_at?[['Sold','Sold — completed']]:[])]};
+  const opts=extraOptions[type]||(type==='class'?[['','Select classification'],['margin','VAT Margin'],['qualifying','VAT qualifying — normal VAT'],['unconfirmed','Other / unconfirmed — cannot complete sale']]:[['','Select supplier type'],['vat_registered','VAT-registered business'],['private','Private seller'],['other','Other — check eligibility']]);
+  control=`<select ${base}>${opts.map(([v,t])=>`<option value="${v}" ${value===v?'selected':''}>${t}</option>`).join('')}</select>`;
+ }else control=`<input ${base} type="${type==='money'?'text':type}" ${type==='money'?'inputmode="decimal" placeholder="0.00"':''} maxlength="4000" value="${escapeHtml(value??'')}">`;
+ return `<label class="vat-field" for="${id}"><span>${escapeHtml(label)}${required?' <b aria-label="required">*</b>':''}</span>${control}<small class="vat-field-error" id="vat-error-${k}" data-error="${k}"></small></label>`;
+}
+const vatAdvertFields = [
+ ['Advert','Price','Advertised asking price (£)','money'],['Advert','Mileage','Mileage','text'],
+ ['Advert','MOT_Date','MOT expiry date','date'],['Advert','Engine_size','Engine size (litres)','text'],
+ ['Advert','Fuel_type','Fuel','fuel'],['Advert','Transmission','Transmission','gearbox'],
+ ['Advert','V5C_number','V5C document reference','text'],['Advert','HPI_report_number','HPI report reference','text'],
+ ['Advert','ETA_in_stock','Expected / actual stock arrival','date'],['Advert','Status','Website availability','availability'],
+ ['Advert','Short_Description','Short advert description','textarea'],['Advert','Full_Description','Full advert description','textarea']
+];
+function vatAdvertCollect(){return Object.fromEntries(vatAdvertFields.map(([,k])=>[k,vatForm.elements.namedItem('advert_'+k)?.value??vatAdvert[k]??'']));}
+function vatDraw(data={},isNew=false) {
+ vatDialog.classList.toggle('vat-new',isNew);
+ vatForm.innerHTML=['Vehicle','Purchase','Advert','Deposit','Sale'].filter(group=>!isNew||['Vehicle','Purchase','Advert'].includes(group)).map((g,i)=>`<fieldset id="vat-section-${g}" role="tabpanel" aria-labelledby="vat-tab-${g}"><legend><span>0${i+1}</span> ${g==='Sale'?'Sale stock-book check':g}</legend>${g==='Purchase'?'<p class="vat-help">Use the supplier invoice, not the auction listing. Enter eligible vehicle consideration; check auction fees against their invoice treatment. Exclude repair and preparation costs from the Margin Scheme purchase price. Retain the invoice copy for at least six years, and longer while unsold.</p>':''}${g==='Deposit'?'<p class="vat-help">A deposit reserves the vehicle; it does not complete the sale. Review its VAT tax point in Zoho when received.</p>':''}${g==='Sale'?'<p class="vat-help">Record the completed sale date, buyer, total consideration, Zoho invoice number and evidence reference. Invoices are managed in Zoho; this system checks the stock-book record. Use the agreed total, not the advertised price. Standard-rate UK transactions only. Other rates, imports, linked insurance and special cases need separate review.</p>':''}<div class="vat-grid">${g==='Advert'?vatAdvertFields.map(([,k,l,t])=>vatControl('advert_'+k,l,t,vatAdvert[k],false)).join(''):vatFields.filter(f=>f[0]===g).map(([,k,l,t,r])=>vatControl(k,l,t,data[k],r)).join('')}</div></fieldset>`).join('');
+ document.getElementById('vatSections').innerHTML=['Vehicle','Purchase','Advert',...(!isNew?['Deposit','Sale']:[])].map(g=>`<button type="button" class="vat-section-link" id="vat-tab-${g}" role="tab" aria-controls="vat-section-${g}" data-section="${g}">${g}</button>`).join('');
+ document.getElementById('vatSave').textContent=isNew?'Create car & purchase record':'Save vehicle record';
+ for(const id of ['vatComplete','vatReserve'])document.getElementById(id).hidden=isNew||!!vatActive?.completed_at;
+ document.getElementById('vatSave').hidden=!!vatActive?.completed_at;
+ document.getElementById('vatSync').hidden=!vatActive?.completed_at||!!vatActive?.synced;
+ if(!isNew){for(const k of ['description','registration','vin'])vatForm.elements.namedItem(k).readOnly=true;vatForm.elements.namedItem('unregistered').disabled=true;}
+ if(vatActive?.completed_at)vatForm.querySelectorAll('input,select,textarea').forEach(e=>e.disabled=true);
+ const preview=document.createElement('div');preview.id='vatCalculationPreview';preview.className='vat-help';vatForm.appendChild(preview);vatPreview();
+ vatActivateSection(vatSection,false);vatDateLimits();
+ vatDirty=false;
+}
+function vatCollect(){const d={};for(const [,k,,t]of vatFields){const e=vatForm.elements.namedItem(k);if(e)d[k]=t==='check'?e.checked:e.value;}return d;}
+function vatErrors(e){
+ vatForm.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
+ vatForm.querySelectorAll('[data-error]').forEach(el=>el.textContent='');
+ let first;
+ for(const [k,msg]of Object.entries(e.fields||{})){const el=vatForm.elements.namedItem(k);if(el){el.setAttribute('aria-invalid','true');first||=el;const hint=vatForm.querySelector(`[data-error="${k}"]`);if(hint)hint.textContent=msg;}}
+ first=vatForm.querySelector('[aria-invalid=true]');
+ if(first)vatActivateSection(first.closest('fieldset').id.replace('vat-section-',''),false);
+ vatStatus(e.fields?`Please complete ${Object.keys(e.fields).length} highlighted detail${Object.keys(e.fields).length===1?'':'s'}. Your other entries are preserved.`:e.message,true);vatSectionErrors();first?.focus();
+}
+function vatShow(title){document.getElementById('vatTitle').textContent=title;vatDialog.showModal();vatForm.querySelector('fieldset:not([hidden]) input:not(:disabled),fieldset:not([hidden]) select:not(:disabled),fieldset:not([hidden]) textarea:not(:disabled)')?.focus();}
+async function openVat(id, pendingFields = {}, section = 'Vehicle') {
+ try {
+  const j=await vatRequest('car/'+id);
+  if(j.legacy&&!j.record){alert('Historical vehicle: no new accounting entry is required. Existing stock controls remain available.');return;}
+  if(!j.record){alert('This new vehicle needs its private ledger link restored before it can be sold. See the release recovery instructions.');return;}
+  vatSection=section;vatActive=j.record;vatNewFields=null;vatAdvert={...(lastCars.find(c=>c.id===id)||{}),...(j.vehicle||{}),...(j.record.advert_pending?j.record.data.advert||{}:{}),...pendingFields};if(vatAdvert.Status==='Sold'&&!j.record.completed_at)vatAdvert.Status=normaliseStatus(lastCars.find(c=>c.id===id)?.Status||'Available');vatDraw(j.record.data);vatShow(`Stock ${String(j.record.stock_no).padStart(6,'0')} · ${j.record.data.description}`);
+  vatStatus(j.record.completed_at?`Stock-book entry completed · Zoho invoice ${j.record.snapshot.salesInvoice}. ${j.record.synced?'Website status synchronised.':'Website status sync pending — use Retry website sync.'}`:'Purchase recorded. Add sale details when ready; required fields are checked again before completion.');
+ }catch(e){alert(e.message);}
+}
+window.openVat=openVat;
+async function beginVatPurchase(fields) {
+ vatSection='Vehicle';vatActive=null;vatNewFields=fields;vatAdvert={...fields};vatCreateKey=crypto.randomUUID();vatDraw({description:fields.Make_Model,registration:fields.Registration,vin:fields.VIN,purchaseDate:new Date().toLocaleDateString('en-CA',{timeZone:'Europe/London'}),supplierType:'vat_registered'},true);
+ vatShow('New acquisition');vatStatus('Complete the purchase record. Advert details are carried across automatically.');
+}
+async function vatCommit(complete=false,reserve=false) {
+ const buttons=vatDialog.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
+ try {
+  const data=vatCollect();
+  const vehicle={...vatAdvertCollect(),Make_Model:data.description,Registration:data.registration,VIN:data.vin};
+  if(complete&&!confirm('Check this completed sale against its Zoho invoice and mark Sold? The stock-book record will be locked. No invoice will be created.'))return;
+  let out;
+  if(vatNewFields){
+   const r=await fetch('/api/create',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:vehicle,purchase:data,requestKey:vatCreateKey})});
+   out=await r.json();if(!r.ok){const e=new Error(out.error||'Create failed');e.fields=out.errors;throw e;}
+   newCarDraft=null;vatDirty=false;vatDialog.close();await loadStock();refreshPublicStockCache();await openVat(out.id);return;
+  }
+  out=await vatRequest(`car/${vatActive.car_id}${complete?'/complete':''}`,{revision:vatActive.revision,data,vehicle});
+  vatActive=out.record;vatAdvert=vehicle;vatDirty=false;vatDraw(out.record.data);
+  if(reserve){const ok=await quickStatusUpdate(vatActive.car_id,'Reserved');if(!ok){vatStatus('Accounting details saved; reservation status was not updated. Check the deposit details and retry.',true);return;}}
+  vatStatus(complete?`Stock-book entry completed · Zoho invoice ${vatActive.snapshot.salesInvoice}. ${out.synced?'Vehicle marked Sold.':'Website sync pending; use Retry website sync.'}`:reserve?'Deposit recorded. Vehicle reserved.':out.vehicleSynced===false?'Stock book saved; advert sync is pending. Reopen and save to retry.':'Vehicle and stock-book details saved.');
+  await loadStock();if(complete)refreshPublicStockCache();
+ }catch(e){vatErrors(e);}finally{buttons.forEach(b=>b.disabled=false);}
+}
+function vatClose(){if(vatDirty&&!confirm('Close without saving your accounting changes?'))return;vatDialog.close();vatDirty=false;}
+vatForm?.addEventListener('input',()=>{vatDirty=true;vatPreview();vatDateLimits();});
+vatForm?.addEventListener('submit',e=>{e.preventDefault();vatCommit();});
+vatDialog?.addEventListener('cancel',e=>{e.preventDefault();vatClose();});
+document.getElementById('vatClose')?.addEventListener('click',vatClose);
+document.getElementById('vatSave')?.addEventListener('click',()=>vatCommit());
+document.getElementById('vatReserve')?.addEventListener('click',()=>vatCommit(false,true));
+document.getElementById('vatComplete')?.addEventListener('click',()=>vatCommit(true));
+document.getElementById('vatSync')?.addEventListener('click',async()=>{try{await vatRequest(`car/${vatActive.car_id}/sync`,{});await openVatRefresh();await loadStock();refreshPublicStockCache();}catch(e){vatErrors(e);}});
+async function openVatRefresh(){const j=await vatRequest('car/'+vatActive.car_id);vatActive=j.record;vatDraw(vatActive.data);vatStatus(vatActive.synced?'Website status synchronised.':'Still pending — check the Worker configuration and retry.',!vatActive.synced);}
+window.addEventListener('beforeunload',e=>{if(vatDirty){e.preventDefault();e.returnValue='';}});
+function vatFilteredRecords(records){
+ const from=document.getElementById('vatDateFrom').value,to=document.getElementById('vatDateTo').value,basis=document.getElementById('vatDateBasis').value,kind=document.getElementById('vatClassFilter').value;
+ if(from&&to&&from>to)throw new Error('The From date must not be after the To date.');
+ return records.filter(r=>{const d=r.snapshot?.data||r.data,date=basis==='saleDate'?(r.completed_at?d.saleDate:''):d.purchaseDate;return (!kind||d.purchaseClass===kind)&&(!from||date>=from)&&(!to||!!date&&date<=to)&&(basis!=='saleDate'||!!r.completed_at);});
+}
+function vatRangeLabel(){return `${document.getElementById('vatDateBasis').selectedOptions[0].textContent} · ${document.getElementById('vatDateFrom').value||'Beginning'} to ${document.getElementById('vatDateTo').value||'Present'} · ${document.getElementById('vatClassFilter').selectedOptions[0].textContent}`;}
+function renderVatStock(){
+ const el=document.getElementById('vatStockRows'),note=document.getElementById('vatReportNote');
+ try{const records=vatFilteredRecords(vatRecords);note.textContent=`${records.length} entries · ${vatRangeLabel()}`;
+ el.innerHTML=records.length?records.map(r=>`<button class="vat-ledger-row" onclick="openVat('${escapeHtml(r.car_id)}')"><span class="vat-number">${String(r.stock_no).padStart(6,'0')}</span><span><strong>${escapeHtml(r.data.description)}</strong><small>${escapeHtml(r.data.registration||r.data.vin)} · ${escapeHtml(r.data.supplierName)}</small></span><span>${r.data.purchaseClass==='margin'?'VAT Margin':r.data.purchaseClass==='qualifying'?'VAT qualifying':'Review required'}</span><span class="vat-pill">${r.completed_at?r.synced?'Completed':'Sync pending':'Purchased'}</span></button>`).join(''):'No entries match this selection. New purchases appear here; historical cars are excluded.';
+ }catch(e){el.textContent='';note.textContent=e.message;}
+}
+async function loadVatStock(){const el=document.getElementById('vatStockRows');el.textContent='Loading private stock book…';try{vatRecords=(await vatRequest('stock')).records;renderVatStock();}catch(e){el.textContent=e.message;}}
+for(const id of ['vatDateFrom','vatDateTo','vatDateBasis','vatClassFilter'])document.getElementById(id)?.addEventListener('change',renderVatStock);
+document.getElementById('vatClearRange')?.addEventListener('click',()=>{document.getElementById('vatDateFrom').value='';document.getElementById('vatDateTo').value='';renderVatStock();});
+document.getElementById('vatRefresh')?.addEventListener('click',loadVatStock);
+function vatDownload(name,text,type){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+function vatCsvCell(v){let s=String(v??'');if(/^[\s]*[=+\-@]/.test(s)&&! /^-?\d+(\.\d+)?$/.test(s))s="'"+s;return '"'+s.replaceAll('"','""')+'"';}
+document.getElementById('vatExport')?.addEventListener('click',async()=>{try{
+ const records=vatFilteredRecords((await vatRequest('stock')).records);
+ const headers=['Stock number','State','Zoho sales invoice','Purchase date','Seller','Seller address','Purchase invoice','Purchase evidence','Supplier class','Purchase gross GBP','Purchase VAT GBP','Registration','VIN','Description','Deposit date','Deposit GBP','Deposit reference','Sale date','Buyer','Buyer address','Sale GBP','Margin GBP','Output VAT GBP','Computed VAT GBP','VAT rounding adjustment GBP','Adjustment reason','Sale evidence'];
+ const lines=[headers,...records.map(r=>{const d=r.snapshot?.data||r.data,c=r.snapshot?.calculation;return [r.stock_no,r.completed_at?'Completed':'Purchased',d.salesInvoice||'',d.purchaseDate,d.supplierName,d.supplierAddress,d.purchaseInvoice,d.purchaseEvidence,d.purchaseClass,d.purchasePrice,d.purchaseVat,d.registration,d.vin,d.description,d.depositDate,d.depositAmount,d.depositReference,d.saleDate,d.buyerName,d.buyerAddress,d.salePrice,c?(c.margin/100).toFixed(2):'',c?(c.vat/100).toFixed(2):'',c?((c.computedVat??c.vat)/100).toFixed(2):'',c?((c.adjustment||0)/100).toFixed(2):'',d.vatAdjustmentReason,d.saleEvidence];})];
+ vatDownload('project55-private-stock-book.csv','\ufeff'+lines.map(l=>l.map(vatCsvCell).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+}catch(e){alert(e.message);}});
+
+
+function vatPreview(){
+ const el=document.getElementById('vatCalculationPreview');if(!el)return;
+ const d=vatCollect(),parse=v=>/^\d{1,9}(\.\d{1,2})?$/.test(v||'')?Math.round(Number(v)*100):null;
+ const purchase=parse(d.purchasePrice),sale=parse(d.salePrice);
+ if(purchase===null||sale===null){el.textContent='';return;}
+ const margin=sale-purchase,vat=Math.round((d.purchaseClass==='margin'?Math.max(0,margin):sale)/6);
+ el.textContent=d.purchaseClass==='unconfirmed'?'Resolve VAT treatment before completion.':`Private calculation · Purchase £${(purchase/100).toFixed(2)} · Sale £${(sale/100).toFixed(2)} · Margin £${(margin/100).toFixed(2)} · ${d.purchaseClass==='margin'?'VAT on positive margin':'Normal output VAT'} £${(vat/100).toFixed(2)}. Repairs and preparation are excluded from this margin.${d.vatRecorded?' Zoho amount entered: £'+d.vatRecorded+'; only a 1p explained rounding difference is accepted.':''}`;
+}
+
+document.getElementById('vatSections')?.addEventListener('click',e=>{const b=e.target.closest('[data-section]');if(b)vatActivateSection(b.dataset.section,true);});
+table?.addEventListener('change',async e=>{
+ if(!e.target.matches('td.col-status select')||e.target.value!=='Sold')return;
+ const tr=e.target.closest('tr'),id=tr?.dataset.id;
+ if(!id)return;
+ const previous=normaliseStatus(lastCars.find(c=>c.id===id)?.Status||'Available');
+ e.target.value=previous;
+ await markSold(id);
+});
+
+function vatReportLines(r){
+ const d=r.snapshot?.data||r.data,c=r.snapshot?.calculation,gbp=n=>'GBP '+(n/100).toFixed(2);
+ return [
+  `Stock ${String(r.stock_no).padStart(6,'0')} | ${d.description}`,
+  `Registration: ${d.registration||'Unregistered'} | VIN: ${d.vin||'Not recorded'}`,
+  `VAT treatment: ${d.purchaseClass} | State: ${r.completed_at?'Completed':'Purchased — no completed sale'}`,
+  `Purchased: ${d.purchaseDate} | Invoice: ${d.purchaseInvoice} | Consideration: GBP ${d.purchasePrice}`,
+  `Seller: ${d.supplierName}`,
+  r.completed_at?`Sold: ${d.saleDate} | Zoho invoice: ${d.salesInvoice} | Consideration: GBP ${d.salePrice}`:'Sale: not completed',
+  r.completed_at?`Buyer: ${d.buyerName}`:'Buyer: —',
+  c?`Margin: ${gbp(c.margin)} | Output VAT: ${gbp(c.vat)} | VAT rate: ${c.rate}%${c.adjustment?' | Rounding: '+gbp(c.adjustment)+' — '+(d.vatAdjustmentReason||''):''}`:'Margin / VAT: not finalised'
+ ];
+}
+async function vatReportRecords(){const records=vatFilteredRecords((await vatRequest('stock')).records);if(!records.length)throw new Error('No stock-book entries match the selected range.');return records;}
+document.getElementById('vatPrint')?.addEventListener('click',async()=>{
+ const w=window.open('','_blank');if(!w){alert('Allow the stock-book print window to open.');return;}
+ w.document.write('<p>Preparing private stock-book report…</p>');
+ try{const records=await vatReportRecords();w.document.open();w.document.write(`<!doctype html><html><head><title>Project 55 Motors — VAT stock book</title><style>body{font:13px Arial;color:#16263c;max-width:950px;margin:30px auto;padding:15px}h1{border-bottom:3px solid #2360a4;padding-bottom:20px}article{break-inside:avoid;border:1px solid #bdc8d6;border-radius:8px;padding:18px;margin:15px 0}p{line-height:1.6;white-space:pre-wrap}small{color:#506079}@media print{button{display:none}}</style></head><body><h1>PROJECT 55 MOTORS · VAT STOCK BOOK</h1><p>${escapeHtml(vatRangeLabel())}</p><small>Private accounting report · Generated ${escapeHtml(new Date().toISOString())} · ${records.length} entries · Not a sales invoice or VAT return</small>${records.map(r=>`<article>${vatReportLines(r).map((line,i)=>i===0?`<h2>${escapeHtml(line)}</h2>`:`<p>${escapeHtml(line)}</p>`).join('')}</article>`).join('')}<button onclick="window.print()">Print stock book</button></body></html>`);w.document.close();w.focus();w.print();}
+ catch(e){w.close();alert(e.message);}
+});
+let vatPdfFont;
+document.getElementById('vatPdf')?.addEventListener('click',async e=>{
+ const button=e.currentTarget;button.disabled=true;
+ try{
+  const records=await vatReportRecords(),reportRange=vatRangeLabel();
+  if(!window.jspdf?.jsPDF)throw new Error('The local PDF library is unavailable. Install the vendor assets with the dashboard.');
+  if(!vatPdfFont){const r=await fetch('/vendor/DejaVuSans.ttf');if(!r.ok)throw new Error('The local PDF font is unavailable.');const bytes=new Uint8Array(await r.arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));vatPdfFont=btoa(binary);}
+  const doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'});doc.addFileToVFS('DejaVuSans.ttf',vatPdfFont);doc.addFont('DejaVuSans.ttf','P55','normal');doc.setFont('P55');
+  const heading=()=>{doc.setTextColor(20,38,65);doc.setFontSize(15);doc.text('PROJECT 55 MOTORS · VAT STOCK BOOK',15,18);doc.setFontSize(8);doc.text(doc.splitTextToSize(reportRange,180),15,26);doc.text('Private accounting report. Not a sales invoice or VAT return.',15,37);};
+  heading();let y=48;
+  for(const r of records){
+   const lines=vatReportLines(r).flatMap((line,i)=>{doc.setFontSize(i===0?11:9);return doc.splitTextToSize(line,174);});
+   const height=lines.length*5+12;
+   if(y+height>275){doc.addPage();heading();y=48;}
+   doc.setDrawColor(182,198,218);doc.roundedRect(13,y-5,184,Math.min(height,225),2,2);doc.setFontSize(9);
+   for(const line of lines){if(y>275){doc.addPage();heading();y=48;}doc.text(line,18,y);y+=5;}y+=15;
+  }
+  const pages=doc.getNumberOfPages();for(let n=1;n<=pages;n++){doc.setPage(n);doc.setFontSize(8);doc.text(`Generated ${new Date().toISOString()} · Page ${n} of ${pages}`,15,290);}
+  doc.save('project55-vat-stock-book.pdf');
+ }catch(error){alert(error.message);}finally{button.disabled=false;}
+});
+
+function vatActivateSection(section,focus=false){
+ const panels=[...vatForm.querySelectorAll('fieldset')];
+ if(!panels.some(p=>p.id==='vat-section-'+section))section='Vehicle';
+ vatSection=section;
+ for(const p of panels)p.hidden=p.id!=='vat-section-'+section;
+ for(const button of document.querySelectorAll('#vatSections [data-section]')){
+  const selected=button.dataset.section===section;button.classList.toggle('is-active',selected);button.setAttribute('aria-selected',String(selected));button.tabIndex=selected?0:-1;
+ }
+ const preview=document.getElementById('vatCalculationPreview');if(preview)preview.hidden=section!=='Sale';
+ const body=vatDialog.querySelector('.vat-body');if(body)body.scrollTop=0;
+ if(focus)document.getElementById('vat-tab-'+section)?.focus();
+}
+function vatSectionErrors(){for(const b of document.querySelectorAll('#vatSections [data-section]')){
+ const n=document.getElementById('vat-section-'+b.dataset.section)?.querySelectorAll('[aria-invalid=true]').length||0;
+ b.classList.toggle('has-errors',n>0);b.textContent=b.dataset.section+(n?' · '+n:'');
+}}
+document.getElementById('vatSections')?.addEventListener('keydown',e=>{
+ const buttons=[...document.querySelectorAll('#vatSections [data-section]')],i=buttons.indexOf(e.target);if(i<0)return;
+ let n;if(e.key==='ArrowRight')n=(i+1)%buttons.length;else if(e.key==='ArrowLeft')n=(i-1+buttons.length)%buttons.length;else if(e.key==='Home')n=0;else if(e.key==='End')n=buttons.length-1;else return;
+ e.preventDefault();vatActivateSection(buttons[n].dataset.section,true);
+});
+function vatDateLimits(){
+ const today=new Date().toLocaleDateString('en-CA',{timeZone:'Europe/London'});
+ for(const key of ['purchaseDate','saleDate','depositDate']){const el=vatForm.elements.namedItem(key);if(el)el.max=today;}
+ const sale=vatForm.elements.namedItem('saleDate'),purchase=vatForm.elements.namedItem('purchaseDate');
+ if(sale)sale.min=purchase?.value&&purchase.value>'2026-11-01'?purchase.value:'2026-11-01';
+}
+vatForm?.addEventListener('focusout',e=>{
+ const el=e.target;if(!el.name||el.disabled||el.readOnly)return;
+ if(el.name==='registration'||el.name==='vin'){el.value=el.value.trim().toUpperCase().replace(/\s+/g,el.name==='vin'?'':' ');}
+ if(el.dataset.kind==='money'){
+  const raw=el.value.trim(),clean=raw.replace(/^£\s*/, '');
+  if(/^\d{1,9}(\.\d{1,2})?$/.test(clean)||/^\d{1,3}(,\d{3})+(\.\d{1,2})?$/.test(clean)){
+   const [whole,fraction='']=clean.replaceAll(',','').split('.');el.value=whole+'.'+fraction.padEnd(2,'0');
+  }
+ }
+ let message='';
+ if(el.required&&(el.type==='checkbox'?!el.checked:!el.value.trim()))message='Required';
+ else if(el.dataset.kind==='money'&&el.value&&!/^\d{1,9}(\.\d{1,2})?$/.test(el.value))message='Use pounds and pence, for example 6750.00';
+ else if(el.type==='date'&&el.value&&(el.max&&el.value>el.max||el.min&&el.value<el.min))message='Choose a date within the permitted range';
+ // Keep contextual server errors until the record is submitted again; do not
+ // clear an eligibility or rounding error just because its field is non-empty.
+ const previousHint=vatForm.querySelector(`[data-error="${el.name}"]`);
+ if(!message && previousHint?.textContent==='Required'){el.removeAttribute('aria-invalid');previousHint.textContent='';}
+ if(message){el.setAttribute('aria-invalid','true');const hint=vatForm.querySelector(`[data-error="${el.name}"]`);if(hint)hint.textContent=message;}
+ vatSectionErrors();vatPreview();
+});
