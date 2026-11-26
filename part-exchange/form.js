@@ -45,7 +45,7 @@
     if (!form.reportValidity()) return;
 
     const message = [
-      "Hi Nathan, I’d like a part-exchange quote.",
+      "Hi, I’d like a part-exchange quote.",
       "",
       "Registration: " + plate,
       "Mileage: " + Number(miles).toLocaleString("en-GB") + " miles",
