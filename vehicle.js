@@ -1041,6 +1041,50 @@
     el.innerHTML = `${introHtml}${cardsHtml}`;
   }
 
+  function renderPartExchangeLink(enquireBtn, rec) {
+    if (!enquireBtn) return;
+
+    const fields = rec.fields || {};
+    const model = String(fields.Make_Model || "").trim();
+    const registration = String(fields.Registration || "").trim();
+    const title = model && registration ? `${model} (${registration})` : model || registration;
+
+    let stockSlug = window.location.pathname.match(/^\/stock\/([a-z0-9-]+-rec[a-z0-9]{8,})\/?$/i)?.[1];
+    if (!stockSlug && /^rec[A-Za-z0-9]{8,}$/.test(rec.id || "")) {
+      // Match the SEO Worker's canonical slug on the legacy vehicle page.
+      const name = String(fields.Slug || "").trim() || [model, registration].filter(Boolean).join(" ");
+      const slug = name.toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "")
+        .slice(0, 80);
+      stockSlug = `${slug || "vehicle"}-${rec.id}`;
+    }
+
+    const params = new URLSearchParams();
+    if (stockSlug) params.set("vehicle", stockSlug);
+    if (title) params.set("title", title);
+
+    let link = qs("#vehicle-part-exchange");
+    if (!link) {
+      link = document.createElement("a");
+      link.id = "vehicle-part-exchange";
+      link.className = "btn";
+      link.innerHTML = 'Part exchange <span aria-hidden="true">→</span>';
+      Object.assign(link.style, {
+        justifyContent: "space-between",
+        minHeight: "44px",
+        borderRadius: "14px",
+        background: "#ffffff",
+        color: "#0f172a",
+        boxShadow: "none"
+      });
+      enquireBtn.insertAdjacentElement("afterend", link);
+    }
+    const query = params.toString();
+    link.href = query ? `/part-exchange?${query}` : "/part-exchange";
+  }
+
   /* ---------- Main render ---------- */
 
   function renderVehicle(rec) {
@@ -1126,6 +1170,8 @@
         window.location.href = `/contact?msg=${encodeURIComponent(msg)}`;
       });
     }
+
+    renderPartExchangeLink(enquireBtn, rec);
 
     // Premium specs + cleanup
     renderSpecsGrid(f);

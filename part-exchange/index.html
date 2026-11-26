@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Part Exchange Your Car | Project 55 Motors</title>
+  <meta name="description" content="Request a no-obligation part-exchange quote from Project 55 Motors. Tell Nathan about your car and send your details by WhatsApp or email.">
+  <link rel="canonical" href="https://project55motors.co.uk/part-exchange/">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/styles.css?v=20260726b">
+  <style>
+    .px-page{
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      height: auto;
+    }
+
+    .px-header{
+      border-bottom: 1px solid #34445b;
+      background: #101c30;
+      color: #fff;
+    }
+
+    .px-header-inner,
+    .px-main{
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: clamp(14px, 3vw, 28px);
+    }
+
+    .px-header-inner{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      column-gap: 20px;
+    }
+
+    .px-brand,
+    .px-nav a{
+      display: inline-flex;
+      align-items: center;
+      min-height: 52px;
+      text-decoration: none;
+    }
+
+    .px-brand{
+      font-size: 1.06rem;
+      font-weight: 800;
+      letter-spacing: -.025em;
+    }
+
+    .px-nav{
+      display: flex;
+      gap: clamp(14px, 2vw, 24px);
+      color: #edf2fa;
+      font-size: .86rem;
+      font-weight: 650;
+    }
+
+    .px-main{
+      flex: 1;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+      align-items: start;
+      gap: clamp(16px, 2vw, 28px);
+      padding-block: clamp(20px, 4vw, 60px);
+    }
+
+    .px-intro{
+      overflow: hidden;
+      border-radius: 18px;
+      background: linear-gradient(130deg, #253950, #101b2d 75%);
+      color: #fff;
+    }
+
+    .px-intro-copy{
+      padding: clamp(22px, 4vw, 42px);
+    }
+
+    .px-intro h1{
+      margin: 0;
+      font: 400 clamp(2.3rem, 4.3vw, 3.45rem)/1.03 Georgia, serif;
+      letter-spacing: -.035em;
+    }
+
+    .px-intro p{
+      max-width: 33ch;
+      margin: 14px 0 0;
+      color: #e0e9f5;
+      line-height: 1.55;
+    }
+
+    .px-intro img{
+      width: 100%;
+      aspect-ratio: 1.38;
+      object-fit: cover;
+      object-position: center 59%;
+      border-radius: 0;
+    }
+
+    .px-form-panel{
+      min-width: 0;
+      padding: clamp(20px, 3vw, 34px);
+      border: 1px solid #d8e1ed;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 12px 32px rgba(16, 28, 48, .065);
+    }
+
+    .px-form-panel h2{
+      margin: 0 0 18px;
+      font-size: clamp(1.35rem, 2.3vw, 1.75rem);
+      line-height: 1.2;
+      letter-spacing: -.03em;
+    }
+
+    .px-selection{
+      margin: 0 0 20px;
+      padding: 10px 14px;
+      border-inline-start: 3px solid #ad8847;
+      border-radius: 5px;
+      background: #f3f6fa;
+      overflow-wrap: anywhere;
+    }
+
+    .px-selection dt{
+      color: #4b5b71;
+      font-size: .82rem;
+    }
+
+    .px-selection dd{
+      margin: 2px 0 0;
+      font-weight: 700;
+    }
+
+    .px-fields{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 16px;
+    }
+
+    .px-form-panel fieldset{
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .px-field{
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+      font-size: .91rem;
+      font-weight: 700;
+    }
+
+    .px-field--wide{ grid-column: 1 / -1; }
+
+    .px-field input,
+    .px-field textarea{
+      width: 100%;
+      min-width: 0;
+      min-height: 46px;
+      margin: 0;
+      padding: 9px 11px;
+      border: 1px solid #aab7c8;
+      border-radius: 8px;
+      background: #fff;
+      color: #101c30;
+      font: 400 1rem/1.4 system-ui, sans-serif;
+    }
+
+    .px-field textarea{
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .px-field #px-registration{
+      background: #fbf6e8;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+    }
+
+    .px-optional{
+      color: #4b5b71;
+      font-size: .84rem;
+      font-weight: 400;
+    }
+
+    .px-actions{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .px-actions button{
+      min-height: 46px;
+      padding: 8px 14px;
+      border: 1px solid #182e4a;
+      border-radius: 8px;
+      background: #182e4a;
+      color: #fff;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .px-actions button:hover{ background: #25466e; }
+    .px-actions button:disabled{ opacity: .65; cursor: default; }
+    .px-actions .px-email{ color: #182e4a; background: #fff; }
+    .px-actions .px-email:hover{ background: #eff4f9; }
+
+    .px-header :focus-visible{
+      outline: 2px solid #edc987;
+      outline-offset: 3px;
+    }
+
+    .px-main :focus-visible{
+      outline: 2px solid #245599;
+      outline-offset: 3px;
+    }
+
+    .px-help,
+    .px-status{
+      color: #4b5b71;
+      font-size: .86rem;
+      line-height: 1.5;
+    }
+
+    .px-help{ margin: 12px 0 0; }
+    .px-status:empty{ margin: 0; }
+
+    @media (max-width: 760px){
+      .px-main{ grid-template-columns: minmax(0, 1fr); }
+      .px-intro img{ display: none; }
+    }
+
+    @media (max-width: 420px){
+      .px-actions button{ width: 100%; }
+    }
+
+    @media (max-width: 330px){
+      .px-fields{ grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+  <script defer src="/site-config.js?v=20260219d"></script>
+  <script defer src="/part-exchange/form.js"></script>
+</head>
+<body class="px-page">
+  <header class="px-header">
+    <div class="px-header-inner">
+      <a class="px-brand" href="/">Project 55 Motors</a>
+      <nav class="px-nav" aria-label="Primary">
+        <a href="/inventory">Current stock</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="px-main">
+    <section class="px-intro" aria-labelledby="px-heading">
+      <div class="px-intro-copy">
+        <h1 id="px-heading">Part exchange</h1>
+        <p>Thinking of trading in your car? Tell Nathan a little about it and ask for a no-obligation quote.</p>
+      </div>
+      <img src="/assets/part-exchange/project55-mercedes.webp" width="683" height="512" alt="" decoding="async" loading="lazy">
+    </section>
+
+    <section class="px-form-panel" aria-labelledby="px-form-heading">
+      <h2 id="px-form-heading">Your vehicle</h2>
+      <dl class="px-selection" id="px-selection" hidden>
+        <dt>Car you’re interested in</dt>
+        <dd><a id="px-listing" href="/inventory">View vehicle</a></dd>
+      </dl>
+      <form id="px-form" aria-describedby="px-help">
+        <fieldset disabled>
+          <div class="px-fields">
+            <label class="px-field" for="px-registration">
+              Registration
+              <input id="px-registration" type="text" maxlength="12" placeholder="AB12 CDE" autocapitalize="characters" autocomplete="off" spellcheck="false" required>
+            </label>
+            <label class="px-field" for="px-mileage">
+              Mileage (miles)
+              <input id="px-mileage" type="text" inputmode="numeric" maxlength="9" placeholder="48,500" autocomplete="off" required>
+            </label>
+            <label class="px-field px-field--wide" for="px-model">
+              Make and model
+              <input id="px-model" type="text" maxlength="90" placeholder="e.g. Ford Focus 1.0 EcoBoost" required>
+            </label>
+            <label class="px-field px-field--wide" for="px-notes">
+              <span>Anything else? <span class="px-optional">(optional)</span></span>
+              <textarea id="px-notes" rows="3" maxlength="320" placeholder="Condition, service history or work it might need"></textarea>
+            </label>
+          </div>
+          <div class="px-actions">
+            <button type="submit" value="whatsapp">Continue on WhatsApp</button>
+            <button class="px-email" type="submit" value="email">Open email draft</button>
+          </div>
+        </fieldset>
+        <p id="px-help" class="px-help">Review and send your request in the app you choose. <a href="/contact">Other contact options</a> · <a href="/privacy/">Privacy</a></p>
+        <noscript><p class="px-help">Use the contact link above to request a quote with JavaScript turned off.</p></noscript>
+        <p id="px-status" class="px-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links" aria-label="Legal">
+        <a href="/terms.html">Terms</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/cookies.html">Cookies</a>
+      </div>
+      <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
+      <div class="footer-contact">
+        <a href="tel:07795311799">07795 311799</a>
+        <a href="mailto:nathan@project55motors.co.uk">nathan@project55motors.co.uk</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

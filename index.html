@@ -105,6 +105,54 @@
       text-align: center;
     }
 
+    .home-part-exchange{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px 24px;
+      margin-top: clamp(24px, 4vw, 40px);
+      padding: clamp(16px, 2.6vw, 26px);
+      border: 1px solid #d7dfe9;
+      border-inline-start: 3px solid #b49156;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .home-part-exchange h2{
+      width: auto;
+      margin: 0;
+      font-size: clamp(1.14rem, 2vw, 1.4rem);
+      text-align: left;
+    }
+
+    .home-part-exchange p{
+      margin: 4px 0 0;
+      color: #4b596e;
+      font-size: .95rem;
+    }
+
+    .home-part-exchange__link{
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+      padding: 8px 16px;
+      border-radius: 9px;
+      background: #172b47;
+      color: #fff;
+      font-size: .9rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .home-part-exchange__link:hover{ background: #254266; }
+    .home-part-exchange__link:focus-visible{ outline: 2px solid #245599; outline-offset: 3px; }
+
+    @media (max-width: 560px){
+      .home-part-exchange{ align-items: start; flex-direction: column; }
+    }
+
     .customer-reviews{
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
@@ -360,6 +408,13 @@
     <h2>Current stock</h2>
     <p class="page-intro-mini">Select a vehicle for full details, photographs and enquiry options.</p>
     <div id="car-grid" class="car-grid"></div>
+    <section class="home-part-exchange" aria-labelledby="home-part-exchange-heading">
+      <div>
+        <h2 id="home-part-exchange-heading">Part exchange your car</h2>
+        <p>Get a no-obligation quote from Nathan.</p>
+      </div>
+      <a class="home-part-exchange__link" href="/part-exchange">Request a quote <span aria-hidden="true">→</span></a>
+    </section>
     <section class="customer-reviews" aria-labelledby="customer-reviews-heading" aria-roledescription="carousel">
       <div class="customer-reviews__heading">
         <p class="customer-reviews__label">Selected Google reviews</p>
