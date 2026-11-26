@@ -155,6 +155,10 @@ const SOLD_AT_PREFIX = "soldAt:";
 const REFRESH_LOCK_KEY = "stock:refreshLock";
 
 const PUBLIC_STOCK_SCHEMA = "public-stock-v1";
+const STOCK_EDGE_SCHEMA = "public-stock-kv-v1";
+const STOCK_EDGE_TTL_SECONDS = 60;
+// Allow a five-minute grace period beyond the 15-minute cron interval.
+const STOCK_SNAPSHOT_MAX_AGE_SECONDS = 20 * 60;
 const STOCK_LAST_GOOD_KEY = `stock:lastGood:${PUBLIC_STOCK_SCHEMA}`;
 const LEGACY_STOCK_LAST_GOOD_KEY = "stock:lastGood";
 
@@ -177,7 +181,7 @@ function buildStockCacheKey(url, { version, sold }) {
   // Keep the cache key stable (ignore utm params etc) but versioned so updates propagate globally.
   const cacheUrl = new URL(url.toString());
   cacheUrl.search = "";
-  cacheUrl.searchParams.set("schema", PUBLIC_STOCK_SCHEMA);
+  cacheUrl.searchParams.set("schema", STOCK_EDGE_SCHEMA);
   cacheUrl.searchParams.set("v", String(version || 1));
   cacheUrl.searchParams.set("sd", sold?.showSold ? "1" : "0");
   cacheUrl.searchParams.set("kd", String(Number(sold?.keepDays ?? 30)));
@@ -390,14 +394,27 @@ async function getLastGoodStock(kv) {
   return null;
 }
 
+function snapshotCacheTtl(snapshot, version) {
+  if (!snapshot || snapshot.body.meta.version !== version) return 0;
+
+  const age = (Date.now() - snapshot.savedAt) / 1000;
+  if (age < 0) return 0;
+  return Math.max(0, Math.min(STOCK_EDGE_TTL_SECONDS, Math.floor(STOCK_SNAPSHOT_MAX_AGE_SECONDS - age)));
+}
+
+function publicStockCacheControl(ttl = STOCK_EDGE_TTL_SECONDS) {
+  return `public, max-age=0, s-maxage=${ttl}`;
+}
+
 function responseFromCacheHit(request, hit, extraHeaders = {}) {
+  const headers = new Headers(hit.headers);
+  for (const [name, value] of Object.entries({ ...buildCorsHeaders(request), ...extraHeaders })) {
+    headers.set(name, value);
+  }
+
   return new Response(hit.body, {
     status: hit.status,
-    headers: {
-      ...Object.fromEntries(hit.headers),
-      ...buildCorsHeaders(request),
-      ...extraHeaders
-    }
+    headers
   });
 }
 
@@ -436,7 +453,7 @@ export default {
             status: 200,
             headers: {
               "Content-Type": "application/json",
-              "Cache-Control": "public, s-maxage=600, stale-if-error=600",
+              "Cache-Control": publicStockCacheControl(),
               "X-P55-Cache": "WARM",
               "X-P55-Version": String(version)
             }
@@ -500,11 +517,9 @@ export default {
       const hit = await cache.match(cacheKey);
       if (hit) body = await hit.clone().json().catch(() => null);
 
-      // 2) Try KV last-known-good
-      if (!body) {
-        const last = await getLastGoodStock(TRAFFIC_KV);
-        if (last?.body) body = last.body;
-      }
+      // 2) Prefer a recent snapshot for the current version.
+      const last = body ? null : await getLastGoodStock(TRAFFIC_KV);
+      if (snapshotCacheTtl(last, version)) body = last.body;
 
       // 3) Last resort: Airtable fetch (if configured)
       if (!body && AIRTABLE_PAT && BASE && TABLE) {
@@ -519,6 +534,7 @@ export default {
         }
       }
 
+      if (!body) body = last?.body;
       const records = Array.isArray(body?.records) ? body.records : [];
       const match = records.find(r => String(r?.fields?.Slug || "").trim().toLowerCase() === slug);
 
@@ -618,8 +634,8 @@ export default {
       const sold = await getSoldSettings(TRAFFIC_KV);
 
       // Helper: on Airtable failure, serve last-known-good stock if available
-      const serveLastGood = async (tag) => {
-        const last = await getLastGoodStock(TRAFFIC_KV);
+      const serveLastGood = async (tag, last) => {
+        if (last === undefined) last = await getLastGoodStock(TRAFFIC_KV);
         if (!last) return null;
 
         return jsonResponse(request, last.body, 200, {
@@ -673,7 +689,7 @@ export default {
           const cacheKey = buildStockCacheKey(url, { version, sold });
 
           const respForCache = jsonResponse(request, body, 200, {
-            "Cache-Control": "public, s-maxage=600, stale-if-error=600",
+            "Cache-Control": publicStockCacheControl(),
             "X-P55-Cache": "MISS",
             "X-P55-Version": String(version),
             "X-P55-Refreshed": "1"
@@ -725,7 +741,7 @@ export default {
           const cacheKey = buildStockCacheKey(url, { version, sold });
 
           const respForCache = jsonResponse(request, body, 200, {
-            "Cache-Control": "public, s-maxage=600, stale-if-error=600",
+            "Cache-Control": publicStockCacheControl(),
             "X-P55-Cache": "MISS",
             "X-P55-Version": String(version),
             "X-P55-Refreshed": "0"
@@ -759,6 +775,19 @@ export default {
         });
       }
 
+      const last = await getLastGoodStock(TRAFFIC_KV);
+      const ttl = snapshotCacheTtl(last, version);
+      if (ttl) {
+        const body = { records: last.body.records, meta: { version, sold } };
+        const response = jsonResponse(request, body, 200, {
+          "Cache-Control": publicStockCacheControl(ttl),
+          "X-P55-Cache": "KV",
+          "X-P55-Version": String(version)
+        });
+        ctx.waitUntil(cache.put(cacheKey, response.clone()));
+        return response;
+      }
+
       try {
         const records = await fetchAllAirtableRecords({
           baseId: BASE,
@@ -775,7 +804,7 @@ export default {
         ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body));
 
         const resp = jsonResponse(request, body, 200, {
-          "Cache-Control": "public, s-maxage=600, stale-if-error=600",
+          "Cache-Control": publicStockCacheControl(),
           "X-P55-Cache": "MISS",
           "X-P55-Version": String(version)
         });
@@ -786,7 +815,7 @@ export default {
         console.error("cars-api error:", err);
 
         // NEW: serve last-known-good stock during Airtable outages
-        const fb = await serveLastGood("normal_airtable_error");
+        const fb = await serveLastGood("normal_airtable_error", last);
         if (fb) return fb;
 
         return jsonResponse(request, { error: "Server error" }, 500, { "Cache-Control": "no-store" });
