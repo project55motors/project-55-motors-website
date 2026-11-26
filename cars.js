@@ -286,9 +286,52 @@ function buildStatusOverlay(label, sublabel = "", theme = "") {
 }
 
 
-function pickBestImage(att) {
-  if (!att) return "";
-  return att.url || att.thumbnails?.large?.url || att.thumbnails?.small?.url || "";
+function loadCardImage(img, photo) {
+  const original = photo?.url;
+  const thumbnail = photo?.thumbnails?.large?.url;
+  let sizeObserver;
+
+  const useOriginal = () => {
+    sizeObserver?.disconnect();
+    img.src = original;
+  };
+
+  img.addEventListener("error", () => {
+    if (original && img.getAttribute("src") === thumbnail && original !== thumbnail) {
+      useOriginal();
+    } else {
+      img.removeAttribute("src");
+    }
+  });
+
+  if (!original || !thumbnail || original === thumbnail || typeof ResizeObserver !== "function") {
+    const url = original || thumbnail || photo?.thumbnails?.small?.url;
+    if (url) img.src = url;
+    return;
+  }
+
+  // Use the full photo for wide cards and high-density displays. The API
+  // supplies thumbnail URLs without dimensions, so check the decoded size too.
+  sizeObserver = new ResizeObserver(([entry]) => {
+    const { width, height } = entry.contentRect;
+    if (!width || !height) return;
+    if (Math.max(width, height) * window.devicePixelRatio > 512) {
+      useOriginal();
+    } else if (!img.hasAttribute("src")) {
+      img.src = thumbnail;
+    }
+  });
+
+  img.addEventListener("load", () => {
+    const { width, height } = img.getBoundingClientRect();
+    if (img.getAttribute("src") === thumbnail &&
+        (img.naturalWidth < width * window.devicePixelRatio ||
+         img.naturalHeight < height * window.devicePixelRatio)) {
+      useOriginal();
+    }
+  }, { once: true });
+
+  sizeObserver.observe(img);
 }
 
 function specItem(iconUrl, label, value, extraClass = "", titleOverride = "") {
@@ -434,7 +477,6 @@ async function loadCars() {
       const shortDesc = getField(f, ["Short_Description", "Summary", "Tagline", "Description_Short"]);
 
       const firstPhoto = f.Photos?.[0] || null;
-      const imgUrl = pickBestImage(firstPhoto);
 
       const card = document.createElement("a");
       card.className = "car-card";
@@ -456,11 +498,7 @@ async function loadCars() {
       img.alt = title ? String(title) : "Vehicle photo";
       img.loading = "lazy";
       img.decoding = "async";
-      if (imgUrl) img.src = imgUrl;
-
-      img.addEventListener("error", () => {
-        img.removeAttribute("src");
-      });
+      loadCardImage(img, firstPhoto);
 
       card.appendChild(img);
 
