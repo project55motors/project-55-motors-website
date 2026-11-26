@@ -6,7 +6,7 @@
    - Render a premium icon-pill spec grid (incl. Registration pill)
    - Offer a privacy-conscious YouTube walk-around in an optional modal
    - Keep only ONE WhatsApp CTA: the floating button (no inline remnants)
-   - Enquire button pre-fills message for this vehicle
+   - Enquire button carries vehicle details to Contact
 
    Version: v9.1 OPTIONAL WALK-AROUND MODAL (20260812b)
 --------------------------------------------------------- */
@@ -406,7 +406,7 @@
     return true;
   }
 
-  function upsertSoldBanner(rec) {
+  function upsertSoldBanner(rec, enquiryUrl) {
     const container = qs(SELECTORS.page) || document.body;
     const st = String(rec?.fields?.Status || "Available").trim() || "Available";
     const isSold = st === "Sold";
@@ -430,7 +430,7 @@
         </div>
       </div>
       <div class="vehicle-sold-cta">
-        <a href="/contact?msg=${encodeURIComponent("I'm looking for a similar vehicle to the one you've just sold.")}">Enquire</a>
+        <a href="${esc(enquiryUrl)}">Enquire</a>
       </div>
     `;
 
@@ -1041,15 +1041,14 @@
     el.innerHTML = `${introHtml}${cardsHtml}`;
   }
 
-  function renderPartExchangeLink(enquireBtn, rec) {
-    if (!enquireBtn) return;
-
+  function getVehicleContext(rec) {
     const fields = rec.fields || {};
     const model = String(fields.Make_Model || "").trim();
     const registration = String(fields.Registration || "").trim();
-    const title = model && registration ? `${model} (${registration})` : model || registration;
+    const label = model && registration ? `${model} (${registration})` : model || registration;
 
-    let stockSlug = window.location.pathname.match(/^\/stock\/([a-z0-9-]+-rec[a-z0-9]{8,})\/?$/i)?.[1];
+    const currentSlug = window.location.pathname.match(/^\/stock\/([a-z0-9-]+-rec[a-z0-9]{8,})\/?$/i)?.[1];
+    let stockSlug = currentSlug?.endsWith(`-${rec.id}`) ? currentSlug : "";
     if (!stockSlug && /^rec[A-Za-z0-9]{8,}$/.test(rec.id || "")) {
       // Match the SEO Worker's canonical slug on the legacy vehicle page.
       const name = String(fields.Slug || "").trim() || [model, registration].filter(Boolean).join(" ");
@@ -1061,9 +1060,15 @@
       stockSlug = `${slug || "vehicle"}-${rec.id}`;
     }
 
+    return { stockSlug, model, registration, label };
+  }
+
+  function renderPartExchangeLink(enquireBtn, { stockSlug, label }) {
+    if (!enquireBtn) return;
+
     const params = new URLSearchParams();
     if (stockSlug) params.set("vehicle", stockSlug);
-    if (title) params.set("title", title);
+    if (label) params.set("title", label);
 
     let link = qs("#vehicle-part-exchange");
     if (!link) {
@@ -1092,7 +1097,16 @@
     const st = String(f.Status || "Available").trim() || "Available";
     const isSold = st === "Sold";
 
-    upsertSoldBanner(rec);
+    const vehicle = getVehicleContext(rec);
+    const enquiryParams = new URLSearchParams();
+    if (vehicle.stockSlug) enquiryParams.set("vehicle", vehicle.stockSlug);
+    if (vehicle.model) enquiryParams.set("title", vehicle.model);
+    if (vehicle.registration) enquiryParams.set("registration", vehicle.registration);
+    if (isSold && (vehicle.stockSlug || vehicle.label)) enquiryParams.set("sold", "1");
+    const enquiryQuery = enquiryParams.toString();
+    const enquiryUrl = enquiryQuery ? `/contact/?${enquiryQuery}` : "/contact/";
+
+    upsertSoldBanner(rec, enquiryUrl);
 
     setText(SELECTORS.title, f.Make_Model || "");
     setText(SELECTORS.regLine, f.Registration ? `Registration: ${f.Registration}` : "");
@@ -1162,16 +1176,15 @@
 
       if (meta) meta.textContent = metaText;
 
-      enquireBtn.addEventListener("click", () => {
+      // Replace the template's generic contact handler once vehicle details are ready.
+      enquireBtn.onclick = (event) => {
+        event.preventDefault();
         try { window.P55?.sendEvent?.("vehicle_enquire_click", { id: rec.id || "", model: f.Make_Model || "" }); } catch (_) {}
-        const msg = isSold
-          ? `I am looking for something similar to the ${f.Make_Model || "vehicle"} (${f.Registration || "registration unknown"}) you have just sold.`
-          : `I am interested in the ${f.Make_Model || "vehicle"} (${f.Registration || "registration unknown"}).`;
-        window.location.href = `/contact?msg=${encodeURIComponent(msg)}`;
-      });
+        window.location.href = enquiryUrl;
+      };
     }
 
-    renderPartExchangeLink(enquireBtn, rec);
+    renderPartExchangeLink(enquireBtn, vehicle);
 
     // Premium specs + cleanup
     renderSpecsGrid(f);
@@ -1181,15 +1194,18 @@
     const wa = qs(SELECTORS.whatsapp);
     const phone = getWhatsAppPhoneE164();
     if (wa && phone) {
-      const vehicleLabel = `${f.Make_Model || "vehicle"}${f.Registration ? ` (${f.Registration})` : ""}`;
+      const vehicleLabel = vehicle.label || "vehicle";
+      const vehicleUrl = vehicle.stockSlug
+        ? `https://project55motors.co.uk/stock/${vehicle.stockSlug}`
+        : window.location.href;
 
       const msg = isSold
-        ? `Hi Nathan — I noticed the ${vehicleLabel} is marked as sold. Do you have anything similar coming in, or could you source one for me?
+        ? `Hi, I noticed the ${vehicleLabel} is marked as sold. Do you have anything similar coming in, or could you source one for me?
 
-Link: ${window.location.href}`
-        : `Hi Nathan — I’m interested in the ${vehicleLabel}. Is it still available? If so, could we arrange a viewing at a time that suits you?
+Link: ${vehicleUrl}`
+        : `Hi, I’m interested in the ${vehicleLabel}. Is it still available? If so, could we arrange a viewing at a time that suits you?
 
-Link: ${window.location.href}`;
+Link: ${vehicleUrl}`;
 
       wa.setAttribute("href", `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
       wa.setAttribute("aria-label", "Message Project 55 Motors on WhatsApp");

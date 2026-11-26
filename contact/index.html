@@ -120,6 +120,129 @@
       .contact-icon{ width: 54px; height: 54px; right: 12px; top: 12px; border-radius: 16px; }
       .contact-icon img{ width: 46px; height: 46px; }
     }
+
+    .contact-page--enquiry{
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      height: auto;
+    }
+
+    .contact-page--enquiry .hero-header{ display: none !important; }
+
+    #vehicle-enquiry{
+      width: 100%;
+      flex: 1;
+      padding-block: clamp(18px, 5vw, 54px);
+    }
+
+    .vehicle-enquiry-card{
+      max-width: 860px;
+      margin-inline: auto;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #d7e0eb;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, .08);
+    }
+
+    .vehicle-enquiry-summary,
+    .vehicle-enquiry-options{
+      padding: clamp(20px, 4.5vw, 36px);
+    }
+
+    .vehicle-enquiry-summary{
+      background: radial-gradient(ellipse at top left, #253b55, #101b2e 75%);
+      color: #fff;
+    }
+
+    .vehicle-enquiry-summary h1{
+      margin: 0 0 9px;
+      color: #f3ce8c;
+      font-size: .88rem;
+      font-weight: 750;
+    }
+
+    .vehicle-enquiry-summary h2{
+      margin: 0;
+      font: 400 clamp(1.6rem, 3.8vw, 2.5rem)/1.15 Georgia, serif;
+      overflow-wrap: anywhere;
+    }
+
+    .vehicle-enquiry-plate{
+      width: fit-content;
+      margin: 14px 0 0;
+      padding: 3px 9px;
+      border: 1px solid #bca578;
+      border-radius: 5px;
+      background: #fbf3df;
+      color: #19243a;
+      font: 700 .9rem/1.4 ui-monospace, monospace;
+      letter-spacing: .045em;
+    }
+
+    .vehicle-enquiry-options > p{
+      margin: 0 0 16px;
+      color: #3d4f66;
+    }
+
+    .vehicle-enquiry-actions{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .vehicle-enquiry-action{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 56px;
+      padding: 10px 14px;
+      border: 1px solid #1b3655;
+      border-radius: 10px;
+      background: #1b3655;
+      color: #fff;
+      font-size: .95rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .vehicle-enquiry-action:hover{ background: #294b73; }
+
+    .vehicle-enquiry-action--email{
+      background: #fff;
+      color: #1b3655;
+    }
+
+    .vehicle-enquiry-action--email:hover{ background: #eef4f9; }
+
+    .vehicle-enquiry-action span:last-child{ margin-inline-start: auto; }
+
+    .vehicle-enquiry-links{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px 22px;
+      margin-block: 12px -8px;
+      color: #304c6b;
+      font-size: .9rem;
+    }
+
+    .vehicle-enquiry-links a{
+      align-content: center;
+      min-height: 44px;
+      text-underline-offset: .18em;
+    }
+
+    .vehicle-enquiry-links a[hidden]{ display: none; }
+
+    .vehicle-enquiry-card a:focus-visible{
+      outline: 2px solid #245599;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 560px){
+      .vehicle-enquiry-actions{ grid-template-columns: minmax(0, 1fr); }
+    }
   </style>
 </head>
 
@@ -157,7 +280,7 @@
     </div>
   </nav>
 
-  <main class="page-wrapper">
+  <main id="general-contact" class="page-wrapper">
     <h1 class="page-title">Contact</h1>
 
     <p class="page-intro contact-intro">
@@ -218,6 +341,33 @@
     </p>
   </main>
 
+  <main id="vehicle-enquiry" class="page-wrapper" hidden>
+    <div class="vehicle-enquiry-card">
+      <header class="vehicle-enquiry-summary">
+        <h1 id="vehicle-enquiry-heading">Enquire about this car</h1>
+        <h2 id="vehicle-enquiry-title"></h2>
+        <p id="vehicle-enquiry-plate" class="vehicle-enquiry-plate" hidden></p>
+      </header>
+      <div class="vehicle-enquiry-options">
+        <p>Your draft includes the car’s details. Review it and send it in the app you choose.</p>
+        <div class="vehicle-enquiry-actions">
+          <a id="vehicle-enquiry-whatsapp" class="vehicle-enquiry-action" target="_blank" rel="noopener noreferrer"
+             data-p55-event="whatsapp_click" data-p55-label="vehicle_enquiry">
+            <span>Continue on WhatsApp</span><span aria-hidden="true">→</span>
+          </a>
+          <a id="vehicle-enquiry-email" class="vehicle-enquiry-action vehicle-enquiry-action--email"
+             data-p55-event="email_click" data-p55-label="vehicle_enquiry">
+            <span>Open email draft</span><span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div class="vehicle-enquiry-links">
+          <a href="tel:07795311799" data-p55-event="call_click" data-p55-label="vehicle_enquiry">Call 07795 311799</a>
+          <a id="vehicle-enquiry-listing" hidden>Back to the listing</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">© 2026 Project 55 Motors • Cleobury Mortimer</div>
@@ -234,6 +384,82 @@
   </footer>
 
   <script src="/site-config.js?v=20260219d"></script>
+  <script>
+    (() => {
+      const params = new URLSearchParams(window.location.search);
+      const phone = window.P55?.whatsapp?.phoneE164;
+      const email = window.P55?.contact?.email;
+      if (!/^\d{7,15}$/.test(phone || "") || !email) return;
+
+      function clean(value, length) {
+        const compact = (value || "").replace(/\s+/g, " ").trim();
+        return Array.from(compact).slice(0, length).join("");
+      }
+      const stockSlugPattern = /^[a-z0-9][a-z0-9-]{0,159}$/i;
+      const stockSlug = params.get("vehicle") || "";
+      let listingPath = stockSlugPattern.test(stockSlug) ? "/stock/" + stockSlug : "";
+      let title = clean(params.get("title"), 120);
+      let registration = clean(params.get("registration"), 12).toUpperCase();
+      let isSold = params.get("sold") === "1";
+
+      // Existing vehicle pages used two message templates instead of separate fields.
+      if (!listingPath && !title && !registration) {
+        const legacy = clean(params.get("msg"), 300);
+        const standard = legacy.match(/^I am interested in the (.+) \(([^()]*)\)\.$/i);
+        const sold = legacy.match(/^I am looking for something similar to the (.+) \(([^()]*)\) you have just sold\.$/i);
+        const match = standard || sold;
+        const soldGate = legacy === "I'm looking for a similar vehicle to the one you've just sold.";
+        if (!match && !soldGate) return;
+        isSold = Boolean(sold || soldGate);
+        if (match) {
+          title = clean(match[1], 120);
+          registration = clean(match[2] === "registration unknown" ? "" : match[2], 12).toUpperCase();
+        }
+
+        if (document.referrer) {
+          const source = new URL(document.referrer);
+          const fromListing = source.pathname.match(/^\/stock\/([^/]+)\/?$/);
+          if (source.origin === window.location.origin && fromListing && stockSlugPattern.test(fromListing[1])) {
+            listingPath = "/stock/" + fromListing[1];
+          }
+        }
+      }
+
+      const listingUrl = listingPath ? "https://project55motors.co.uk" + listingPath : "";
+      const subject = isSold ? "Similar car enquiry" : "Vehicle enquiry";
+      const body = [isSold
+        ? "Hi, I’m looking for a car similar to this one. Do you have anything similar available or coming in?"
+        : "Hi, is this car still available? I’d like to find out more and arrange a viewing if possible."];
+      const details = [title && "Car: " + title, registration && "Registration: " + registration, listingUrl && "Listing: " + listingUrl].filter(Boolean);
+      if (details.length) body.push("", ...details);
+
+      const heading = document.getElementById("vehicle-enquiry-heading");
+      const titleEl = document.getElementById("vehicle-enquiry-title");
+      const plateEl = document.getElementById("vehicle-enquiry-plate");
+      heading.textContent = isSold ? "Enquire about a similar car" : "Enquire about this car";
+      titleEl.textContent = title || (isSold ? "Find a similar car" : "Vehicle enquiry");
+      if (registration) {
+        plateEl.textContent = registration;
+        plateEl.setAttribute("aria-label", "Registration " + registration);
+        plateEl.hidden = false;
+      }
+
+      if (listingUrl) {
+        const link = document.getElementById("vehicle-enquiry-listing");
+        link.href = listingUrl;
+        link.hidden = false;
+      }
+
+      document.getElementById("vehicle-enquiry-whatsapp").href = "https://wa.me/" + phone + "?text=" + encodeURIComponent(body.join("\n"));
+      const emailSubject = title ? subject + " — " + title : subject;
+      document.getElementById("vehicle-enquiry-email").href = "mailto:" + email
+        + "?subject=" + encodeURIComponent(emailSubject) + "&body=" + encodeURIComponent(body.join("\r\n"));
+
+      document.getElementById("general-contact").hidden = true;
+      document.getElementById("vehicle-enquiry").hidden = false;
+      document.body.classList.add("contact-page--enquiry");
+    })();
+  </script>
   <script src="/site.js?v=20260219d"></script>
   <script defer src="/final-seo.js?v=20260219d"></script>
   <script src="/admin-shortcut.js?v=20260219d"></script>
