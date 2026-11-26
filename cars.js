@@ -286,9 +286,27 @@ function buildStatusOverlay(label, sublabel = "", theme = "") {
 }
 
 
+const MEDIUM_CARD_WIDTH = 1280;
+
+function mobileCardImageUrl(original) {
+  if (!original) return "";
+  try {
+    const source = new URL(original);
+    if (source.origin !== "https://v5.airtableusercontent.com" ||
+        source.username || source.password || !source.pathname.startsWith("/v3/")) {
+      return "";
+    }
+    return `/cdn-cgi/image/width=${MEDIUM_CARD_WIDTH},fit=scale-down,quality=85,format=auto,metadata=none/${source.href}`;
+  } catch {
+    return "";
+  }
+}
+
 function loadCardImage(img, photo) {
   const original = photo?.url;
   const thumbnail = photo?.thumbnails?.large?.url;
+  const medium = mobileCardImageUrl(original);
+  let selectedLimit = 0;
   let sizeObserver;
 
   const useOriginal = () => {
@@ -297,34 +315,45 @@ function loadCardImage(img, photo) {
   };
 
   img.addEventListener("error", () => {
-    if (original && img.getAttribute("src") === thumbnail && original !== thumbnail) {
+    const source = img.getAttribute("src");
+    if (original && source !== original && (source === thumbnail || source === medium)) {
       useOriginal();
     } else {
       img.removeAttribute("src");
     }
   });
 
-  if (!original || !thumbnail || original === thumbnail || typeof ResizeObserver !== "function") {
+  if (!original || (!thumbnail && !medium) || typeof ResizeObserver !== "function") {
     const url = original || thumbnail || photo?.thumbnails?.small?.url;
     if (url) img.src = url;
     return;
   }
 
-  // Use the full photo for wide cards and high-density displays. The API
-  // supplies thumbnail URLs without dimensions, so check the decoded size too.
+  // Choose from the measured card size. Upgrade to the original when needed.
   sizeObserver = new ResizeObserver(([entry]) => {
     const { width, height } = entry.contentRect;
     if (!width || !height) return;
-    if (Math.max(width, height) * window.devicePixelRatio > 512) {
-      useOriginal();
-    } else if (!img.hasAttribute("src")) {
+    const requiredPixels = Math.max(width, height) * window.devicePixelRatio;
+
+    if (img.hasAttribute("src")) {
+      if (requiredPixels > selectedLimit) useOriginal();
+      return;
+    }
+
+    if (thumbnail && thumbnail !== original && requiredPixels <= 512) {
+      selectedLimit = 512;
       img.src = thumbnail;
+    } else if (medium && requiredPixels <= MEDIUM_CARD_WIDTH && window.matchMedia("(max-width: 640px)").matches) {
+      selectedLimit = MEDIUM_CARD_WIDTH;
+      img.src = medium;
+    } else {
+      useOriginal();
     }
   });
 
   img.addEventListener("load", () => {
     const { width, height } = img.getBoundingClientRect();
-    if (img.getAttribute("src") === thumbnail &&
+    if (img.getAttribute("src") !== original &&
         (img.naturalWidth < width * window.devicePixelRatio ||
          img.naturalHeight < height * window.devicePixelRatio)) {
       useOriginal();
