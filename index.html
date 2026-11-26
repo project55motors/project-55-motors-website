@@ -105,6 +105,108 @@
       text-align: center;
     }
 
+    .customer-reviews{
+      margin-top: clamp(28px, 5vw, 56px);
+      padding: clamp(22px, 5vw, 54px);
+      border: 1px solid #263954;
+      border-radius: 22px;
+      background: radial-gradient(ellipse at 0 0, #1f324c, #0d182a 72%);
+      color: #eef4fb;
+    }
+
+    .customer-reviews__label{
+      margin: 0 0 8px;
+      color: #e4c286;
+      font-size: .88rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .customer-reviews h2{
+      width: auto;
+      margin: 0 0 clamp(24px, 4vw, 40px);
+      color: #fff;
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      text-align: left;
+    }
+
+    .customer-reviews__cards{
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: clamp(24px, 4vw, 48px);
+    }
+
+    .customer-review{
+      margin: 0;
+    }
+
+    .customer-review blockquote{
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    .customer-review figcaption{
+      margin-top: 8px;
+      color: #cbd8e9;
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .customer-review--featured{
+      align-self: start;
+      padding: clamp(20px, 3.5vw, 38px);
+      border: 1px solid #526176;
+      border-radius: 14px;
+      background: #182940;
+    }
+
+    .customer-review--featured blockquote{
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+      line-height: 1.42;
+    }
+
+    .customer-review--featured figcaption{
+      margin-top: 18px;
+    }
+
+    .customer-reviews__support .customer-review + .customer-review{
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #46566c;
+    }
+
+    .customer-reviews__source{
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      margin-top: 24px;
+      padding-right: 24px;
+      border-radius: 12px;
+      background: #fff;
+      color: #17253b;
+      font-weight: 700;
+      text-underline-offset: .25em;
+    }
+
+    .customer-reviews__google-logo{
+      display: block;
+      flex-shrink: 0;
+      width: 72px;
+      height: 72px;
+      border-radius: 0;
+    }
+
+    .customer-reviews__source:focus-visible{
+      outline: 2px solid #a8caff;
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 740px){
+      .customer-reviews__cards{ grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 900px){ .home-chips{ flex-wrap: wrap; } }
 
     @media (max-width: 640px){
@@ -184,6 +286,34 @@
     <h2>Current stock</h2>
     <p class="page-intro-mini">Select a vehicle for full details, photographs and enquiry options.</p>
     <div id="car-grid" class="car-grid"></div>
+    <section class="customer-reviews" aria-labelledby="customer-reviews-heading">
+      <p class="customer-reviews__label">Selected five-star Google reviews</p>
+      <h2 id="customer-reviews-heading">What our customers say</h2>
+      <div class="customer-reviews__cards">
+        <figure class="customer-review customer-review--featured">
+          <blockquote>“What a truly amazing experience it was dealing with Nathan during the part exchange of our VW Polo to a wonderful newer version.”</blockquote>
+          <figcaption>Peter Dunford</figcaption>
+        </figure>
+        <div class="customer-reviews__support">
+          <figure class="customer-review">
+            <blockquote>“Smooth and slick process. 10/10 recommend!”</blockquote>
+            <figcaption>Alex Dent</figcaption>
+          </figure>
+          <figure class="customer-review">
+            <blockquote>“I'm very happy with my purchase and wouldn't hesitate to buy from Project 55 Motors again in the future.”</blockquote>
+            <figcaption>Vicky Amps</figcaption>
+          </figure>
+          <figure class="customer-review">
+            <blockquote>“Nathan provided knowledgeable, helpful advice throughout the whole process.”</blockquote>
+            <figcaption>Angela Cole</figcaption>
+          </figure>
+        </div>
+      </div>
+      <a class="customer-reviews__source" href="https://share.google/aC8VzGdtGGjXXNT9o">
+        <img class="customer-reviews__google-logo" src="/assets/brands/google-g.png" width="72" height="72" alt="" loading="lazy" decoding="async">
+        <span>Read reviews on Google</span>
+      </a>
+    </section>
   </main>
 
   <footer class="site-footer">
