@@ -80,6 +80,12 @@
       padding-top: 12px; /* keeps stock visible sooner without crowding the intro */
     }
 
+    /* Reserve space for stock cards so a slow response does not move the footer. */
+    .home-stock .car-grid{
+      min-block-size: max(0px, calc(100vh - 32rem));
+      min-block-size: max(0px, calc(100svh - 32rem));
+    }
+
     .home-stock h2{
       width: min(1100px, 92vw);
       margin: 0 auto 6px;
