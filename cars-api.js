@@ -154,8 +154,9 @@ const STOCK_VERSION_KEY = "stock:version";
 const SOLD_AT_PREFIX = "soldAt:";
 const REFRESH_LOCK_KEY = "stock:refreshLock";
 
-// NEW: last-known-good stock payload for resilience during Airtable outages
-const STOCK_LAST_GOOD_KEY = "stock:lastGood";
+const PUBLIC_STOCK_SCHEMA = "public-stock-v1";
+const STOCK_LAST_GOOD_KEY = `stock:lastGood:${PUBLIC_STOCK_SCHEMA}`;
+const LEGACY_STOCK_LAST_GOOD_KEY = "stock:lastGood";
 
 async function getStockVersion(kv) {
   if (!kv) return 1;
@@ -176,6 +177,7 @@ function buildStockCacheKey(url, { version, sold }) {
   // Keep the cache key stable (ignore utm params etc) but versioned so updates propagate globally.
   const cacheUrl = new URL(url.toString());
   cacheUrl.search = "";
+  cacheUrl.searchParams.set("schema", PUBLIC_STOCK_SCHEMA);
   cacheUrl.searchParams.set("v", String(version || 1));
   cacheUrl.searchParams.set("sd", sold?.showSold ? "1" : "0");
   cacheUrl.searchParams.set("kd", String(Number(sold?.keepDays ?? 30)));
@@ -249,29 +251,72 @@ async function attachSoldMeta(records, kv) {
   );
 }
 
-function filterPublicRecords(records) {
-  const arr = Array.isArray(records) ? records : [];
-  return arr
-    .filter((r) => {
-      const status = String(r?.fields?.Status || "").trim();
-      // Inactive (and legacy Hidden) are not shown on public-facing pages.
-      if (status === "Inactive" || status === "Hidden") return false;
-      return true;
-    })
-    .map((r) => {
-      // Airtable fields are still returned unchanged. This stable alias makes
-      // the public video contract explicit and keeps the front end insulated
-      // if the Airtable field name is adjusted later.
-      const rawVideo = r?.fields?.Video_URL;
-      const videoValue = Array.isArray(rawVideo) ? rawVideo[0] : rawVideo;
-      const videoUrl = String(
-        videoValue && typeof videoValue === "object"
-          ? (videoValue.url || videoValue.href || "")
-          : (videoValue || "")
-      ).trim().slice(0, 2048);
+// Public fields consumed by stock cards, vehicle pages, slug resolution and SEO.
+const PUBLIC_STOCK_FIELDS = [
+  "Status", "Slug", "Make_Model", "Title", "Vehicle", "Name",
+  "Price", "Asking_Price", "Mileage", "Miles", "Odometer", "Mileage_miles",
+  "Fuel_type", "Fuel", "FuelType", "Transmission", "MOT_Date",
+  "Registration", "Reg", "VRM", "Number_Plate", "NumberPlate",
+  "Registration_Plate", "Reg_Plate", "Plate", "Year", "Registration_Year",
+  "Engine_size", "Engine", "EngineSize", "CC", "cc",
+  "Short_Description", "Summary", "Tagline", "Description_Short", "Full_Description",
+  "ETA_in_stock", "ETA_In_Stock", "ETA", "VideoURL", "Video_Url"
+];
 
-      return { ...r, videoUrl };
-    });
+function isPublicScalar(value) {
+  return typeof value === "string" || typeof value === "number" || typeof value === "boolean";
+}
+
+function projectPublicPhoto(photo) {
+  const result = {};
+  if (typeof photo?.url === "string" && photo.url) result.url = photo.url;
+
+  const thumbnails = {};
+  for (const size of ["small", "large", "full"]) {
+    const url = photo?.thumbnails?.[size]?.url;
+    if (typeof url === "string" && url) thumbnails[size] = { url };
+  }
+  if (Object.keys(thumbnails).length) result.thumbnails = thumbnails;
+
+  return result;
+}
+
+function getPublicVideoUrl(value) {
+  const first = Array.isArray(value) ? value[0] : value;
+  const url = first && typeof first === "object" ? (first.url || first.href) : first;
+  return typeof url === "string" ? url.trim().slice(0, 2048) : "";
+}
+
+function projectPublicRecords(records) {
+  const result = [];
+
+  for (const record of records) {
+    if (typeof record?.id !== "string") continue;
+    const source = record.fields || {};
+    const status = String(source.Status || "").trim().toLowerCase();
+    if (status === "inactive" || status === "hidden") continue;
+
+    const fields = {};
+    for (const name of PUBLIC_STOCK_FIELDS) {
+      const value = source[name];
+      if (isPublicScalar(value) || (Array.isArray(value) && value.every(isPublicScalar))) {
+        fields[name] = value;
+      }
+    }
+    if (Array.isArray(source.Photos)) fields.Photos = source.Photos.map(projectPublicPhoto);
+
+    const videoUrl = getPublicVideoUrl(source.Video_URL) || getPublicVideoUrl(record.videoUrl);
+    if (source.Video_URL !== undefined || videoUrl) fields.Video_URL = videoUrl;
+
+    const publicRecord = { id: record.id, fields, videoUrl };
+    if (Number.isFinite(record.__p55?.soldAtTs)) {
+      const { soldAtTs, soldAt } = record.__p55;
+      publicRecord.__p55 = { soldAtTs, soldAt: typeof soldAt === "string" ? soldAt : null };
+    }
+    result.push(publicRecord);
+  }
+
+  return result;
 }
 
 async function fetchAllAirtableRecords({ baseId, tableName, pat }) {
@@ -298,7 +343,10 @@ async function fetchAllAirtableRecords({ baseId, tableName, pat }) {
     }
 
     const data = await res.json();
-    records = records.concat(data.records || []);
+    if (!Array.isArray(data?.records)) {
+      throw new Error("Invalid Airtable stock response");
+    }
+    records = records.concat(data.records);
     offset = data.offset || null;
   } while (offset);
 
@@ -314,9 +362,32 @@ async function saveLastGoodStock(kv, body) {
 
 async function getLastGoodStock(kv) {
   if (!kv) return null;
-  const payload = await kv.get(STOCK_LAST_GOOD_KEY, { type: "json" }).catch(() => null);
-  if (!payload || typeof payload !== "object" || !payload.body) return null;
-  return payload;
+
+  // During rollout the legacy snapshot may be the only available copy.
+  // Project records and metadata before use, regardless of the snapshot key.
+  for (const key of [STOCK_LAST_GOOD_KEY, LEGACY_STOCK_LAST_GOOD_KEY]) {
+    const payload = await kv.get(key, { type: "json" }).catch(() => null);
+    if (!Array.isArray(payload?.body?.records) || !Number.isFinite(payload.savedAt)) continue;
+
+    const { version, sold } = payload.body.meta || {};
+    const updatedAt = sold?.updatedAt;
+    return {
+      savedAt: payload.savedAt,
+      body: {
+        records: projectPublicRecords(payload.body.records),
+        meta: {
+          version: Number.isFinite(version) ? version : 1,
+          sold: {
+            showSold: typeof sold?.showSold === "boolean" ? sold.showSold : true,
+            keepDays: Number.isFinite(sold?.keepDays) ? sold.keepDays : 30,
+            updatedAt: Number.isFinite(updatedAt) || typeof updatedAt === "string" ? updatedAt : null
+          }
+        }
+      }
+    };
+  }
+
+  return null;
 }
 
 function responseFromCacheHit(request, hit, extraHeaders = {}) {
@@ -350,7 +421,7 @@ export default {
           const records = await fetchAllAirtableRecords({ baseId: BASE, tableName: TABLE, pat: AIRTABLE_PAT });
           await attachSoldMeta(records, TRAFFIC_KV);
 
-          const publicRecords = filterPublicRecords(records);
+          const publicRecords = projectPublicRecords(records);
           const body = { records: publicRecords, meta: { version, sold } };
 
           // Save last-known-good for outage resilience
@@ -440,7 +511,7 @@ export default {
         try {
           const records = await fetchAllAirtableRecords({ baseId: BASE, tableName: TABLE, pat: AIRTABLE_PAT });
           await attachSoldMeta(records, TRAFFIC_KV);
-          const publicRecords = filterPublicRecords(records);
+          const publicRecords = projectPublicRecords(records);
           body = { records: publicRecords, meta: { version, sold } };
           ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body));
         } catch {
@@ -591,7 +662,7 @@ export default {
           await attachSoldMeta(records, TRAFFIC_KV);
 
           const version = await bumpStockVersion(TRAFFIC_KV);
-          const publicRecords = filterPublicRecords(records);
+          const publicRecords = projectPublicRecords(records);
           const body = { records: publicRecords, meta: { version, sold } };
 
           // Save last-known-good
@@ -643,7 +714,7 @@ export default {
 
           await attachSoldMeta(records, TRAFFIC_KV);
           const version = await getStockVersion(TRAFFIC_KV);
-          const publicRecords = filterPublicRecords(records);
+          const publicRecords = projectPublicRecords(records);
           const body = { records: publicRecords, meta: { version, sold } };
 
           // Save last-known-good
@@ -697,7 +768,7 @@ export default {
 
         await attachSoldMeta(records, TRAFFIC_KV);
 
-        const publicRecords = filterPublicRecords(records);
+        const publicRecords = projectPublicRecords(records);
         const body = { records: publicRecords, meta: { version, sold } };
 
         // Save last-known-good
