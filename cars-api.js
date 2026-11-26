@@ -1,3 +1,5 @@
+import { DurableObject, WorkerEntrypoint } from "cloudflare:workers";
+
 // PROJECT 55 MOTORS – PUBLIC STOCK API (CACHED + KV ANALYTICS + KV STOCK FALLBACK + SCHEDULED WARM)
 
 // If you want to be strict, keep an allowlist of your real site origins:
@@ -152,9 +154,13 @@ async function incrementDailyEvents(kv, { event, path }) {
 const SETTINGS_SOLD_KEY = "settings:sold";
 const STOCK_VERSION_KEY = "stock:version";
 const SOLD_AT_PREFIX = "soldAt:";
-const REFRESH_LOCK_KEY = "stock:refreshLock";
+const STOCK_REFRESH_INTERVAL_MS = 5000;
 
 const PUBLIC_STOCK_SCHEMA = "public-stock-v1";
+const STOCK_EDGE_SCHEMA = "public-stock-kv-v1";
+const STOCK_EDGE_TTL_SECONDS = 60;
+// Allow a five-minute grace period beyond the 15-minute cron interval.
+const STOCK_SNAPSHOT_MAX_AGE_SECONDS = 20 * 60;
 const STOCK_LAST_GOOD_KEY = `stock:lastGood:${PUBLIC_STOCK_SCHEMA}`;
 const LEGACY_STOCK_LAST_GOOD_KEY = "stock:lastGood";
 
@@ -165,50 +171,16 @@ async function getStockVersion(kv) {
   return Number.isFinite(n) && n >= 1 ? Math.round(n) : 1;
 }
 
-async function bumpStockVersion(kv) {
-  if (!kv) return 1;
-  const current = await getStockVersion(kv);
-  const next = current + 1;
-  await kv.put(STOCK_VERSION_KEY, String(next));
-  return next;
-}
-
 function buildStockCacheKey(url, { version, sold }) {
   // Keep the cache key stable (ignore utm params etc) but versioned so updates propagate globally.
   const cacheUrl = new URL(url.toString());
   cacheUrl.search = "";
-  cacheUrl.searchParams.set("schema", PUBLIC_STOCK_SCHEMA);
+  cacheUrl.searchParams.set("schema", STOCK_EDGE_SCHEMA);
   cacheUrl.searchParams.set("v", String(version || 1));
   cacheUrl.searchParams.set("sd", sold?.showSold ? "1" : "0");
   cacheUrl.searchParams.set("kd", String(Number(sold?.keepDays ?? 30)));
   if (sold?.updatedAt) cacheUrl.searchParams.set("su", String(sold.updatedAt));
   return new Request(cacheUrl.toString(), { method: "GET" });
-}
-
-async function refreshLockOk(kv, minGapMs = 3000) {
-  if (!kv) return true;
-
-  const now = Date.now();
-  const last = Number((await kv.get(REFRESH_LOCK_KEY).catch(() => "0")) || "0");
-  if (Number.isFinite(last) && last > 0 && now - last < minGapMs) return false;
-
-  // Set a short lock window to prevent abuse (and accidental double refreshes).
-  await kv.put(REFRESH_LOCK_KEY, String(now), { expirationTtl: Math.ceil(minGapMs / 1000) + 1 }).catch(() => {});
-  return true;
-}
-
-function isSameSiteReferrerOrOrigin(request) {
-  const origin = request.headers.get("Origin") || "";
-  if (origin && ALLOWED_ORIGINS.has(origin)) return true;
-
-  const ref = request.headers.get("Referer") || "";
-  try {
-    const u = new URL(ref);
-    const o = `${u.protocol}//${u.hostname.replace(/^www\./, "")}`;
-    return ALLOWED_ORIGINS.has(o);
-  } catch {
-    return false;
-  }
 }
 
 async function getSoldSettings(kv) {
@@ -357,7 +329,7 @@ async function fetchAllAirtableRecords({ baseId, tableName, pat }) {
 async function saveLastGoodStock(kv, body) {
   if (!kv) return;
   const payload = { savedAt: Date.now(), body };
-  await kv.put(STOCK_LAST_GOOD_KEY, JSON.stringify(payload)).catch(() => {});
+  await kv.put(STOCK_LAST_GOOD_KEY, JSON.stringify(payload));
 }
 
 async function getLastGoodStock(kv) {
@@ -390,65 +362,117 @@ async function getLastGoodStock(kv) {
   return null;
 }
 
+function snapshotCacheTtl(snapshot, version) {
+  if (!snapshot || snapshot.body.meta.version !== version) return 0;
+
+  const age = (Date.now() - snapshot.savedAt) / 1000;
+  if (age < 0) return 0;
+  return Math.max(0, Math.min(STOCK_EDGE_TTL_SECONDS, Math.floor(STOCK_SNAPSHOT_MAX_AGE_SECONDS - age)));
+}
+
+function publicStockCacheControl(ttl = STOCK_EDGE_TTL_SECONDS) {
+  return `public, max-age=0, s-maxage=${ttl}`;
+}
+
 function responseFromCacheHit(request, hit, extraHeaders = {}) {
+  const headers = new Headers(hit.headers);
+  for (const [name, value] of Object.entries({ ...buildCorsHeaders(request), ...extraHeaders })) {
+    headers.set(name, value);
+  }
+
   return new Response(hit.body, {
     status: hit.status,
-    headers: {
-      ...Object.fromEntries(hit.headers),
-      ...buildCorsHeaders(request),
-      ...extraHeaders
-    }
+    headers
   });
 }
 
+// All scheduled and admin refreshes share one coordinator across locations.
+export class StockRefreshCoordinator extends DurableObject {
+  inFlight = false;
+
+  async fetch(request) {
+    if (request.method !== "POST") return new Response(null, { status: 405 });
+    if (this.inFlight) return this.throttled(3);
+
+    this.inFlight = true;
+    try {
+      const now = Date.now();
+      const nextRefreshAt = await this.ctx.storage.get("nextRefreshAt") || 0;
+      if (nextRefreshAt > now) return this.throttled(Math.ceil((nextRefreshAt - now) / 1000));
+
+      const { TRAFFIC_KV, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME, AIRTABLE_PAT } = this.env;
+      if (!TRAFFIC_KV || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_NAME || !AIRTABLE_PAT) {
+        return new Response(null, { status: 503 });
+      }
+
+      await this.ctx.storage.put("nextRefreshAt", now + STOCK_REFRESH_INTERVAL_MS);
+      const version = await getStockVersion(TRAFFIC_KV);
+      const sold = await getSoldSettings(TRAFFIC_KV);
+
+      const records = await fetchAllAirtableRecords({
+        baseId: AIRTABLE_BASE_ID,
+        tableName: AIRTABLE_TABLE_NAME,
+        pat: AIRTABLE_PAT
+      });
+      await attachSoldMeta(records, TRAFFIC_KV);
+      if (version !== await getStockVersion(TRAFFIC_KV)) return this.throttled(3);
+
+      const body = { records: projectPublicRecords(records), meta: { version, sold } };
+      await saveLastGoodStock(TRAFFIC_KV, body);
+      return Response.json(body);
+    } catch {
+      console.error("Stock refresh failed");
+      return new Response(null, { status: 503 });
+    } finally {
+      this.inFlight = false;
+    }
+  }
+
+  throttled(retryAfter) {
+    return new Response(null, { status: 429, headers: { "Retry-After": String(retryAfter) } });
+  }
+}
+
+async function runCoordinatedRefresh(env) {
+  try {
+    const id = env.STOCK_REFRESH_COORDINATOR.idFromName("public-stock");
+    const coordinator = env.STOCK_REFRESH_COORDINATOR.get(id);
+    const response = await coordinator.fetch("https://stock-refresh.internal/", { method: "POST" });
+    if (response.status === 429) {
+      return { status: 429, retryAfter: Number(response.headers.get("Retry-After")) };
+    }
+    if (!response.ok) return { status: 503 };
+
+    const body = await response.json();
+    const { version, sold } = body.meta;
+    const url = new URL("https://project55motors.co.uk/cars-api");
+    const cacheKey = buildStockCacheKey(url, { version, sold });
+    await caches.default.put(cacheKey, Response.json(body, {
+      headers: {
+        "Cache-Control": publicStockCacheControl(),
+        "X-P55-Cache": "WARM",
+        "X-P55-Version": String(version)
+      }
+    })).catch(() => {});
+    return { status: 200 };
+  } catch {
+    console.error("Unable to reach stock refresh coordinator");
+    return { status: 503 };
+  }
+}
+
+// Named entrypoint for the admin Worker's service binding. It has no public route.
+export class StockRefreshService extends WorkerEntrypoint {
+  async refreshStock() {
+    return runCoordinatedRefresh(this.env);
+  }
+}
+
 export default {
-  // NEW: cron support — stops "Handler does not export scheduled()" and warms cache
   async scheduled(event, env, ctx) {
-    const TRAFFIC_KV = env.TRAFFIC_KV;
-
-    const AIRTABLE_PAT = env.AIRTABLE_PAT;
-    const BASE = env.AIRTABLE_BASE_ID;
-    const TABLE = env.AIRTABLE_TABLE_NAME;
-
-    if (!AIRTABLE_PAT || !BASE || !TABLE) return;
-
-    ctx.waitUntil(
-      (async () => {
-        try {
-          const sold = await getSoldSettings(TRAFFIC_KV);
-          const version = await getStockVersion(TRAFFIC_KV);
-
-          const records = await fetchAllAirtableRecords({ baseId: BASE, tableName: TABLE, pat: AIRTABLE_PAT });
-          await attachSoldMeta(records, TRAFFIC_KV);
-
-          const publicRecords = projectPublicRecords(records);
-          const body = { records: publicRecords, meta: { version, sold } };
-
-          // Save last-known-good for outage resilience
-          await saveLastGoodStock(TRAFFIC_KV, body);
-
-          // Warm cache for current version
-          const cache = caches.default;
-          const url = new URL("https://project55motors.co.uk/cars-api");
-          const cacheKey = buildStockCacheKey(url, { version, sold });
-
-          const respForCache = new Response(JSON.stringify(body), {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json",
-              "Cache-Control": "public, s-maxage=600, stale-if-error=600",
-              "X-P55-Cache": "WARM",
-              "X-P55-Version": String(version)
-            }
-          });
-
-          await cache.put(cacheKey, respForCache);
-        } catch (err) {
-          // Never throw on scheduled; log only
-          console.error("cars-api scheduled warm error:", err);
-        }
-      })()
-    );
+    ctx.waitUntil(runCoordinatedRefresh(env).then(result => {
+      if (result.status === 503) console.error("Scheduled stock refresh unavailable");
+    }));
   },
 
   async fetch(request, env, ctx) {
@@ -500,11 +524,9 @@ export default {
       const hit = await cache.match(cacheKey);
       if (hit) body = await hit.clone().json().catch(() => null);
 
-      // 2) Try KV last-known-good
-      if (!body) {
-        const last = await getLastGoodStock(TRAFFIC_KV);
-        if (last?.body) body = last.body;
-      }
+      // 2) Prefer a recent snapshot for the current version.
+      const last = body ? null : await getLastGoodStock(TRAFFIC_KV);
+      if (snapshotCacheTtl(last, version)) body = last.body;
 
       // 3) Last resort: Airtable fetch (if configured)
       if (!body && AIRTABLE_PAT && BASE && TABLE) {
@@ -513,12 +535,13 @@ export default {
           await attachSoldMeta(records, TRAFFIC_KV);
           const publicRecords = projectPublicRecords(records);
           body = { records: publicRecords, meta: { version, sold } };
-          ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body));
+          ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body).catch(() => {}));
         } catch {
           // ignore
         }
       }
 
+      if (!body) body = last?.body;
       const records = Array.isArray(body?.records) ? body.records : [];
       const match = records.find(r => String(r?.fields?.Slug || "").trim().toLowerCase() === slug);
 
@@ -611,140 +634,13 @@ export default {
 
     // 4) PUBLIC STOCK (cached + versioned)
     if (request.method === "GET" && (path === "/" || path === "")) {
-      const wantsNoCache = url.searchParams.get("nocache") === "1";
-      const wantsRefresh = url.searchParams.get("refresh") === "1";
-
-      // Read settings/version up-front so the cache key can be versioned (global cache-bust).
-      const sold = await getSoldSettings(TRAFFIC_KV);
-
-      // Helper: on Airtable failure, serve last-known-good stock if available
-      const serveLastGood = async (tag) => {
-        const last = await getLastGoodStock(TRAFFIC_KV);
-        if (!last) return null;
-
-        return jsonResponse(request, last.body, 200, {
-          "Cache-Control": "no-store",
-          "X-P55-Fallback": "KV",
-          "X-P55-Fallback-Reason": tag || "airtable_error",
-          "X-P55-LastGood-AgeSec": String(Math.max(0, Math.round((Date.now() - Number(last.savedAt || 0)) / 1000)))
+      if (url.searchParams.get("refresh") === "1") {
+        return jsonResponse(request, { error: "Use the signed-in admin dashboard to refresh stock." }, 403, {
+          "Cache-Control": "no-store"
         });
-      };
-
-      // Refresh requests bump the global version (throttled) and also pre-warm this PoP's cache.
-      if (wantsRefresh) {
-        if (!isSameSiteReferrerOrOrigin(request)) {
-          return jsonResponse(
-            request,
-            { ok: false, error: "Refresh not allowed from this origin." },
-            403,
-            { "Cache-Control": "no-store" }
-          );
-        }
-
-        const ok = await refreshLockOk(TRAFFIC_KV, 3000);
-        if (!ok) {
-          const version = await getStockVersion(TRAFFIC_KV);
-          return jsonResponse(
-            request,
-            { ok: true, throttled: true, version },
-            200,
-            { "Cache-Control": "no-store" }
-          );
-        }
-
-        try {
-          const records = await fetchAllAirtableRecords({
-            baseId: BASE,
-            tableName: TABLE,
-            pat: AIRTABLE_PAT
-          });
-
-          await attachSoldMeta(records, TRAFFIC_KV);
-
-          const version = await bumpStockVersion(TRAFFIC_KV);
-          const publicRecords = projectPublicRecords(records);
-          const body = { records: publicRecords, meta: { version, sold } };
-
-          // Save last-known-good
-          ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body));
-
-          // Store a cacheable copy
-          const cache = caches.default;
-          const cacheKey = buildStockCacheKey(url, { version, sold });
-
-          const respForCache = jsonResponse(request, body, 200, {
-            "Cache-Control": "public, s-maxage=600, stale-if-error=600",
-            "X-P55-Cache": "MISS",
-            "X-P55-Version": String(version),
-            "X-P55-Refreshed": "1"
-          });
-
-          ctx.waitUntil(cache.put(cacheKey, respForCache.clone()));
-
-          return jsonResponse(request, body, 200, {
-            "Cache-Control": "no-store",
-            "X-P55-Cache": "REFRESH",
-            "X-P55-Version": String(version)
-          });
-        } catch (err) {
-          console.error("cars-api refresh error:", err);
-          const fb = await serveLastGood("refresh_airtable_error");
-          if (fb) return fb;
-          return jsonResponse(request, { error: "Server error" }, 500, { "Cache-Control": "no-store" });
-        }
       }
 
-      // nocache=1 path: forces Airtable read (and also updates cache for the current version)
-      if (wantsNoCache) {
-        if (!isSameSiteReferrerOrOrigin(request)) {
-          return jsonResponse(
-            request,
-            { ok: false, error: "nocache not allowed from this origin." },
-            403,
-            { "Cache-Control": "no-store" }
-          );
-        }
-
-        try {
-          const records = await fetchAllAirtableRecords({
-            baseId: BASE,
-            tableName: TABLE,
-            pat: AIRTABLE_PAT
-          });
-
-          await attachSoldMeta(records, TRAFFIC_KV);
-          const version = await getStockVersion(TRAFFIC_KV);
-          const publicRecords = projectPublicRecords(records);
-          const body = { records: publicRecords, meta: { version, sold } };
-
-          // Save last-known-good
-          ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body));
-
-          // Best-effort: update cache for the current version
-          const cache = caches.default;
-          const cacheKey = buildStockCacheKey(url, { version, sold });
-
-          const respForCache = jsonResponse(request, body, 200, {
-            "Cache-Control": "public, s-maxage=600, stale-if-error=600",
-            "X-P55-Cache": "MISS",
-            "X-P55-Version": String(version),
-            "X-P55-Refreshed": "0"
-          });
-
-          ctx.waitUntil(cache.put(cacheKey, respForCache.clone()));
-
-          return jsonResponse(request, body, 200, {
-            "Cache-Control": "no-store",
-            "X-P55-Cache": "BYPASS",
-            "X-P55-Version": String(version)
-          });
-        } catch (err) {
-          console.error("cars-api nocache error:", err);
-          const fb = await serveLastGood("nocache_airtable_error");
-          if (fb) return fb;
-          return jsonResponse(request, { error: "Server error" }, 500, { "Cache-Control": "no-store" });
-        }
-      }
+      const sold = await getSoldSettings(TRAFFIC_KV);
 
       // Normal cached path (versioned cache key)
       const version = await getStockVersion(TRAFFIC_KV);
@@ -757,6 +653,19 @@ export default {
           "X-P55-Cache": "HIT",
           "X-P55-Version": String(version)
         });
+      }
+
+      const last = await getLastGoodStock(TRAFFIC_KV);
+      const ttl = snapshotCacheTtl(last, version);
+      if (ttl) {
+        const body = { records: last.body.records, meta: { version, sold } };
+        const response = jsonResponse(request, body, 200, {
+          "Cache-Control": publicStockCacheControl(ttl),
+          "X-P55-Cache": "KV",
+          "X-P55-Version": String(version)
+        });
+        ctx.waitUntil(cache.put(cacheKey, response.clone()));
+        return response;
       }
 
       try {
@@ -772,10 +681,10 @@ export default {
         const body = { records: publicRecords, meta: { version, sold } };
 
         // Save last-known-good
-        ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body));
+        ctx.waitUntil(saveLastGoodStock(TRAFFIC_KV, body).catch(() => {}));
 
         const resp = jsonResponse(request, body, 200, {
-          "Cache-Control": "public, s-maxage=600, stale-if-error=600",
+          "Cache-Control": publicStockCacheControl(),
           "X-P55-Cache": "MISS",
           "X-P55-Version": String(version)
         });
@@ -786,8 +695,14 @@ export default {
         console.error("cars-api error:", err);
 
         // NEW: serve last-known-good stock during Airtable outages
-        const fb = await serveLastGood("normal_airtable_error");
-        if (fb) return fb;
+        if (last) {
+          return jsonResponse(request, last.body, 200, {
+            "Cache-Control": "no-store",
+            "X-P55-Fallback": "KV",
+            "X-P55-Fallback-Reason": "normal_airtable_error",
+            "X-P55-LastGood-AgeSec": String(Math.max(0, Math.round((Date.now() - last.savedAt) / 1000)))
+          });
+        }
 
         return jsonResponse(request, { error: "Server error" }, 500, { "Cache-Control": "no-store" });
       }

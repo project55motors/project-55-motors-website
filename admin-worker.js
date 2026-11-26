@@ -46,10 +46,10 @@ export default {
     const sessionToken = getCookie(cookie, SESSION_COOKIE);
     const loggedIn = await isValidSession(sessionToken);
 
-    const json = (d, s = 200) =>
+    const json = (d, s = 200, extraHeaders = {}) =>
       new Response(JSON.stringify(d), {
         status: s,
-        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...extraHeaders }
       });
 
     /* ---------- SETTINGS (KV) ---------- */
@@ -181,6 +181,34 @@ export default {
     }
 
     if (!loggedIn) return json({ error: "Unauthorized" }, 401);
+
+    if (path === "/api/stock/refresh") {
+      if (req.method !== "POST") {
+        return json({ ok: false, error: "Method not allowed" }, 405, { Allow: "POST" });
+      }
+      if (req.headers.get("Origin") !== url.origin) {
+        return json({ ok: false, error: "Invalid request origin" }, 403);
+      }
+
+      try {
+        const result = await env.STOCK_REFRESH.refreshStock();
+        if (result?.status === 200) return json({ ok: true });
+        if (result?.status === 429 || result?.status === 503) {
+          const { status, retryAfter } = result;
+          const error = status === 429
+            ? "Stock refresh is temporarily throttled"
+            : "Stock refresh is temporarily unavailable";
+          if (Number.isSafeInteger(retryAfter) && retryAfter > 0) {
+            return json({ ok: false, error, retryAfter }, status, { "Retry-After": String(retryAfter) });
+          }
+          return json({ ok: false, error }, status);
+        }
+        console.error("Stock refresh service returned an unexpected response");
+      } catch {
+        console.error("Stock refresh service call failed");
+      }
+      return json({ ok: false, error: "Stock refresh is temporarily unavailable" }, 503);
+    }
 
     /* ---------- SETTINGS (Sold vehicles) ---------- */
     if (path === "/api/settings/sold" && req.method === "GET") {

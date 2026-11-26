@@ -541,42 +541,55 @@ function setActiveTab(view) {
 
 /* ---------- PUBLIC STOCK CACHE REFRESH ---------- */
 
-let __p55RefreshInFlight = null;
-let __p55RefreshTimer = null;
+let publicStockRefresh = null;
+let publicStockRefreshPending = false;
 
-/**
- * Refreshes the public stock cache without forcing every call to hit Airtable.
- *
- * - Uses cars-api `?refresh=1` (version bump + cache pre-warm) instead of `?nocache=1`.
- * - Coalesces multiple admin edits into a single refresh (default ~2.5s delay).
- *
- * This specifically reduces Airtable API consumption when doing lots of admin saves/updates.
- */
-function refreshPublicStockCache({ delayMs = 2500 } = {}) {
-  // If there's already a refresh in flight, reuse it.
-  if (__p55RefreshInFlight) return __p55RefreshInFlight;
-
-  // Coalesce repeated calls (saves / status clicks) into one refresh.
-  if (__p55RefreshTimer) clearTimeout(__p55RefreshTimer);
-
-  __p55RefreshInFlight = new Promise((resolve) => {
-    __p55RefreshTimer = setTimeout(async () => {
-      try {
-        // Refresh endpoint bumps a global version and pre-warms the edge cache.
-        // cars-api also throttles refreshes server-side.
-        await fetch("/cars-api?refresh=1", { cache: "no-store" });
-      } catch {
-        // non-fatal
-      } finally {
-        __p55RefreshTimer = null;
-        const done = __p55RefreshInFlight;
-        __p55RefreshInFlight = null;
-        resolve();
-      }
-    }, Math.max(0, Number(delayMs) || 0));
+function requestPublicStockRefresh() {
+  return fetch(`${API}/stock/refresh`, {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    signal: window.AbortSignal?.timeout?.(10000)
   });
+}
 
-  return __p55RefreshInFlight;
+function refreshPublicStockCache({ delayMs = 2500 } = {}) {
+  publicStockRefreshPending = true;
+  if (publicStockRefresh) return publicStockRefresh;
+
+  const note = document.getElementById("publicStockRefreshNote");
+  publicStockRefresh = (async () => {
+    try {
+      while (publicStockRefreshPending) {
+        // Batch nearby edits and queue another refresh if an edit arrives while one runs.
+        await new Promise(resolve => setTimeout(resolve, Math.max(0, Number(delayMs) || 0)));
+        publicStockRefreshPending = false;
+
+        try {
+          let response = await requestPublicStockRefresh();
+          if (response.status === 429) {
+            const retryAfter = Number(response.headers.get("Retry-After"));
+            if (retryAfter > 0 && retryAfter <= 5) {
+              await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+              // The retry also covers any edits saved while we waited.
+              publicStockRefreshPending = false;
+              response = await requestPublicStockRefresh();
+            }
+          }
+
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          if (note) note.textContent = "";
+        } catch (err) {
+          if (note) note.textContent = "The public stock refresh could not finish. The website may take longer to show recent edits.";
+          console.warn("Public stock refresh failed", err);
+        }
+      }
+    } finally {
+      publicStockRefresh = null;
+    }
+  })();
+
+  return publicStockRefresh;
 }
 
 /* ---------- AUTH ---------- */
@@ -617,7 +630,7 @@ async function logout() {
 logoutBtn.onclick = logout;
 loginBtn.onclick = login;
 
-// Logo: return to site and force a fresh stock read.
+// Logo: request a stock refresh before returning to the public site.
 if (adminHomeLogo) {
   adminHomeLogo.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -822,7 +835,7 @@ async function quickStatusUpdate(id, nextStatus, btn) {
     }
 
     updateLocalCar(id, { Status: nextStatus });
-    // Keep the public site in sync immediately.
+    // Schedule a refresh of public stock.
     refreshPublicStockCache();
     renderStockTable();
     return true;
@@ -1273,7 +1286,7 @@ async function save(id, btn) {
       Status: normaliseStatus(fields.Status)
     });
 
-    // Keep the public site in sync immediately.
+    // Schedule a refresh of public stock.
     refreshPublicStockCache();
 
     // Re-apply the current filter so status changes move rows immediately.
