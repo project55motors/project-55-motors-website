@@ -64,12 +64,14 @@
       width: 100%;
       display: grid;
       grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-      align-items: start;
+      align-content: start;
       gap: clamp(16px, 2vw, 28px);
       padding-block: clamp(20px, 4vw, 60px);
     }
 
     .px-intro{
+      display: grid;
+      grid-template-rows: 1fr auto;
       overflow: hidden;
       border-radius: 18px;
       background: linear-gradient(130deg, #253950, #101b2d 75%);
@@ -77,6 +79,7 @@
     }
 
     .px-intro-copy{
+      align-self: center;
       padding: clamp(22px, 4vw, 42px);
     }
 
